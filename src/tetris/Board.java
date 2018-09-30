@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -15,21 +14,41 @@ import javax.swing.Timer;
 import tetris.Piece.Tetris;
 
 public class Board extends JPanel implements ActionListener {
+
+    // width of game board
     private final int BoardWidth = 10;
+
+    // height of game board
     private final int BoardHeight = 22;
 
+    // timer used to regulate drop speeds
     private Timer timer;
+
+    // used to know when to get next piece
     private boolean isFallingFinished = false;
+
+    // used to know when game is started
     private boolean isStarted = false;
+
+    // number of lines cleared (score)
     private int numLinesRemoved = 0;
 
     // current position of falling piece
     private int currentX = 0;
     private int currentY = 0;
+
+    // bar to show score/game message
     private JLabel statusbar;
+
+    // curretn tetromino shape
     private Piece currentPiece;
+
+    // game board
     private Tetris[] board;
 
+    /*
+    Default constructor. Sets up game
+     */
     public Board(Game parent) {
         setFocusable(true);
         currentPiece = new Piece();
@@ -42,28 +61,45 @@ public class Board extends JPanel implements ActionListener {
         clearBoard();
     }
 
+    /*
+    Checks when to get new piece
+     */
     public void actionPerformed(ActionEvent e) {
-        if(isFallingFinished) {
+        if (isFallingFinished) {
             isFallingFinished = false;
             newPiece();
-        }
-        else {
+        } else {
             oneLineDown();
         }
     }
 
-    int squareWidth() {
+    /*
+     Gets square width
+     @returns width of square
+     */
+    private int squareWidth() {
         return (int) getSize().getWidth() / BoardWidth;
     }
 
-    int squareHeight() {
+    /*
+     Gets square height
+     @returns height of square
+     */
+    private int squareHeight() {
         return (int) getSize().getWidth() / BoardHeight;
     }
 
-    Tetris shapeAt(int x, int y) {
+    /*
+     Gets piece at coordinate position
+     @returns position of shape
+     */
+    private Tetris shapeAt(int x, int y) {
         return board[(y * BoardWidth) + x];
     }
 
+    /*
+     Resets game and starts a new one
+     */
     public void start() {
         isStarted = true;
         isFallingFinished = false;
@@ -74,6 +110,9 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
     }
 
+    /*
+     Colors game piece
+     */
     public void paint(Graphics g) {
 
         super.paint(g);
@@ -86,7 +125,7 @@ public class Board extends JPanel implements ActionListener {
             for (int j = 0; j < BoardWidth; ++j) {
                 Tetris shape = shapeAt(j, BoardHeight - i - 1);
                 if (shape != Tetris.emptyPiece) {
-                    drawSquare(g, j * squareWidth(),boardTop + i * squareHeight(), shape);
+                    drawSquare(g, j * squareWidth(), boardTop + i * squareHeight(), shape);
                 }
             }
         }
@@ -101,6 +140,9 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    /*
+     Drops piece into lowest position
+     */
     private void dropDown() {
         int newY = currentY;
         while (newY > 0) {
@@ -112,18 +154,27 @@ public class Board extends JPanel implements ActionListener {
         pieceDropped();
     }
 
+    /*
+     Drops piece one line down
+     */
     private void oneLineDown() {
-        if(!tryMove(currentPiece, currentX, currentY - 1)) {
+        if (!tryMove(currentPiece, currentX, currentY - 1)) {
             pieceDropped();
         }
     }
 
+    /*
+     Clears board of all pieces
+     */
     private void clearBoard() {
         for (int i = 0; i < BoardHeight * BoardWidth; ++i) {
             board[i] = Tetris.emptyPiece;
         }
     }
 
+    /*
+     Checks if a line is full
+     */
     private void pieceDropped() {
         for (int i = 0; i < 4; ++i) {
             int x = currentX + currentPiece.x(i);
@@ -138,6 +189,9 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    /*
+     Picks new piece to drop next
+     */
     private void newPiece() {
         currentPiece.pickRandomPiece();
         currentX = BoardWidth / 2 + 1;
@@ -151,6 +205,10 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    /*
+     Checks if space is already occupied
+     @returns boolean
+     */
     private boolean tryMove(Piece newPiece, int newX, int newY) {
         for (int i = 0; i < 4; ++i) {
             int x = newX + newPiece.x(i);
@@ -170,6 +228,9 @@ public class Board extends JPanel implements ActionListener {
         return true;
     }
 
+    /*
+     Removes line if full
+     */
     private void removeFullLines() {
         int numFullLines = 0;
 
@@ -201,6 +262,9 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    /*
+     Fills color for shapes
+     */
     private void drawSquare(Graphics g, int x, int y, Tetris shape) {
         Color colors[] = {
                 new Color(0, 0, 0),
@@ -229,9 +293,12 @@ public class Board extends JPanel implements ActionListener {
                 x + squareWidth() - 1, y + 1);
     }
 
+    /*
+     Checks when keys are hit to make moves
+     */
     class TAdapter extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
-            if(!isStarted || currentPiece.getPiece() == Tetris.emptyPiece) {
+            if (!isStarted || currentPiece.getPiece() == Tetris.emptyPiece) {
                 return;
             }
 
