@@ -15,20 +15,20 @@ import javax.swing.Timer;
 import tetris.Piece.Tetris;
 
 public class Board extends JPanel implements ActionListener {
-    final int BoardWidth = 10;
-    final int BoardHeight = 22;
+    private final int BoardWidth = 10;
+    private final int BoardHeight = 22;
 
-    Timer timer;
-    boolean isFallingFinished = false;
-    boolean isStarted = false;
-    int numLinesRemoved = 0;
+    private Timer timer;
+    private boolean isFallingFinished = false;
+    private boolean isStarted = false;
+    private int numLinesRemoved = 0;
 
     // current position of falling piece
-    int currentX = 0;
-    int currentY = 0;
-    JLabel statusbar;
-    Piece currentPiece;
-    Tetris[] board;
+    private int currentX = 0;
+    private int currentY = 0;
+    private JLabel statusbar;
+    private Piece currentPiece;
+    private Tetris[] board;
 
     public Board(Game parent) {
         setFocusable(true);
@@ -75,6 +75,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public void paint(Graphics g) {
+
         super.paint(g);
 
         Dimension size = getSize();
@@ -146,6 +147,7 @@ public class Board extends JPanel implements ActionListener {
             currentPiece.newPiece(Tetris.emptyPiece);
             timer.stop();
             isStarted = false;
+            statusbar.setText("Game Over");
         }
     }
 
@@ -153,10 +155,12 @@ public class Board extends JPanel implements ActionListener {
         for (int i = 0; i < 4; ++i) {
             int x = newX + newPiece.x(i);
             int y = newY - newPiece.y(i);
-            if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight)
+            if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight) {
                 return false;
-            if (shapeAt(x, y) != Tetris.emptyPiece)
+            }
+            if (shapeAt(x, y) != Tetris.emptyPiece) {
                 return false;
+            }
         }
 
         currentPiece = newPiece;
@@ -190,6 +194,7 @@ public class Board extends JPanel implements ActionListener {
 
         if (numFullLines > 0) {
             numLinesRemoved += numFullLines;
+            statusbar.setText(String.valueOf(numLinesRemoved));
             isFallingFinished = true;
             currentPiece.newPiece(Tetris.emptyPiece);
             repaint();
@@ -199,13 +204,13 @@ public class Board extends JPanel implements ActionListener {
     private void drawSquare(Graphics g, int x, int y, Tetris shape) {
         Color colors[] = {
                 new Color(0, 0, 0),
-                new Color(204, 102, 102),
-                new Color(102, 204, 102),
-                new Color(102, 102, 204),
-                new Color(204, 204, 102),
-                new Color(204, 102, 204),
-                new Color(102, 204, 204),
-                new Color(218, 170, 0)
+                new Color(255, 0, 0),
+                new Color(0, 255, 37),
+                new Color(0, 10, 255),
+                new Color(240, 238, 0),
+                new Color(204, 0, 222),
+                new Color(0, 241, 239),
+                new Color(255, 154, 0)
         };
 
         Color color = colors[shape.ordinal()];

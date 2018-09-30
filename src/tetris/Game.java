@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class Game extends JFrame {
+
+    // bar to show score/game message
     JLabel statusbar;
 
     /*
@@ -13,18 +15,22 @@ public class Game extends JFrame {
      */
     public Game() {
 
-        // create board
+        // create score bar
         statusbar = new JLabel(" 0");
         add(statusbar, BorderLayout.SOUTH);
         Board board = new Board(this);
         add(board);
         board.start();
 
-        setSize(300, 600);
+        // create game window
+        setSize(600, 700);
         setTitle("Tetris");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
+    /*
+    Label at bottom of screen for score
+     */
     public JLabel getStatusBar() {
         return statusbar;
     }
