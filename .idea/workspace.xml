@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ea65d76c-3ae4-41af-9566-8142651da27d" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tetris/Board.java" afterPath="$PROJECT_DIR$/src/tetris/Board.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tetris/Piece.java" afterPath="$PROJECT_DIR$/src/tetris/Piece.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -19,7 +22,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
               <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-              <folding />
+              <folding>
+                <marker date="1538323367000" expanded="true" signature="2733:2739" ph="{}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -47,8 +52,8 @@
       <file leaf-file-name="Piece.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/tetris/Piece.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="659">
-              <caret line="161" column="1" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="161" selection-end-column="1" />
+            <state relative-caret-position="209">
+              <caret line="131" column="37" lean-forward="true" selection-start-line="131" selection-start-column="37" selection-end-line="131" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1805#1806#0" expanded="true" />
@@ -225,12 +230,12 @@
       <option name="presentableId" value="Default" />
       <updated>1538083845662</updated>
       <workItem from="1538083852720" duration="137000" />
-      <workItem from="1538318125906" duration="5090000" />
+      <workItem from="1538318125906" duration="5309000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6983000" />
+    <option name="totallyTimeSpent" value="7202000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="510" y="26" width="1241" height="823" extended-state="0" />
@@ -280,7 +285,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1538323367000" expanded="true" signature="2733:2739" ph="{}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -325,7 +332,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1538323367000" expanded="true" signature="2733:2739" ph="{}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -397,7 +406,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-          <folding />
+          <folding>
+            <marker date="1538323367000" expanded="true" signature="2733:2739" ph="{}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -419,8 +430,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tetris/Piece.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="659">
-          <caret line="161" column="1" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="161" selection-end-column="1" />
+        <state relative-caret-position="209">
+          <caret line="131" column="37" lean-forward="true" selection-start-line="131" selection-start-column="37" selection-end-line="131" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1805#1806#0" expanded="true" />
