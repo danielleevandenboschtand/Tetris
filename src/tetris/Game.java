@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 public class Game extends JFrame {
 
     // bar to show score/game message
-    JLabel statusbar;
+    private JLabel statusbar;
 
     /*
     Default constructor to create game

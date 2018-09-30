@@ -125,7 +125,7 @@ public class Board extends JPanel implements ActionListener {
             for (int j = 0; j < BoardWidth; ++j) {
                 Tetris shape = shapeAt(j, BoardHeight - i - 1);
                 if (shape != Tetris.emptyPiece) {
-                    drawSquare(g, j * squareWidth(), boardTop + i * squareHeight(), shape);
+                    fillShape(g, j * squareWidth(), boardTop + i * squareHeight(), shape);
                 }
             }
         }
@@ -134,8 +134,7 @@ public class Board extends JPanel implements ActionListener {
             for (int i = 0; i < 4; ++i) {
                 int x = currentX + currentPiece.x(i);
                 int y = currentY - currentPiece.y(i);
-                drawSquare(g, x * squareWidth(),
-                        boardTop + (BoardHeight - y - 1) * squareHeight(), currentPiece.getPiece());
+                fillShape(g, x * squareWidth(), boardTop + (BoardHeight - y - 1) * squareHeight(), currentPiece.getPiece());
             }
         }
     }
@@ -265,7 +264,7 @@ public class Board extends JPanel implements ActionListener {
     /*
      Fills color for shapes
      */
-    private void drawSquare(Graphics g, int x, int y, Tetris shape) {
+    private void fillShape(Graphics g, int x, int y, Tetris shape) {
         Color colors[] = {
                 new Color(0, 0, 0),
                 new Color(255, 0, 0),
