@@ -64,10 +64,6 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public void start() {
-        if (ifPaused) {
-            return;
-        }
-
         isStarted = true;
         isFallingFinished = false;
         numLinesRemoved = 0;
