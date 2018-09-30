@@ -153,8 +153,8 @@ public class Piece {
 
         // change coordinates of shape from rotation
         for (int i = 0; i < 4; i++) {
-        rotPiece.changeX(i, y(i));
-        rotPiece.changeY(i, -x(i));
+            rotPiece.changeX(i, y(i));
+            rotPiece.changeY(i, -x(i));
         }
 
         return rotPiece;
