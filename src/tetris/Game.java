@@ -20,7 +20,7 @@ public class Game extends JFrame {
         add(board);
         board.start();
 
-        setSize(200, 400);
+        setSize(300, 600);
         setTitle("Tetris");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
