@@ -17,7 +17,7 @@ public class Piece {
     // array of coordinates of created piece shapes
     private int createCoord[][][];
 
-    // default constructor
+    // default constructor sets pieceCoors with placeholder empty shape
     public Piece() {
         pieceCoord = new int[4][2];
         newPiece(Tetris.emptyPiece);
