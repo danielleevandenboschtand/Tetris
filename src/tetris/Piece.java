@@ -70,7 +70,7 @@ public class Piece {
     Returns tetris piece
     @returns pieces tetris piece object
      */
-    private Tetris getPiece() {
+    public Tetris getPiece() {
         return pieces;
     }
 

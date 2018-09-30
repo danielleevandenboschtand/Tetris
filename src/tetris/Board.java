@@ -27,12 +27,12 @@ public class Board extends JPanel implements ActionListener {
     // current position of falling piece
     int currentX = 0;
     int currentY = 0;
-    Shape currentPiece;
+    Piece currentPiece;
     Tetris[] board;
 
     public Board(Tetris parent) {
         setFocusable(true);
-        currentPiece = new Shape();
+        currentPiece = new Piece();
         timer = new Timer(400, this);
         timer.start();
 
@@ -87,19 +87,19 @@ public class Board extends JPanel implements ActionListener {
         for (int i = 0; i < BoardHeight; i++) {
             for(int j = 0; j < BoardWidth; j++) {
                 Tetris shape = shapeAt(j, BoardHeight - i - 1);
-                if (shape != Tetris.NoShape) {
-                    drawSquare(g, 0 + x * squareWidth(), boardTop + (BoardHeight - y - 1) * squareHeight(), currentPiece.getShape());
+                if (shape != Tetris.emptyPiece) {
+                    drawSquare(g, 0 + x * squareWidth(), boardTop + (BoardHeight - y - 1) * squareHeight(), currentPiece.getPiece());
                 }
             }
         }
 
-        if (currentPiece.getShape() != Tetris.NoShape) {
+        if (currentPiece.getPiece() != Tetris.emptyPiece) {
             for (int i = 0; i < 4; ++i) {
-                int x = curX + curPiece.x(i);
-                int y = curY - curPiece.y(i);
+                int x = currentX + currentPiece.x(i);
+                int y = currentY - currentPiece.y(i);
                 drawSquare(g, 0 + x * squareWidth(),
                         boardTop + (BoardHeight - y - 1) * squareHeight(),
-                        currentPiece.getShape());
+                        currentPiece.getPiece());
             }
         }
     }
@@ -123,7 +123,7 @@ public class Board extends JPanel implements ActionListener {
 
     private void clearBoard() {
         for (int i = 0; i < BoardHeight * BoardWidth; ++i) {
-            board[i] = Tetris.NoShape;
+            board[i] = Tetris.emptyPiece;
         }
     }
 
@@ -131,7 +131,7 @@ public class Board extends JPanel implements ActionListener {
         for (int i = 0; i < 4; ++i) {
             int x = currentX + currentPiece.x(i);
             int y = currentY - currentPiece.y(i);
-            board[(y * BoardWidth) + x] = currentPiece.getShape();
+            board[(y * BoardWidth) + x] = currentPiece.getPiece();
         }
 
         removeFullLines();
@@ -142,24 +142,24 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void newPiece() {
-        currentPiece.setRandomShape();
+        currentPiece.pickRandomPiece();
         currentX = BoardWidth / 2 + 1;
         currentY = BoardHeight - 1 + currentPiece.minY();
 
-        if (!tryMove(curPiece, curX, curY)) {
-            curPiece.setShape(Tetrominoes.NoShape);
+        if (!tryMove(currentPiece, currentX, currentY)) {
+            currentPiece.newPiece(Tetris.emptyPiece);
             timer.stop();
             isStarted = false;
         }
     }
 
-    private boolean tryMove(Shape newPiece, int newX, int newY) {
+    private boolean tryMove(Piece newPiece, int newX, int newY) {
         for (int i = 0; i < 4; ++i) {
             int x = newX + newPiece.x(i);
             int y = newY - newPiece.y(i);
             if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight)
                 return false;
-            if (shapeAt(x, y) != Tetris.NoShape)
+            if (shapeAt(x, y) != Tetris.emptyPiece)
                 return false;
         }
 
@@ -177,7 +177,7 @@ public class Board extends JPanel implements ActionListener {
             boolean lineIsFull = true;
 
             for (int j = 0; j < BoardWidth; ++j) {
-                if (shapeAt(j, i) == Tetris.NoShape) {
+                if (shapeAt(j, i) == Tetris.emptyPiece) {
                     lineIsFull = false;
                     break;
                 }
@@ -195,7 +195,7 @@ public class Board extends JPanel implements ActionListener {
         if (numFullLines > 0) {
             numLinesRemoved += numFullLines;
             isFallingFinished = true;
-            currentPiece.setShape(Tetris.NoShape);
+            currentPiece.newPiece(Tetris.emptyPiece);
             repaint();
         }
     }
