@@ -129,7 +129,7 @@ public class Piece {
         rotPiece.pieces = pieces;
 
         // change coordinates of shape from rotation
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; ++i) {
             rotPiece.changeX(i, -y(i));
             rotPiece.changeY(i, x(i));
         }
@@ -152,7 +152,7 @@ public class Piece {
         rotPiece.pieces = pieces;
 
         // change coordinates of shape from rotation
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; ++i) {
             rotPiece.changeX(i, y(i));
             rotPiece.changeY(i, -x(i));
         }
