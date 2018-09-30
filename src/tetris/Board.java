@@ -21,7 +21,6 @@ public class Board extends JPanel implements ActionListener {
     Timer timer;
     boolean isFallingFinished = false;
     boolean isStarted = false;
-    boolean isPaused = false;
     int numLinesRemoved = 0;
 
     // current position of falling piece
@@ -83,10 +82,10 @@ public class Board extends JPanel implements ActionListener {
         int boardTop = (int) size.getHeight() - BoardHeight * squareHeight();
 
         for (int i = 0; i < BoardHeight; ++i) {
-            for(int j = 0; j < BoardWidth; ++j) {
+            for (int j = 0; j < BoardWidth; ++j) {
                 Tetris shape = shapeAt(j, BoardHeight - i - 1);
                 if (shape != Tetris.emptyPiece) {
-                    drawSquare(g, 0 + j * squareWidth(), boardTop + (BoardHeight - i - 1) * squareHeight(), currentPiece.getPiece());
+                    drawSquare(g, j * squareWidth(),boardTop + i * squareHeight(), shape);
                 }
             }
         }
@@ -95,9 +94,8 @@ public class Board extends JPanel implements ActionListener {
             for (int i = 0; i < 4; ++i) {
                 int x = currentX + currentPiece.x(i);
                 int y = currentY - currentPiece.y(i);
-                drawSquare(g, 0 + x * squareWidth(),
-                        boardTop + (BoardHeight - y - 1) * squareHeight(),
-                        currentPiece.getPiece());
+                drawSquare(g, x * squareWidth(),
+                        boardTop + (BoardHeight - y - 1) * squareHeight(), currentPiece.getPiece());
             }
         }
     }
