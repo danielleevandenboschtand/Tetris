@@ -27,15 +27,17 @@ public class Board extends JPanel implements ActionListener {
     // current position of falling piece
     int currentX = 0;
     int currentY = 0;
+    JLabel statusbar;
     Piece currentPiece;
     Tetris[] board;
 
-    public Board(Tetris parent) {
+    public Board(Game parent) {
         setFocusable(true);
         currentPiece = new Piece();
         timer = new Timer(400, this);
         timer.start();
 
+        statusbar = parent.getStatusBar();
         board = new Tetris[BoardWidth * BoardHeight];
         addKeyListener(new TAdapter());
         clearBoard();
@@ -80,11 +82,11 @@ public class Board extends JPanel implements ActionListener {
 
         int boardTop = (int) size.getHeight() - BoardHeight * squareHeight();
 
-        for (int i = 0; i < BoardHeight; i++) {
-            for(int j = 0; j < BoardWidth; j++) {
+        for (int i = 0; i < BoardHeight; ++i) {
+            for(int j = 0; j < BoardWidth; ++j) {
                 Tetris shape = shapeAt(j, BoardHeight - i - 1);
                 if (shape != Tetris.emptyPiece) {
-                    drawSquare(g, 0 + x * squareWidth(), boardTop + (BoardHeight - y - 1) * squareHeight(), currentPiece.getPiece());
+                    drawSquare(g, 0 + j * squareWidth(), boardTop + (BoardHeight - i - 1) * squareHeight(), currentPiece.getPiece());
                 }
             }
         }
