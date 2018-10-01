@@ -197,7 +197,7 @@ public class Board extends JPanel implements ActionListener {
         currentY = BoardHeight - 1 + currentPiece.minY();
 
         if (!tryMove(currentPiece, currentX, currentY)) {
-            currentPiece.newPiece(Tetris.emptyPiece);
+            currentPiece.setPiece(Tetris.emptyPiece);
             timer.stop();
             isStarted = false;
             statusbar.setText("Game Over");
@@ -256,7 +256,7 @@ public class Board extends JPanel implements ActionListener {
             numLinesRemoved += numFullLines;
             statusbar.setText(String.valueOf(numLinesRemoved));
             isFallingFinished = true;
-            currentPiece.newPiece(Tetris.emptyPiece);
+            currentPiece.setPiece(Tetris.emptyPiece);
             repaint();
         }
     }

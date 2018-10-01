@@ -20,13 +20,13 @@ public class Piece {
     // default constructor sets pieceCoors with placeholder empty shape
     public Piece() {
         pieceCoord = new int[4][2];
-        newPiece(Tetris.emptyPiece);
+        setPiece(Tetris.emptyPiece);
     }
 
     /*
     Creates new tetromino shape
      */
-    public void newPiece(Tetris shape) {
+    public void setPiece(Tetris shape) {
 
         createCoord = new int[][][] {
 
@@ -81,7 +81,7 @@ public class Piece {
         Random rand = new Random();
         int i = Math.abs(rand.nextInt()) % 7 + 1;
         Tetris[] num = Tetris.values();
-        newPiece(num[i]);
+        setPiece(num[i]);
     }
 
     /*
