@@ -57,7 +57,7 @@ public class Piece {
 
         // loop to set coordinates and build shapes
         for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < 2; ++j) {
                 pieceCoord[i][j] = createCoord[shape.ordinal()][i][j];
             }
         }
@@ -161,24 +161,12 @@ public class Piece {
     }
 
     /*
-    Sets where piece starts frop left based on size of piece
-    @returns min minimum left-position
-     */
-    public int minX() {
-        int min = pieceCoord[0][0];
-        for (int i=0; i < 4; i++) {
-            min = Math.min(min, pieceCoord[i][0]);
-        }
-        return min;
-    }
-
-    /*
     Sets where piece starts from top based on size of piece
     @returns min minimum top-position
     */
     public int minY() {
         int min = pieceCoord[0][1];
-        for (int i=0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             min = Math.min(min, pieceCoord[i][1]);
         }
         return min;

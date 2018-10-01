@@ -297,6 +297,7 @@ public class Board extends JPanel implements ActionListener {
      */
     class TAdapter extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
+
             if (!isStarted || currentPiece.getPiece() == Tetris.emptyPiece) {
                 return;
             }
