@@ -1,7 +1,7 @@
 package tetris;
 
-import java.awt.*;
-
+import java.awt.BorderLayout;
+import java.awt.Font;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
