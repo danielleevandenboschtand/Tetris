@@ -186,10 +186,36 @@ public class Board extends JPanel implements ActionListener {
     }
 
     /*
+     Checks if space is already occupied
+     @returns boolean
+     */
+    private boolean move(Piece newPiece, int newX, int newY) {
+
+        // try move
+        for (int i = 0; i < 4; ++i) {
+            int x = newX + newPiece.x(i);
+            int y = newY - newPiece.y(i);
+
+            // check if piece has room to attempt move
+            if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight) {
+                return false;
+            }
+            if (shapeAt(x, y) != Tetris.emptyPiece) {
+                return false;
+            }
+        }
+        curPiece = newPiece;
+        curX = newX;
+        curY = newY;
+        repaint();
+        return true;
+    }
+
+    /*
      Drops piece one line down
      */
     private void oneLineDown() {
-        if (!tryMove(curPiece, curX, curY - 1)) {
+        if (!move(curPiece, curX, curY - 1)) {
             pieceDropped();
         }
     }
@@ -207,7 +233,7 @@ public class Board extends JPanel implements ActionListener {
      Removes line if full
      */
     private void removeFullLines() {
-        int numFullLines = 0;
+        int lines = 0;
 
         for (int i = BoardHeight - 1; i >= 0; --i) {
             boolean lineIsFull = true;
@@ -220,7 +246,7 @@ public class Board extends JPanel implements ActionListener {
             }
 
             if (lineIsFull) {
-                ++numFullLines;
+                ++lines;
                 for (int k = i; k < BoardHeight - 1; ++k) {
                     for (int j = 0; j < BoardWidth; ++j)
                         board[(k * BoardWidth) + j] = shapeAt(j, k + 1);
@@ -228,8 +254,8 @@ public class Board extends JPanel implements ActionListener {
             }
         }
 
-        if (numFullLines > 0) {
-            score += numFullLines;
+        if (lines > 0) {
+            score += lines;
             scorebar.setText(String.valueOf(score * 100));
             atBottom = true;
             curPiece.setPiece(Tetris.emptyPiece);
@@ -246,7 +272,6 @@ public class Board extends JPanel implements ActionListener {
             int y = curY - curPiece.y(i);
             board[(y * BoardWidth) + x] = curPiece.getPiece();
         }
-
         removeFullLines();
 
         if (!atBottom) {
@@ -262,7 +287,7 @@ public class Board extends JPanel implements ActionListener {
         curX = BoardWidth / 2 + 1;
         curY = BoardHeight - 1 + curPiece.minY();
 
-        if (!tryMove(curPiece, curX, curY)) {
+        if (!move(curPiece, curX, curY)) {
             curPiece.setPiece(Tetris.emptyPiece);
             timer.stop();
             isStarted = false;
@@ -276,7 +301,7 @@ public class Board extends JPanel implements ActionListener {
     private void instantDrop() {
         int newY = curY;
         while (newY > 0) {
-            if (!tryMove(curPiece, curX, newY - 1)) {
+            if (!move(curPiece, curX, newY - 1)) {
                 break;
             }
             --newY;
@@ -285,32 +310,11 @@ public class Board extends JPanel implements ActionListener {
     }
 
     /*
-     Checks if space is already occupied
-     @returns boolean
-     */
-    private boolean tryMove(Piece newPiece, int newX, int newY) {
-        for (int i = 0; i < 4; ++i) {
-            int x = newX + newPiece.x(i);
-            int y = newY - newPiece.y(i);
-            if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight) {
-                return false;
-            }
-            if (shapeAt(x, y) != Tetris.emptyPiece) {
-                return false;
-            }
-        }
-
-        curPiece = newPiece;
-        curX = newX;
-        curY = newY;
-        repaint();
-        return true;
-    }
-
-    /*
     Checks when to get new piece
      */
     public void actionPerformed(ActionEvent e) {
+
+        // check if piece is at bottom
         if (atBottom) {
             atBottom = false;
             newPiece();
@@ -329,6 +333,7 @@ public class Board extends JPanel implements ActionListener {
                 return;
             }
 
+            // code for key pressed
             int keycode = e.getKeyCode();
 
             // pause game
@@ -342,26 +347,27 @@ public class Board extends JPanel implements ActionListener {
                 return;
             }
 
+            // controls for moves
             switch (keycode) {
 
                 // move left
                 case KeyEvent.VK_LEFT:
-                    tryMove(curPiece, curX - 1, curY);
+                    move(curPiece, curX - 1, curY);
                     break;
 
                 // move right
                 case KeyEvent.VK_RIGHT:
-                    tryMove(curPiece, curX + 1, curY);
+                    move(curPiece, curX + 1, curY);
                     break;
 
                 // rotate left
                 case KeyEvent.VK_DOWN:
-                    tryMove(curPiece.rotateLeft(), curX, curY);
+                    move(curPiece.rotateLeft(), curX, curY);
                     break;
 
                 // rotate right
                 case KeyEvent.VK_UP:
-                    tryMove(curPiece.rotateRight(), curX, curY);
+                    move(curPiece.rotateRight(), curX, curY);
                     break;
 
                 // instant drop to bottom
