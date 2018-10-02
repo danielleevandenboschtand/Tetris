@@ -43,7 +43,7 @@ public class Board extends JPanel implements ActionListener {
     // bar to show score/game message
     private JLabel statusbar;
 
-    // curretn tetromino shape
+    // current tetromino shape
     private Piece currentPiece;
 
     // game board
