@@ -3,23 +3,26 @@ package tetris;
 import java.util.Random;
 import java.lang.Math;
 
+
 public class Piece {
 
     // tetrominos shapes
-    enum Tetris {emptyPiece, sPiece, zPiece, tPiece, lPiece, linePiece, squarePiece, mlPiece};
+    enum Tetris {emptyPiece, zPiece, sPiece, linePiece, tPiece, squarePiece, lPiece, mlPiece};
 
     // tetrominos shape object
     private Tetris pieces;
 
     // coordinates to make tetromino piece
-    private int pieceCoord[][];
+    private int pieceCoords[][];
 
     // array of coordinates of created piece shapes
-    private int createCoord[][][];
+    private int[][][] createCoord;
 
-    // default constructor sets pieceCoors with placeholder empty shape
+    /*
+    Default constructor sets pieceCoords with placeholder empty shape
+     */
     public Piece() {
-        pieceCoord = new int[4][2];
+        pieceCoords = new int[4][2];
         setPiece(Tetris.emptyPiece);
     }
 
@@ -33,42 +36,43 @@ public class Piece {
                 // empty shape
                 { {0, 0}, {0, 0}, {0, 0}, {0, 0} },
 
-                // S shape
-                { {0, -1}, {0, 0}, {1, 0}, {1, 1} },
-
                 // Z shape
                 { {0, -1}, {0, 0}, {-1, 0}, {-1, 1} },
 
-                // T shape
-                { {-1, 0}, {0, 0}, {1, 0}, {0, 1} },
-
-                // L shape
-                { {-1, -1}, {0, -1}, {0, 0}, {0, 1} },
+                // S shape
+                { {0, -1}, {0, 0}, {1, 0}, {1, 1} },
 
                 // Line shape
                 { {0, -1}, {0, 0}, {0, 1}, {0, 2} },
 
+                // T shape
+                { {-1, 0}, {0, 0}, {1, 0}, {0, 1} },
+
                 // Square shape
                 { {0, 0}, {1, 0}, {0, 1}, {1, 1} },
+
+                // L shape
+                { {-1, -1}, {0, -1}, {0, 0}, {0, 1} },
 
                 // Mirrored L shape
                 { {1, -1}, {0, -1}, {0, 0}, {0, 1} }
         };
 
         // loop to set coordinates and build shapes
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4 ; i++) {
             for (int j = 0; j < 2; ++j) {
-                pieceCoord[i][j] = createCoord[shape.ordinal()][i][j];
+                pieceCoords[i][j] = createCoord[shape.ordinal()][i][j];
             }
         }
 
         // set piece
         pieces = shape;
+
     }
 
     /*
     Returns tetris piece
-    @returns pieces tetris piece object
+    @returns Tetris piece object
      */
     public Tetris getPiece() {
         return pieces;
@@ -79,44 +83,44 @@ public class Piece {
      */
     public void pickRandomPiece() {
         Random rand = new Random();
-        int i = Math.abs(rand.nextInt()) % 7 + 1;
+        int x = Math.abs(rand.nextInt()) % 7 + 1;
         Tetris[] num = Tetris.values();
-        setPiece(num[i]);
+        setPiece(num[x]);
     }
 
     /*
     Used to adjust x coordinates when piece is rotated
      */
     private void changeX(int i, int x) {
-        pieceCoord[i][0] = x;
+        pieceCoords[i][0] = x;
     }
 
     /*
     Used to adjust y coordinates when piece is rotated
      */
     private void changeY(int i, int y) {
-        pieceCoord[i][0] = y;
+        pieceCoords[i][1] = y;
     }
 
     /*
     Used to adjust x coordinates when piece is rotated
-    @returns pieceCoord the new x coordinates
+    @returns int pieceCoords the new x coordinates
      */
     public int x(int i) {
-        return pieceCoord[i][0];
+        return pieceCoords[i][0];
     }
 
     /*
     Used to adjust y coordinates when piece is rotated
-    @returns pieceCoord the new x coordinates
+    @returns int pieceCoords the new y coordinates
      */
     public int y(int i) {
-        return pieceCoord[i][1];
+        return pieceCoords[i][1];
     }
 
     /*
-    Rotates tetromino to the right
-    @returns rotPiece the new piece coordinates
+    Rotates the tetromino to the right
+    @returns Tetris rotPiece the new piece coordinates
      */
     public Piece rotateRight() {
 
@@ -133,13 +137,12 @@ public class Piece {
             rotPiece.changeX(i, -y(i));
             rotPiece.changeY(i, x(i));
         }
-
         return rotPiece;
     }
 
     /*
-    Rotates tetromino to the left
-    @returns rotPiece the new piece coordinates
+    Rotates the tetromino to the left
+    @returns Tetris rotPiece the new piece coordinates
      */
     public Piece rotateLeft() {
 
@@ -156,18 +159,18 @@ public class Piece {
             rotPiece.changeX(i, y(i));
             rotPiece.changeY(i, -x(i));
         }
-
         return rotPiece;
     }
 
     /*
-    Sets where piece starts from top based on size of piece
-    @returns min minimum top-position
-    */
-    public int minY() {
-        int min = pieceCoord[0][1];
+    Sets where the piece starts from the top based on the size of the piece
+    @returns int min the minimum top-position
+     */
+    public int minY()
+    {
+        int min = pieceCoords[0][1];
         for (int i = 0; i < 4; i++) {
-            min = Math.min(min, pieceCoord[i][1]);
+            min = Math.min(min, pieceCoords[i][1]);
         }
         return min;
     }
