@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 public class Game extends JFrame {
 
     // bar to show score/game message
-    private JLabel statusbar;
+    private JLabel scorebar;
 
     /*
     Default constructor to create game
@@ -16,10 +16,10 @@ public class Game extends JFrame {
     public Game() {
 
         // create score bar
-        statusbar = new JLabel("Score");
-        add(statusbar, BorderLayout.NORTH);
-        statusbar.setHorizontalAlignment(JLabel.CENTER);
-        statusbar.setFont(new Font("Arial Black", Font.PLAIN, 20));
+        scorebar = new JLabel("Score");
+        add(scorebar, BorderLayout.NORTH);
+        scorebar.setHorizontalAlignment(JLabel.CENTER);
+        scorebar.setFont(new Font("Arial Black", Font.PLAIN, 20));
         Board board = new Board(this);
         add(board);
         board.start();
@@ -34,7 +34,7 @@ public class Game extends JFrame {
     Label at bottom of screen for score
      */
     public JLabel getStatusBar() {
-        return statusbar;
+        return scorebar;
     }
 
     /*

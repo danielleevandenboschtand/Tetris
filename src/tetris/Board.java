@@ -25,7 +25,7 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
 
     // used to know when to get next piece
-    private boolean isFallingFinished = false;
+    private boolean atBottom = false;
 
     // used to know when game is started
     private boolean isStarted = false;
@@ -33,18 +33,18 @@ public class Board extends JPanel implements ActionListener {
     // used to know if game is paused
     private boolean isPaused = false;
 
-    // number of lines cleared (score)
-    private int numLinesRemoved = 0;
+    // number of lines cleared
+    private int score = 0;
 
     // current position of falling piece
-    private int currentX = 0;
-    private int currentY = 0;
+    private int curX = 0;
+    private int curY = 0;
 
     // bar to show score/game message
-    private JLabel statusbar;
+    private JLabel scorebar;
 
     // current tetromino shape
-    private Piece currentPiece;
+    private Piece curPiece;
 
     // game board
     private Tetris[] board;
@@ -54,31 +54,19 @@ public class Board extends JPanel implements ActionListener {
      */
     public Board(Game parent) {
         setFocusable(true);
-        currentPiece = new Piece();
+        curPiece = new Piece();
         timer = new Timer(400, this);
         timer.start();
 
-        statusbar = parent.getStatusBar();
+        scorebar = parent.getStatusBar();
         board = new Tetris[BoardWidth * BoardHeight];
         addKeyListener(new TAdapter());
         clearBoard();
     }
 
     /*
-    Checks when to get new piece
-     */
-    public void actionPerformed(ActionEvent e) {
-        if (isFallingFinished) {
-            isFallingFinished = false;
-            newPiece();
-        } else {
-            oneLineDown();
-        }
-    }
-
-    /*
      Gets square width
-     @returns width of square
+     @returns int width of square
      */
     private int squareWidth() {
         return (int) getSize().getWidth() / BoardWidth;
@@ -86,7 +74,7 @@ public class Board extends JPanel implements ActionListener {
 
     /*
      Gets square height
-     @returns height of square
+     @returns int height of square
      */
     private int squareHeight() {
         return (int) getSize().getWidth() / BoardHeight;
@@ -111,8 +99,8 @@ public class Board extends JPanel implements ActionListener {
         }
 
         isStarted = true;
-        isFallingFinished = false;
-        numLinesRemoved = 0;
+        atBottom = false;
+        score = 0;
         clearBoard();
 
         newPiece();
@@ -131,12 +119,41 @@ public class Board extends JPanel implements ActionListener {
         isPaused = !isPaused;
         if (isPaused) {
             timer.stop();
-            statusbar.setText("Paused");
+            scorebar.setText("Paused");
         } else {
             timer.start();
-            statusbar.setText(String.valueOf(numLinesRemoved * 100));
+            scorebar.setText(String.valueOf(score * 100));
         }
         repaint();
+    }
+
+    /*
+     Fills color for pieces
+     */
+    private void fillShape(Graphics g, int x, int y, Tetris piece) {
+        Color colors[] = {
+                new Color(0, 0, 0),
+                new Color(255, 0, 0),
+                new Color(0, 255, 37),
+                new Color(0, 10, 255),
+                new Color(240, 238, 0),
+                new Color(204, 0, 222),
+                new Color(0, 241, 239),
+                new Color(255, 154, 0)
+        };
+
+        Color color = colors[piece.ordinal()];
+
+        g.setColor(color);
+        g.fillRect(x + 1, y + 1, squareWidth() - 2, squareHeight() - 2);
+
+        g.setColor(color.brighter());
+        g.drawLine(x, y + squareHeight() - 1, x, y);
+        g.drawLine(x, y, x + squareWidth() - 1, y);
+
+        g.setColor(color.darker());
+        g.drawLine(x + 1, y + squareHeight() - 1, x + squareWidth() - 1, y + squareHeight() - 1);
+        g.drawLine(x + squareWidth() - 1, y + squareHeight() - 1, x + squareWidth() - 1, y + 1);
     }
 
     /*
@@ -159,34 +176,20 @@ public class Board extends JPanel implements ActionListener {
             }
         }
 
-        if (currentPiece.getPiece() != Tetris.emptyPiece) {
+        if (curPiece.getPiece() != Tetris.emptyPiece) {
             for (int i = 0; i < 4; ++i) {
-                int x = currentX + currentPiece.x(i);
-                int y = currentY - currentPiece.y(i);
-                fillShape(g, x * squareWidth(), boardTop + (BoardHeight - y - 1) * squareHeight(), currentPiece.getPiece());
+                int x = curX + curPiece.x(i);
+                int y = curY - curPiece.y(i);
+                fillShape(g, x * squareWidth(), boardTop + (BoardHeight - y - 1) * squareHeight(), curPiece.getPiece());
             }
         }
-    }
-
-    /*
-     Drops piece into lowest position
-     */
-    private void dropDown() {
-        int newY = currentY;
-        while (newY > 0) {
-            if (!tryMove(currentPiece, currentX, newY - 1)) {
-                break;
-            }
-            --newY;
-        }
-        pieceDropped();
     }
 
     /*
      Drops piece one line down
      */
     private void oneLineDown() {
-        if (!tryMove(currentPiece, currentX, currentY - 1)) {
+        if (!tryMove(curPiece, curX, curY - 1)) {
             pieceDropped();
         }
     }
@@ -198,62 +201,6 @@ public class Board extends JPanel implements ActionListener {
         for (int i = 0; i < BoardHeight * BoardWidth; ++i) {
             board[i] = Tetris.emptyPiece;
         }
-    }
-
-    /*
-     Checks if a line is full
-     */
-    private void pieceDropped() {
-        for (int i = 0; i < 4; ++i) {
-            int x = currentX + currentPiece.x(i);
-            int y = currentY - currentPiece.y(i);
-            board[(y * BoardWidth) + x] = currentPiece.getPiece();
-        }
-
-        removeFullLines();
-
-        if (!isFallingFinished) {
-            newPiece();
-        }
-    }
-
-    /*
-     Picks new piece to drop next
-     */
-    private void newPiece() {
-        currentPiece.pickRandomPiece();
-        currentX = BoardWidth / 2 + 1;
-        currentY = BoardHeight - 1 + currentPiece.minY();
-
-        if (!tryMove(currentPiece, currentX, currentY)) {
-            currentPiece.setPiece(Tetris.emptyPiece);
-            timer.stop();
-            isStarted = false;
-            statusbar.setText("Game Over");
-        }
-    }
-
-    /*
-     Checks if space is already occupied
-     @returns boolean
-     */
-    private boolean tryMove(Piece newPiece, int newX, int newY) {
-        for (int i = 0; i < 4; ++i) {
-            int x = newX + newPiece.x(i);
-            int y = newY - newPiece.y(i);
-            if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight) {
-                return false;
-            }
-            if (shapeAt(x, y) != Tetris.emptyPiece) {
-                return false;
-            }
-        }
-
-        currentPiece = newPiece;
-        currentX = newX;
-        currentY = newY;
-        repaint();
-        return true;
     }
 
     /*
@@ -282,43 +229,94 @@ public class Board extends JPanel implements ActionListener {
         }
 
         if (numFullLines > 0) {
-            numLinesRemoved += numFullLines;
-            statusbar.setText(String.valueOf(numLinesRemoved * 100));
-            isFallingFinished = true;
-            currentPiece.setPiece(Tetris.emptyPiece);
+            score += numFullLines;
+            scorebar.setText(String.valueOf(score * 100));
+            atBottom = true;
+            curPiece.setPiece(Tetris.emptyPiece);
             repaint();
         }
     }
 
     /*
-     Fills color for shapes
+     Checks if a line is full
      */
-    private void fillShape(Graphics g, int x, int y, Tetris shape) {
-        Color colors[] = {
-                new Color(0, 0, 0),
-                new Color(255, 0, 0),
-                new Color(0, 255, 37),
-                new Color(0, 10, 255),
-                new Color(240, 238, 0),
-                new Color(204, 0, 222),
-                new Color(0, 241, 239),
-                new Color(255, 154, 0)
-        };
+    private void pieceDropped() {
+        for (int i = 0; i < 4; ++i) {
+            int x = curX + curPiece.x(i);
+            int y = curY - curPiece.y(i);
+            board[(y * BoardWidth) + x] = curPiece.getPiece();
+        }
 
-        Color color = colors[shape.ordinal()];
+        removeFullLines();
 
-        g.setColor(color);
-        g.fillRect(x + 1, y + 1, squareWidth() - 2, squareHeight() - 2);
+        if (!atBottom) {
+            newPiece();
+        }
+    }
 
-        g.setColor(color.brighter());
-        g.drawLine(x, y + squareHeight() - 1, x, y);
-        g.drawLine(x, y, x + squareWidth() - 1, y);
+    /*
+     Picks new piece to drop next
+     */
+    private void newPiece() {
+        curPiece.pickRandomPiece();
+        curX = BoardWidth / 2 + 1;
+        curY = BoardHeight - 1 + curPiece.minY();
 
-        g.setColor(color.darker());
-        g.drawLine(x + 1, y + squareHeight() - 1,
-                x + squareWidth() - 1, y + squareHeight() - 1);
-        g.drawLine(x + squareWidth() - 1, y + squareHeight() - 1,
-                x + squareWidth() - 1, y + 1);
+        if (!tryMove(curPiece, curX, curY)) {
+            curPiece.setPiece(Tetris.emptyPiece);
+            timer.stop();
+            isStarted = false;
+            scorebar.setText("Game Over");
+        }
+    }
+
+    /*
+     Drops piece into lowest position
+     */
+    private void instantDrop() {
+        int newY = curY;
+        while (newY > 0) {
+            if (!tryMove(curPiece, curX, newY - 1)) {
+                break;
+            }
+            --newY;
+        }
+        pieceDropped();
+    }
+
+    /*
+     Checks if space is already occupied
+     @returns boolean
+     */
+    private boolean tryMove(Piece newPiece, int newX, int newY) {
+        for (int i = 0; i < 4; ++i) {
+            int x = newX + newPiece.x(i);
+            int y = newY - newPiece.y(i);
+            if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight) {
+                return false;
+            }
+            if (shapeAt(x, y) != Tetris.emptyPiece) {
+                return false;
+            }
+        }
+
+        curPiece = newPiece;
+        curX = newX;
+        curY = newY;
+        repaint();
+        return true;
+    }
+
+    /*
+    Checks when to get new piece
+     */
+    public void actionPerformed(ActionEvent e) {
+        if (atBottom) {
+            atBottom = false;
+            newPiece();
+        } else {
+            oneLineDown();
+        }
     }
 
     /*
@@ -327,7 +325,7 @@ public class Board extends JPanel implements ActionListener {
     class TAdapter extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
 
-            if (!isStarted || currentPiece.getPiece() == Tetris.emptyPiece) {
+            if (!isStarted || curPiece.getPiece() == Tetris.emptyPiece) {
                 return;
             }
 
@@ -348,27 +346,27 @@ public class Board extends JPanel implements ActionListener {
 
                 // move left
                 case KeyEvent.VK_LEFT:
-                    tryMove(currentPiece, currentX - 1, currentY);
+                    tryMove(curPiece, curX - 1, curY);
                     break;
 
                 // move right
                 case KeyEvent.VK_RIGHT:
-                    tryMove(currentPiece, currentX + 1, currentY);
+                    tryMove(curPiece, curX + 1, curY);
                     break;
 
                 // rotate left
-                case KeyEvent.VK_UP:
-                    tryMove(currentPiece.rotateLeft(), currentX, currentY);
+                case KeyEvent.VK_DOWN:
+                    tryMove(curPiece.rotateLeft(), curX, curY);
                     break;
 
                 // rotate right
-                case KeyEvent.VK_DOWN:
-                    tryMove(currentPiece.rotateRight(), currentX, currentY);
+                case KeyEvent.VK_UP:
+                    tryMove(curPiece.rotateRight(), curX, curY);
                     break;
 
                 // instant drop to bottom
                 case KeyEvent.VK_SPACE:
-                    dropDown();
+                    instantDrop();
                     break;
 
                 // speed up drop
