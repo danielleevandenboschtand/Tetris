@@ -1,6 +1,6 @@
 package tetris;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,12 +19,13 @@ public class Game extends JFrame {
         statusbar = new JLabel("Score");
         add(statusbar, BorderLayout.NORTH);
         statusbar.setHorizontalAlignment(JLabel.CENTER);
+        statusbar.setFont(new Font("Arial Black", Font.PLAIN, 20));
         Board board = new Board(this);
         add(board);
         board.start();
 
         // create game window
-        setSize(500, 515);
+        setSize(500, 550);
         setTitle("Tetris");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
