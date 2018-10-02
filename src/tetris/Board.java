@@ -30,6 +30,9 @@ public class Board extends JPanel implements ActionListener {
     // used to know when game is started
     private boolean isStarted = false;
 
+    // used to know if game is paused
+    private boolean isPaused = false;
+
     // number of lines cleared (score)
     private int numLinesRemoved = 0;
 
@@ -101,6 +104,12 @@ public class Board extends JPanel implements ActionListener {
      Resets game and starts a new one
      */
     public void start() {
+
+        // check if game is paused
+        if (isPaused) {
+            return;
+        }
+
         isStarted = true;
         isFallingFinished = false;
         numLinesRemoved = 0;
@@ -108,6 +117,26 @@ public class Board extends JPanel implements ActionListener {
 
         newPiece();
         timer.start();
+    }
+
+    /*
+     Pauses the game
+     */
+    private void pause() {
+
+        // check if game is already paused
+        if (!isStarted)
+            return;
+
+        isPaused = !isPaused;
+        if (isPaused) {
+            timer.stop();
+            statusbar.setText("Paused");
+        } else {
+            timer.start();
+            statusbar.setText(String.valueOf(numLinesRemoved * 100));
+        }
+        repaint();
     }
 
     /*
@@ -304,22 +333,45 @@ public class Board extends JPanel implements ActionListener {
 
             int keycode = e.getKeyCode();
 
+            // pause game
+            if (keycode == 'p' || keycode == 'P') {
+                pause();
+                return;
+            }
+
+            // can't do moves of game is paused
+            if (isPaused) {
+                return;
+            }
+
             switch (keycode) {
+
+                // move left
                 case KeyEvent.VK_LEFT:
                     tryMove(currentPiece, currentX - 1, currentY);
                     break;
+
+                // move right
                 case KeyEvent.VK_RIGHT:
                     tryMove(currentPiece, currentX + 1, currentY);
                     break;
+
+                // rotate left
                 case KeyEvent.VK_UP:
                     tryMove(currentPiece.rotateLeft(), currentX, currentY);
                     break;
+
+                // rotate right
                 case KeyEvent.VK_DOWN:
                     tryMove(currentPiece.rotateRight(), currentX, currentY);
                     break;
+
+                // instant drop to bottom
                 case KeyEvent.VK_SPACE:
                     dropDown();
                     break;
+
+                // speed up drop
                 case KeyEvent.VK_SHIFT:
                     oneLineDown();
                     break;
