@@ -254,7 +254,7 @@ public class Board extends JPanel implements ActionListener {
 
         if (numFullLines > 0) {
             numLinesRemoved += numFullLines;
-            statusbar.setText(String.valueOf(numLinesRemoved));
+            statusbar.setText(String.valueOf(numLinesRemoved * 100));
             isFallingFinished = true;
             currentPiece.setPiece(Tetris.emptyPiece);
             repaint();
@@ -311,19 +311,13 @@ public class Board extends JPanel implements ActionListener {
                 case KeyEvent.VK_RIGHT:
                     tryMove(currentPiece, currentX + 1, currentY);
                     break;
-                case KeyEvent.VK_DOWN:
-                    tryMove(currentPiece.rotateRight(), currentX, currentY);
-                    break;
                 case KeyEvent.VK_UP:
                     tryMove(currentPiece.rotateLeft(), currentX, currentY);
                     break;
                 case KeyEvent.VK_SPACE:
                     dropDown();
                     break;
-                case 'd':
-                    oneLineDown();
-                    break;
-                case 'D':
+                case KeyEvent.VK_DOWN:
                     oneLineDown();
                     break;
             }

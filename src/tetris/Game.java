@@ -16,8 +16,9 @@ public class Game extends JFrame {
     public Game() {
 
         // create score bar
-        statusbar = new JLabel(" 0");
+        statusbar = new JLabel("Score");
         add(statusbar, BorderLayout.NORTH);
+        statusbar.setHorizontalAlignment(JLabel.CENTER);
         Board board = new Board(this);
         add(board);
         board.start();
