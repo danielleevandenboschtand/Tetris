@@ -291,7 +291,7 @@ public class Board extends JPanel implements ActionListener {
             curPiece.setPiece(Tetris.emptyPiece);
             timer.stop();
             isStarted = false;
-            scorebar.setText("Game Over");
+            scorebar.setText("Game Over! Score: " + String.valueOf(score * 100));
         }
     }
 
