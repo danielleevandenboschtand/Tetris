@@ -122,7 +122,7 @@ public class Board extends JPanel implements ActionListener {
             scorebar.setText("Paused");
         } else {
             timer.start();
-            scorebar.setText(String.valueOf(score * 100));
+            scorebar.setText("Score: " + String.valueOf(score * 100));
         }
         repaint();
     }
@@ -256,7 +256,7 @@ public class Board extends JPanel implements ActionListener {
 
         if (lines > 0) {
             score += lines;
-            scorebar.setText(String.valueOf(score * 100));
+            scorebar.setText("Score: " + String.valueOf(score * 100));
             atBottom = true;
             curPiece.setPiece(Tetris.emptyPiece);
             repaint();

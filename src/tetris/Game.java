@@ -16,7 +16,7 @@ public class Game extends JFrame {
     public Game() {
 
         // create score bar
-        scorebar = new JLabel("Score");
+        scorebar = new JLabel("Score: 0");
         add(scorebar, BorderLayout.NORTH);
         scorebar.setHorizontalAlignment(JLabel.CENTER);
         scorebar.setFont(new Font("Arial Black", Font.PLAIN, 20));
