@@ -105,7 +105,7 @@ public class Piece {
     Used to adjust x coordinates when piece is rotated
     @returns int pieceCoords the new x coordinates
      */
-    public int x(int i) {
+    public int adjustX(int i) {
         return pieceCoords[i][0];
     }
 
@@ -113,7 +113,7 @@ public class Piece {
     Used to adjust y coordinates when piece is rotated
     @returns int pieceCoords the new y coordinates
      */
-    public int y(int i) {
+    public int adjustY(int i) {
         return pieceCoords[i][1];
     }
 
@@ -133,8 +133,8 @@ public class Piece {
 
         // change coordinates of shape from rotation
         for (int i = 0; i < 4; ++i) {
-            rotPiece.changeX(i, -y(i));
-            rotPiece.changeY(i, x(i));
+            rotPiece.changeX(i, -adjustY(i));
+            rotPiece.changeY(i, adjustX(i));
         }
         return rotPiece;
     }
@@ -155,8 +155,8 @@ public class Piece {
 
         // change coordinates of shape from rotation
         for (int i = 0; i < 4; ++i) {
-            rotPiece.changeX(i, y(i));
-            rotPiece.changeY(i, -x(i));
+            rotPiece.changeX(i, adjustY(i));
+            rotPiece.changeY(i, -adjustX(i));
         }
         return rotPiece;
     }

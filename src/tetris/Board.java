@@ -178,8 +178,8 @@ public class Board extends JPanel implements ActionListener {
 
         if (curPiece.getPiece() != Tetris.emptyPiece) {
             for (int i = 0; i < 4; ++i) {
-                int x = curX + curPiece.x(i);
-                int y = curY - curPiece.y(i);
+                int x = curX + curPiece.adjustX(i);
+                int y = curY - curPiece.adjustY(i);
                 fillPiece(g, x * sqWidth(), boardTop + (bHeight - y - 1) * sqHeight(), curPiece.getPiece());
             }
         }
@@ -193,8 +193,8 @@ public class Board extends JPanel implements ActionListener {
 
         // try move
         for (int i = 0; i < 4; ++i) {
-            int x = newX + newPiece.x(i);
-            int y = newY - newPiece.y(i);
+            int x = newX + newPiece.adjustX(i);
+            int y = newY - newPiece.adjustY(i);
 
             // check if piece has room to attempt move
             if (x < 0 || x >= bWidth || y < 0 || y >= bHeight) {
@@ -271,8 +271,8 @@ public class Board extends JPanel implements ActionListener {
      */
     private void pieceDropped() {
         for (int i = 0; i < 4; ++i) {
-            int x = curX + curPiece.x(i);
-            int y = curY - curPiece.y(i);
+            int x = curX + curPiece.adjustX(i);
+            int y = curY - curPiece.adjustY(i);
             board[(y * bWidth) + x] = curPiece.getPiece();
         }
         removeFullLines();
