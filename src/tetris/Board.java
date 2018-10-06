@@ -61,7 +61,7 @@ public class Board extends JPanel implements ActionListener {
         scorebar = parent.getStatusBar();
         board = new Tetris[bWidth * bHeight];
         addKeyListener(new TAdapter());
-        clearBoard();
+        clear();
     }
 
     /*
@@ -101,7 +101,7 @@ public class Board extends JPanel implements ActionListener {
         started = true;
         atBottom = false;
         score = 0;
-        clearBoard();
+        clear();
 
         newPiece();
         timer.start();
@@ -130,7 +130,7 @@ public class Board extends JPanel implements ActionListener {
     /*
      Fills color for pieces
      */
-    private void fillShape(Graphics graphics, int x, int y, Tetris piece) {
+    private void fillPiece(Graphics graphics, int x, int y, Tetris piece) {
         Color colors[] = {
                 new Color(0, 0, 0),
                 new Color(255, 0, 0),
@@ -171,7 +171,7 @@ public class Board extends JPanel implements ActionListener {
             for (int j = 0; j < bWidth; ++j) {
                 Tetris shape = pieceAt(j, bHeight - i - 1);
                 if (shape != Tetris.emptyPiece) {
-                    fillShape(g, j * sqWidth(), boardTop + i * sqHeight(), shape);
+                    fillPiece(g, j * sqWidth(), boardTop + i * sqHeight(), shape);
                 }
             }
         }
@@ -180,7 +180,7 @@ public class Board extends JPanel implements ActionListener {
             for (int i = 0; i < 4; ++i) {
                 int x = curX + curPiece.x(i);
                 int y = curY - curPiece.y(i);
-                fillShape(g, x * sqWidth(), boardTop + (bHeight - y - 1) * sqHeight(), curPiece.getPiece());
+                fillPiece(g, x * sqWidth(), boardTop + (bHeight - y - 1) * sqHeight(), curPiece.getPiece());
             }
         }
     }
@@ -216,7 +216,7 @@ public class Board extends JPanel implements ActionListener {
     /*
      Drops piece one line down
      */
-    private void oneLineDown() {
+    private void moveOneLineDown() {
         if (!move(curPiece, curX, curY - 1)) {
             pieceDropped();
         }
@@ -225,7 +225,7 @@ public class Board extends JPanel implements ActionListener {
     /*
      Clears board of all pieces
      */
-    private void clearBoard() {
+    private void clear() {
         for (int i = 0; i < bHeight * bWidth; ++i) {
             board[i] = Tetris.emptyPiece;
         }
@@ -277,6 +277,7 @@ public class Board extends JPanel implements ActionListener {
         }
         removeFullLines();
 
+        // check if piece is at the bottom
         if (!atBottom) {
             newPiece();
         }
@@ -327,7 +328,7 @@ public class Board extends JPanel implements ActionListener {
             atBottom = false;
             newPiece();
         } else {
-            oneLineDown();
+            moveOneLineDown();
         }
     }
 
@@ -385,7 +386,7 @@ public class Board extends JPanel implements ActionListener {
 
                 // speed up drop
                 case KeyEvent.VK_SHIFT:
-                    oneLineDown();
+                    moveOneLineDown();
                     break;
             }
         }
