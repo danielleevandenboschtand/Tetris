@@ -62,7 +62,9 @@ public class Game extends JFrame implements ActionListener{
         f.add(p);
     }
 
-    // frame for menu screen
+    /*
+    Frame for menu screen
+      */
     public void frame() {
 
         JFrame f = new JFrame();
