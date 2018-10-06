@@ -16,10 +16,10 @@ import tetris.Piece.Tetris;
 public class Board extends JPanel implements ActionListener {
 
     // width of game board
-    private final int BoardWidth = 10;
+    private final int bWidth = 10;
 
     // height of game board
-    private final int BoardHeight = 22;
+    private final int bHeight = 22;
 
     // timer used to regulate drop speeds
     private Timer timer;
@@ -28,10 +28,10 @@ public class Board extends JPanel implements ActionListener {
     private boolean atBottom = false;
 
     // used to know when game is started
-    private boolean isStarted = false;
+    private boolean started = false;
 
     // used to know if game is paused
-    private boolean isPaused = false;
+    private boolean paused = false;
 
     // number of lines cleared
     private int score = 0;
@@ -59,7 +59,7 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
 
         scorebar = parent.getStatusBar();
-        board = new Tetris[BoardWidth * BoardHeight];
+        board = new Tetris[bWidth * bHeight];
         addKeyListener(new TAdapter());
         clearBoard();
     }
@@ -68,24 +68,24 @@ public class Board extends JPanel implements ActionListener {
      Gets square width
      @returns int width of square
      */
-    private int squareWidth() {
-        return (int) getSize().getWidth() / BoardWidth;
+    private int sqWidth() {
+        return (int) getSize().getWidth() / bWidth;
     }
 
     /*
      Gets square height
      @returns int height of square
      */
-    private int squareHeight() {
-        return (int) getSize().getWidth() / BoardHeight;
+    private int sqHeight() {
+        return (int) getSize().getWidth() / bHeight;
     }
 
     /*
      Gets piece at coordinate position
      @returns position of shape
      */
-    private Tetris shapeAt(int x, int y) {
-        return board[(y * BoardWidth) + x];
+    private Tetris pieceAt(int x, int y) {
+        return board[(y * bWidth) + x];
     }
 
     /*
@@ -94,11 +94,11 @@ public class Board extends JPanel implements ActionListener {
     public void start() {
 
         // check if game is paused
-        if (isPaused) {
+        if (paused) {
             return;
         }
 
-        isStarted = true;
+        started = true;
         atBottom = false;
         score = 0;
         clearBoard();
@@ -113,11 +113,11 @@ public class Board extends JPanel implements ActionListener {
     private void pause() {
 
         // check if game is already paused
-        if (!isStarted)
+        if (!started)
             return;
 
-        isPaused = !isPaused;
-        if (isPaused) {
+        paused = !paused;
+        if (paused) {
             timer.stop();
             scorebar.setText("Paused");
         } else {
@@ -130,7 +130,7 @@ public class Board extends JPanel implements ActionListener {
     /*
      Fills color for pieces
      */
-    private void fillShape(Graphics g, int x, int y, Tetris piece) {
+    private void fillShape(Graphics graphics, int x, int y, Tetris piece) {
         Color colors[] = {
                 new Color(0, 0, 0),
                 new Color(255, 0, 0),
@@ -142,18 +142,18 @@ public class Board extends JPanel implements ActionListener {
                 new Color(255, 154, 0)
         };
 
-        Color color = colors[piece.ordinal()];
+        // set of colors
+        Color c = colors[piece.ordinal()];
 
-        g.setColor(color);
-        g.fillRect(x + 1, y + 1, squareWidth() - 2, squareHeight() - 2);
-
-        g.setColor(color.brighter());
-        g.drawLine(x, y + squareHeight() - 1, x, y);
-        g.drawLine(x, y, x + squareWidth() - 1, y);
-
-        g.setColor(color.darker());
-        g.drawLine(x + 1, y + squareHeight() - 1, x + squareWidth() - 1, y + squareHeight() - 1);
-        g.drawLine(x + squareWidth() - 1, y + squareHeight() - 1, x + squareWidth() - 1, y + 1);
+        // logic to fill shapes with colors
+        graphics.setColor(c);
+        graphics.fillRect(x + 1, y + 1, sqWidth() - 2, sqHeight() - 2);
+        graphics.setColor(c.brighter());
+        graphics.drawLine(x, y + sqHeight() - 1, x, y);
+        graphics.drawLine(x, y, x + sqWidth() - 1, y);
+        graphics.setColor(c.darker());
+        graphics.drawLine(x + 1, y + sqHeight() - 1, x + sqWidth() - 1, y + sqHeight() - 1);
+        graphics.drawLine(x + sqWidth() - 1, y + sqHeight() - 1, x + sqWidth() - 1, y + 1);
     }
 
     /*
@@ -163,15 +163,15 @@ public class Board extends JPanel implements ActionListener {
 
         super.paint(g);
 
-        Dimension size = getSize();
+        Dimension s = getSize();
 
-        int boardTop = (int) size.getHeight() - BoardHeight * squareHeight();
+        int boardTop = (int) s.getHeight() - bHeight * sqHeight();
 
-        for (int i = 0; i < BoardHeight; ++i) {
-            for (int j = 0; j < BoardWidth; ++j) {
-                Tetris shape = shapeAt(j, BoardHeight - i - 1);
+        for (int i = 0; i < bHeight; ++i) {
+            for (int j = 0; j < bWidth; ++j) {
+                Tetris shape = pieceAt(j, bHeight - i - 1);
                 if (shape != Tetris.emptyPiece) {
-                    fillShape(g, j * squareWidth(), boardTop + i * squareHeight(), shape);
+                    fillShape(g, j * sqWidth(), boardTop + i * sqHeight(), shape);
                 }
             }
         }
@@ -180,7 +180,7 @@ public class Board extends JPanel implements ActionListener {
             for (int i = 0; i < 4; ++i) {
                 int x = curX + curPiece.x(i);
                 int y = curY - curPiece.y(i);
-                fillShape(g, x * squareWidth(), boardTop + (BoardHeight - y - 1) * squareHeight(), curPiece.getPiece());
+                fillShape(g, x * sqWidth(), boardTop + (bHeight - y - 1) * sqHeight(), curPiece.getPiece());
             }
         }
     }
@@ -197,13 +197,15 @@ public class Board extends JPanel implements ActionListener {
             int y = newY - newPiece.y(i);
 
             // check if piece has room to attempt move
-            if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight) {
+            if (x < 0 || x >= bWidth || y < 0 || y >= bHeight) {
                 return false;
             }
-            if (shapeAt(x, y) != Tetris.emptyPiece) {
+            if (pieceAt(x, y) != Tetris.emptyPiece) {
                 return false;
             }
         }
+
+        // set new piece
         curPiece = newPiece;
         curX = newX;
         curY = newY;
@@ -224,7 +226,7 @@ public class Board extends JPanel implements ActionListener {
      Clears board of all pieces
      */
     private void clearBoard() {
-        for (int i = 0; i < BoardHeight * BoardWidth; ++i) {
+        for (int i = 0; i < bHeight * bWidth; ++i) {
             board[i] = Tetris.emptyPiece;
         }
     }
@@ -235,25 +237,26 @@ public class Board extends JPanel implements ActionListener {
     private void removeFullLines() {
         int lines = 0;
 
-        for (int i = BoardHeight - 1; i >= 0; --i) {
-            boolean lineIsFull = true;
+        for (int i = bHeight - 1; i >= 0; --i) {
+            boolean fullLine = true;
 
-            for (int j = 0; j < BoardWidth; ++j) {
-                if (shapeAt(j, i) == Tetris.emptyPiece) {
-                    lineIsFull = false;
+            for (int j = 0; j < bWidth; ++j) {
+                if (pieceAt(j, i) == Tetris.emptyPiece) {
+                    fullLine = false;
                     break;
                 }
             }
 
-            if (lineIsFull) {
+            if (fullLine) {
                 ++lines;
-                for (int k = i; k < BoardHeight - 1; ++k) {
-                    for (int j = 0; j < BoardWidth; ++j)
-                        board[(k * BoardWidth) + j] = shapeAt(j, k + 1);
+                for (int k = i; k < bHeight - 1; ++k) {
+                    for (int j = 0; j < bWidth; ++j)
+                        board[(k * bWidth) + j] = pieceAt(j, k + 1);
                 }
             }
         }
 
+        // add removed lines to score
         if (lines > 0) {
             score += lines;
             scorebar.setText("Score: " + String.valueOf(score * 100));
@@ -270,7 +273,7 @@ public class Board extends JPanel implements ActionListener {
         for (int i = 0; i < 4; ++i) {
             int x = curX + curPiece.x(i);
             int y = curY - curPiece.y(i);
-            board[(y * BoardWidth) + x] = curPiece.getPiece();
+            board[(y * bWidth) + x] = curPiece.getPiece();
         }
         removeFullLines();
 
@@ -283,14 +286,17 @@ public class Board extends JPanel implements ActionListener {
      Picks new piece to drop next
      */
     private void newPiece() {
-        curPiece.pickRandomPiece();
-        curX = BoardWidth / 2 + 1;
-        curY = BoardHeight - 1 + curPiece.minY();
 
+        // pick next piece
+        curPiece.pickRandomPiece();
+        curX = bWidth / 2 + 1;
+        curY = bHeight - 1 + curPiece.minY();
+
+        // check if board is full
         if (!move(curPiece, curX, curY)) {
             curPiece.setPiece(Tetris.emptyPiece);
             timer.stop();
-            isStarted = false;
+            started = false;
             scorebar.setText("Game Over! Score: " + String.valueOf(score * 100));
         }
     }
@@ -300,6 +306,8 @@ public class Board extends JPanel implements ActionListener {
      */
     private void instantDrop() {
         int newY = curY;
+
+        // drop piece while there is an empty line below
         while (newY > 0) {
             if (!move(curPiece, curX, newY - 1)) {
                 break;
@@ -329,7 +337,7 @@ public class Board extends JPanel implements ActionListener {
     class TAdapter extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
 
-            if (!isStarted || curPiece.getPiece() == Tetris.emptyPiece) {
+            if (!started || curPiece.getPiece() == Tetris.emptyPiece) {
                 return;
             }
 
@@ -343,7 +351,7 @@ public class Board extends JPanel implements ActionListener {
             }
 
             // can't do moves of game is paused
-            if (isPaused) {
+            if (paused) {
                 return;
             }
 
