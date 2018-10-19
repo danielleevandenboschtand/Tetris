@@ -66,14 +66,19 @@ public class Game extends JFrame implements ActionListener{
 //        helpWindow.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 
-        helpText = new JLabel("How to Play Tetris");
+        helpText = new JLabel("Tetris Gameplay");
         helpWindow.add(helpText, BorderLayout.NORTH);
         helpText.setHorizontalAlignment(JLabel.CENTER);
         helpText.setFont(new Font("Arial Black", Font.PLAIN, 20));
 
-        helpTextArea = new JTextArea("Gameplay Rotate Right: Up Arrow\" +\n" +
-                "                \"Rotate Left: Down Arrow Move Right: Right Arrow Move Left: Left Arrow\" +\n" +
-                "                \"Soft Drop: Shift Hard Drop: Space Pause: p");
+        helpTextArea = new JTextArea("Right:            Up Arrow\n" +
+                "Rotate Left:   Down Arrow\n" +
+                "Move Right:  Right Arrow\n" +
+                "Move Left:    Left Arrow\n" +
+                "Soft Drop:     Shift\n" +
+                "Hard Drop:   Space\n" +
+                "Pause:           p");
+
         helpTextArea.setEditable(false);
 
         helpTextArea.setFont(new Font("Serif", Font.PLAIN, 16));
