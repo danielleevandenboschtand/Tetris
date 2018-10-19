@@ -90,7 +90,6 @@ public class Board extends JPanel implements ActionListener {
      Resets game and starts a new one
      */
     public void start() {
-        System.out.println("game started");
         // check if game is paused
         if (paused) {
             return;

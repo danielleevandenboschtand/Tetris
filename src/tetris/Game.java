@@ -63,21 +63,23 @@ public class Game extends JFrame implements ActionListener{
         helpWindow.setVisible(true);
         helpWindow.setSize(500, 550);
         helpWindow.setTitle("Tetris Help");
-//        helpWindow.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
 
         helpText = new JLabel("Tetris Gameplay");
         helpWindow.add(helpText, BorderLayout.NORTH);
         helpText.setHorizontalAlignment(JLabel.CENTER);
         helpText.setFont(new Font("Arial Black", Font.PLAIN, 20));
 
-        helpTextArea = new JTextArea("Right:            Up Arrow\n" +
-                "Rotate Left:   Down Arrow\n" +
-                "Move Right:  Right Arrow\n" +
-                "Move Left:    Left Arrow\n" +
-                "Soft Drop:     Shift\n" +
-                "Hard Drop:   Space\n" +
-                "Pause:           p");
+        helpTextArea = new JTextArea(
+                "                             Right:              Up Arrow\n" +
+                "                             Rotate Left:     Down Arrow\n" +
+                "                             Move Right:    Right Arrow\n" +
+                "                             Move Left:      Left Arrow\n" +
+                "                             Fast Drop:       Shift\n" +
+                "                             Instant Drop:   Space\n" +
+                "                             Pause:              p"
+        );
+        Insets i = new Insets(50,50,50,50);
+        helpTextArea.setMargin(i);
 
         helpTextArea.setEditable(false);
 
@@ -112,7 +114,7 @@ public class Game extends JFrame implements ActionListener{
 
         f.add(title, BorderLayout.NORTH);
         title.setHorizontalAlignment(JLabel.CENTER);
-        title.setFont(new Font("Arial Black", Font.PLAIN, 30));
+        title.setFont(new Font("Arial Black", Font.PLAIN, 80));
         p.add(start);
         p.add(help);
         f.add(p);
@@ -131,7 +133,6 @@ public class Game extends JFrame implements ActionListener{
             helpMenu();
         }
         if (e.getSource() == back) {
-            System.out.println("dope");
             helpWindow.dispose();
         }
     }
