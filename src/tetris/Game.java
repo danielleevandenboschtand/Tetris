@@ -1,33 +1,30 @@
 package tetris;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Game extends JFrame {
+public class Game extends JFrame implements ActionListener{
+    private JFrame helpWindow;
 
     // bar to show score/game message
-    private JLabel scorebar;
+    private JLabel scorebar, helpText;
+
+    // game title
+    private JLabel title;
+
+    // buttons for game navigation
+    private JButton start, help, back;
+
+    private JTextArea helpTextArea;
 
     /*
     Default constructor to create game
      */
     public Game() {
-
-        // create score bar
-        scorebar = new JLabel("Score: 0");
-        add(scorebar, BorderLayout.NORTH);
-        scorebar.setHorizontalAlignment(JLabel.CENTER);
-        scorebar.setFont(new Font("Arial Black", Font.PLAIN, 20));
-        Board board = new Board(this);
-        add(board);
-        board.start();
-
-        // create game window
-        setSize(500, 550);
-        setTitle("Tetris");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frame();
     }
 
     /*
@@ -37,12 +34,107 @@ public class Game extends JFrame {
         return scorebar;
     }
 
+    private void startGame() {
+
+        JFrame f = new JFrame();
+
+        // create game window
+        f.setVisible(true);
+        f.setSize(500, 550);
+        f.setTitle("Tetris");
+        f.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        // create score bar
+        scorebar = new JLabel("Score: 0");
+
+        f.add(scorebar, BorderLayout.NORTH);
+        scorebar.setHorizontalAlignment(JLabel.CENTER);
+        scorebar.setFont(new Font("Arial Black", Font.PLAIN, 20));
+
+        Board board = new Board(this);
+        f.add(board);
+        board.start();
+    }
+
+    public void helpMenu() {
+        helpWindow = new JFrame();
+
+        // create help window
+        helpWindow.setVisible(true);
+        helpWindow.setSize(500, 550);
+        helpWindow.setTitle("Tetris Help");
+//        helpWindow.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+
+        helpText = new JLabel("How to Play Tetris");
+        helpWindow.add(helpText, BorderLayout.NORTH);
+        helpText.setHorizontalAlignment(JLabel.CENTER);
+        helpText.setFont(new Font("Arial Black", Font.PLAIN, 20));
+
+        helpTextArea = new JTextArea("Gameplay Rotate Right: Up Arrow\" +\n" +
+                "                \"Rotate Left: Down Arrow Move Right: Right Arrow Move Left: Left Arrow\" +\n" +
+                "                \"Soft Drop: Shift Hard Drop: Space Pause: p");
+        helpTextArea.setEditable(false);
+
+        helpTextArea.setFont(new Font("Serif", Font.PLAIN, 16));
+        helpTextArea.setLineWrap(true);
+        helpTextArea.setWrapStyleWord(true);
+        helpWindow.add(helpTextArea, BorderLayout.CENTER);
+
+        back = new JButton("Back");
+        helpWindow.add(back, BorderLayout.SOUTH);
+        back.addActionListener(this);
+    }
+
+    /*
+    Frame for menu screen
+      */
+    public void frame() {
+
+        JFrame f = new JFrame();
+
+        // create game window
+        f.setVisible(true);
+        f.setSize(500, 550);
+        f.setTitle("Tetris");
+        f.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        JPanel p = new JPanel();
+
+        title = new JLabel("TETRIS");
+        start = new JButton("Start");
+        help = new JButton("Help");
+
+        f.add(title, BorderLayout.NORTH);
+        title.setHorizontalAlignment(JLabel.CENTER);
+        title.setFont(new Font("Arial Black", Font.PLAIN, 30));
+        p.add(start);
+        p.add(help);
+        f.add(p);
+
+        start.addActionListener(this);
+        help.addActionListener(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource() == start) {
+            startGame();
+        }
+        if (e.getSource() == help) {
+            helpMenu();
+        }
+        if (e.getSource() == back) {
+            System.out.println("dope");
+            helpWindow.dispose();
+        }
+    }
+
     /*
     Main method to run game
      */
     public static void main(String[] args) {
         Game game = new Game();
-        game.setLocationRelativeTo(null);
-        game.setVisible(true);
     }
 }

@@ -7,9 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.Timer;
+import javax.swing.*;
 
 import tetris.Piece.Tetris;
 
@@ -92,7 +90,7 @@ public class Board extends JPanel implements ActionListener {
      Resets game and starts a new one
      */
     public void start() {
-
+        System.out.println("game started");
         // check if game is paused
         if (paused) {
             return;
