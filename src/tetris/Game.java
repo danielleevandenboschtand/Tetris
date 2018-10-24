@@ -12,6 +12,8 @@ public class Game extends JFrame implements ActionListener{
     // bar to show score/game message
     private JLabel scorebar, helpText;
 
+    ImageIcon logo = new ImageIcon("tetris.png");
+
     // game title
     private JLabel title;
 
@@ -70,20 +72,20 @@ public class Game extends JFrame implements ActionListener{
         helpText.setFont(new Font("Arial Black", Font.PLAIN, 20));
 
         helpTextArea = new JTextArea(
-                "                             Right:              Up Arrow\n" +
-                "                             Rotate Left:     Down Arrow\n" +
-                "                             Move Right:    Right Arrow\n" +
-                "                             Move Left:      Left Arrow\n" +
-                "                             Fast Drop:       Shift\n" +
-                "                             Instant Drop:   Space\n" +
-                "                             Pause:              p"
+                "                            Right:              Up Arrow\n" +
+                "                            Rotate Left:    Down Arrow\n" +
+                "                            Move Right:   Right Arrow\n" +
+                "                            Move Left:      Left Arrow\n" +
+                "                            Fast Drop:      Shift\n" +
+                "                            Instant Drop:  Space\n" +
+                "                            Pause:            p"
         );
         Insets i = new Insets(50,50,50,50);
         helpTextArea.setMargin(i);
 
         helpTextArea.setEditable(false);
 
-        helpTextArea.setFont(new Font("Serif", Font.PLAIN, 16));
+        helpTextArea.setFont(new Font("Arial", Font.PLAIN, 16));
         helpTextArea.setLineWrap(true);
         helpTextArea.setWrapStyleWord(true);
         helpWindow.add(helpTextArea, BorderLayout.CENTER);
@@ -108,9 +110,12 @@ public class Game extends JFrame implements ActionListener{
 
         JPanel p = new JPanel();
 
-        title = new JLabel("TETRIS");
+        title = new JLabel(logo);
         start = new JButton("Start");
+        start.setPreferredSize(new Dimension(100, 40));
+
         help = new JButton("Help");
+        help.setPreferredSize(new Dimension(100, 40));
 
         f.add(title, BorderLayout.NORTH);
         title.setHorizontalAlignment(JLabel.CENTER);
