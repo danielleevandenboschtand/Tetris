@@ -1,0 +1,229 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Game</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">tetris</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Game (tetris)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Game</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (64/ 64)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package tetris;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javax.swing.*;
+<i>4</i>&nbsp;import javax.swing.border.Border;
+<i>5</i>&nbsp;import java.awt.*;
+<i>6</i>&nbsp;import java.awt.event.ActionEvent;
+<i>7</i>&nbsp;import java.awt.event.ActionListener;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;public class Game extends JFrame implements ActionListener{
+<i>10</i>&nbsp;    private JFrame helpWindow;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    // bar to show score/game message
+<i>13</i>&nbsp;    private JLabel scorebar, helpText;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    // game title
+<i>16</i>&nbsp;    private JLabel title;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    // buttons for game navigation
+<i>19</i>&nbsp;    private JButton start, help, back;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    private JTextArea helpTextArea;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /*
+<i>24</i>&nbsp;    Default constructor to create game
+<i>25</i>&nbsp;     */
+<b class="fc"><i>26</i>&nbsp;    public Game() {</b>
+<b class="fc"><i>27</i>&nbsp;        frame();</b>
+<b class="fc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /*
+<i>31</i>&nbsp;    Label at bottom of screen for score
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    public JLabel getStatusBar() {
+<b class="fc"><i>34</i>&nbsp;        return scorebar;</b>
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    private void startGame() {
+<i>38</i>&nbsp;
+<b class="fc"><i>39</i>&nbsp;        JFrame f = new JFrame();</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;        // create game window
+<b class="fc"><i>42</i>&nbsp;        f.setVisible(true);</b>
+<b class="fc"><i>43</i>&nbsp;        f.setSize(500, 550);</b>
+<b class="fc"><i>44</i>&nbsp;        f.setTitle(&quot;Tetris&quot;);</b>
+<b class="fc"><i>45</i>&nbsp;        f.setDefaultCloseOperation(EXIT_ON_CLOSE);</b>
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;        // create score bar
+<b class="fc"><i>48</i>&nbsp;        scorebar = new JLabel(&quot;Score: 0&quot;);</b>
+<i>49</i>&nbsp;
+<b class="fc"><i>50</i>&nbsp;        f.add(scorebar, BorderLayout.NORTH);</b>
+<b class="fc"><i>51</i>&nbsp;        scorebar.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>52</i>&nbsp;        scorebar.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 20));</b>
+<i>53</i>&nbsp;
+<b class="fc"><i>54</i>&nbsp;        Board board = new Board(this);</b>
+<b class="fc"><i>55</i>&nbsp;        f.add(board);</b>
+<b class="fc"><i>56</i>&nbsp;        board.start();</b>
+<b class="fc"><i>57</i>&nbsp;    }</b>
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    public void helpMenu() {
+<b class="fc"><i>60</i>&nbsp;        helpWindow = new JFrame();</b>
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;        // create help window
+<b class="fc"><i>63</i>&nbsp;        helpWindow.setVisible(true);</b>
+<b class="fc"><i>64</i>&nbsp;        helpWindow.setSize(500, 550);</b>
+<b class="fc"><i>65</i>&nbsp;        helpWindow.setTitle(&quot;Tetris Help&quot;);</b>
+<i>66</i>&nbsp;
+<b class="fc"><i>67</i>&nbsp;        helpText = new JLabel(&quot;Tetris Gameplay&quot;);</b>
+<b class="fc"><i>68</i>&nbsp;        helpWindow.add(helpText, BorderLayout.NORTH);</b>
+<b class="fc"><i>69</i>&nbsp;        helpText.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>70</i>&nbsp;        helpText.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 20));</b>
+<i>71</i>&nbsp;
+<b class="fc"><i>72</i>&nbsp;        helpTextArea = new JTextArea(</b>
+<i>73</i>&nbsp;                &quot;                             Right:              Up Arrow\n&quot; +
+<i>74</i>&nbsp;                &quot;                             Rotate Left:     Down Arrow\n&quot; +
+<i>75</i>&nbsp;                &quot;                             Move Right:    Right Arrow\n&quot; +
+<i>76</i>&nbsp;                &quot;                             Move Left:      Left Arrow\n&quot; +
+<i>77</i>&nbsp;                &quot;                             Fast Drop:       Shift\n&quot; +
+<i>78</i>&nbsp;                &quot;                             Instant Drop:   Space\n&quot; +
+<i>79</i>&nbsp;                &quot;                             Pause:              p&quot;
+<i>80</i>&nbsp;        );
+<b class="fc"><i>81</i>&nbsp;        Insets i = new Insets(50,50,50,50);</b>
+<b class="fc"><i>82</i>&nbsp;        helpTextArea.setMargin(i);</b>
+<i>83</i>&nbsp;
+<b class="fc"><i>84</i>&nbsp;        helpTextArea.setEditable(false);</b>
+<i>85</i>&nbsp;
+<b class="fc"><i>86</i>&nbsp;        helpTextArea.setFont(new Font(&quot;Serif&quot;, Font.PLAIN, 16));</b>
+<b class="fc"><i>87</i>&nbsp;        helpTextArea.setLineWrap(true);</b>
+<b class="fc"><i>88</i>&nbsp;        helpTextArea.setWrapStyleWord(true);</b>
+<b class="fc"><i>89</i>&nbsp;        helpWindow.add(helpTextArea, BorderLayout.CENTER);</b>
+<i>90</i>&nbsp;
+<b class="fc"><i>91</i>&nbsp;        back = new JButton(&quot;Back&quot;);</b>
+<b class="fc"><i>92</i>&nbsp;        helpWindow.add(back, BorderLayout.SOUTH);</b>
+<b class="fc"><i>93</i>&nbsp;        back.addActionListener(this);</b>
+<b class="fc"><i>94</i>&nbsp;    }</b>
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    /*
+<i>97</i>&nbsp;    Frame for menu screen
+<i>98</i>&nbsp;      */
+<i>99</i>&nbsp;    public void frame() {
+<i>100</i>&nbsp;
+<b class="fc"><i>101</i>&nbsp;        JFrame f = new JFrame();</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;        // create game window
+<b class="fc"><i>104</i>&nbsp;        f.setVisible(true);</b>
+<b class="fc"><i>105</i>&nbsp;        f.setSize(500, 550);</b>
+<b class="fc"><i>106</i>&nbsp;        f.setTitle(&quot;Tetris&quot;);</b>
+<b class="fc"><i>107</i>&nbsp;        f.setDefaultCloseOperation(EXIT_ON_CLOSE);</b>
+<i>108</i>&nbsp;
+<b class="fc"><i>109</i>&nbsp;        JPanel p = new JPanel();</b>
+<i>110</i>&nbsp;
+<b class="fc"><i>111</i>&nbsp;        title = new JLabel(&quot;TETRIS&quot;);</b>
+<b class="fc"><i>112</i>&nbsp;        start = new JButton(&quot;Start&quot;);</b>
+<b class="fc"><i>113</i>&nbsp;        help = new JButton(&quot;Help&quot;);</b>
+<i>114</i>&nbsp;
+<b class="fc"><i>115</i>&nbsp;        f.add(title, BorderLayout.NORTH);</b>
+<b class="fc"><i>116</i>&nbsp;        title.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>117</i>&nbsp;        title.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 80));</b>
+<b class="fc"><i>118</i>&nbsp;        p.add(start);</b>
+<b class="fc"><i>119</i>&nbsp;        p.add(help);</b>
+<b class="fc"><i>120</i>&nbsp;        f.add(p);</b>
+<i>121</i>&nbsp;
+<b class="fc"><i>122</i>&nbsp;        start.addActionListener(this);</b>
+<b class="fc"><i>123</i>&nbsp;        help.addActionListener(this);</b>
+<b class="fc"><i>124</i>&nbsp;    }</b>
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;    @Override
+<i>127</i>&nbsp;    public void actionPerformed(ActionEvent e) {
+<i>128</i>&nbsp;
+<b class="fc"><i>129</i>&nbsp;        if (e.getSource() == start) {</b>
+<b class="fc"><i>130</i>&nbsp;            startGame();</b>
+<i>131</i>&nbsp;        }
+<b class="fc"><i>132</i>&nbsp;        if (e.getSource() == help) {</b>
+<b class="fc"><i>133</i>&nbsp;            helpMenu();</b>
+<i>134</i>&nbsp;        }
+<b class="fc"><i>135</i>&nbsp;        if (e.getSource() == back) {</b>
+<b class="fc"><i>136</i>&nbsp;            helpWindow.dispose();</b>
+<i>137</i>&nbsp;        }
+<b class="fc"><i>138</i>&nbsp;    }</b>
+<i>139</i>&nbsp;
+<i>140</i>&nbsp;    /*
+<i>141</i>&nbsp;    Main method to run game
+<i>142</i>&nbsp;     */
+<i>143</i>&nbsp;    public static void main(String[] args) {
+<b class="fc"><i>144</i>&nbsp;        Game game = new Game();</b>
+<b class="fc"><i>145</i>&nbsp;    }</b>
+<i>146</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-10-23 22:03</div>
+</div>
+</body>
+</html>
