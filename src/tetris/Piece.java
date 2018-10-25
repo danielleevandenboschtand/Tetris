@@ -5,28 +5,29 @@ import java.lang.Math;
 
 public class Piece {
 
-    // tetrominos shapes
+    /** tetrominos shapes */
     enum Tetris {emptyPiece, zPiece, sPiece, linePiece, tPiece, squarePiece, lPiece, mlPiece};
 
-    // tetrominos shape object
+    /** tetrominos shape object */
     private Tetris pieces;
 
-    // coordinates to make tetromino piece
+    /** coordinates to make tetromino piece */
     private int pieceCoords[][];
 
-    // array of coordinates of created piece shapes
+    /** array of coordinates of created piece shapes */
     private int[][][] createCoord;
 
-    /*
-    Default constructor sets pieceCoords with placeholder empty shape
+    /**
+     * Default constructor sets pieceCoords with placeholder empty shape
      */
     public Piece() {
         pieceCoords = new int[4][2];
         setPiece(Tetris.emptyPiece);
     }
 
-    /*
-    Creates new tetromino shape
+    /**
+     * Creates new tetromino shape
+     * @param shape tetromino shape
      */
     public void setPiece(Tetris shape) {
 
@@ -69,16 +70,16 @@ public class Piece {
 
     }
 
-    /*
-    Returns tetris piece
-    @returns Tetris piece object
+    /**
+     * Returns tetris piece
+     * @return Tetris piece object
      */
     public Tetris getPiece() {
         return pieces;
     }
 
-    /*
-    Chooses a random tetromino piece
+    /**
+     * Chooses a random tetromino piece
      */
     public void pickRandomPiece() {
         Random rand = new Random();
@@ -87,39 +88,45 @@ public class Piece {
         setPiece(num[x]);
     }
 
-    /*
-    Used to adjust x coordinates when piece is rotated
+    /**
+     * Used to adjust x coordinates when piece is rotated
+     * @param i old x coordinate
+     * @param x new x coordinate
      */
     private void changeX(int i, int x) {
         pieceCoords[i][0] = x;
     }
 
-    /*
-    Used to adjust y coordinates when piece is rotated
+    /**
+     * Used to adjust y coordinates when piece is rotated
+     * @param i old y coordinate
+     * @param y nre y coordinate
      */
     private void changeY(int i, int y) {
         pieceCoords[i][1] = y;
     }
 
-    /*
-    Used to adjust x coordinates when piece is rotated
-    @returns int pieceCoords the new x coordinates
+    /**
+     * Used to adjust x coordinates when piece is rotated
+     * @param i x coordinate
+     * @return new coordinates
      */
     public int adjustX(int i) {
         return pieceCoords[i][0];
     }
 
-    /*
-    Used to adjust y coordinates when piece is rotated
-    @returns int pieceCoords the new y coordinates
+    /**
+     * Used to adjust y coordinates when piece is rotated
+     * @param i y coordinate
+     * @return new coordinates
      */
     public int adjustY(int i) {
         return pieceCoords[i][1];
     }
 
-    /*
-    Rotates the tetromino to the right
-    @returns Tetris rotPiece the new piece coordinates
+    /**
+     * Rotates the tetromino to the right
+     * @return Tetris rotPiece the new piece coordinates
      */
     public Piece rotateRight() {
 
@@ -139,9 +146,9 @@ public class Piece {
         return rotPiece;
     }
 
-    /*
-    Rotates the tetromino to the left
-    @returns Tetris rotPiece the new piece coordinates
+    /**
+     * Rotates the tetromino to the left
+     * @return Tetris rotPiece the new piece coordinates
      */
     public Piece rotateLeft() {
 
@@ -161,9 +168,9 @@ public class Piece {
         return rotPiece;
     }
 
-    /*
-    Sets where the piece starts from the top based on the size of the piece
-    @returns int min the minimum top-position
+    /**
+     * Sets where the piece starts from the top based on the size of the piece
+     * @return int min the minimum top-position
      */
     public int minY()
     {

@@ -1,7 +1,6 @@
 package tetris;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,33 +8,39 @@ import java.awt.event.ActionListener;
 public class Game extends JFrame implements ActionListener{
     private JFrame helpWindow;
 
-    // bar to show score/game message
+    /** bar to show score/game message */
     private JLabel scorebar, helpText;
 
-    ImageIcon logo = new ImageIcon("tetris.png");
+    /** tetris logo */
+    private ImageIcon logo = new ImageIcon("tetris.png");
 
-    // game title
+    /** game title */
     private JLabel title;
 
-    // buttons for game navigation
+    /** buttons for game navigation */
     private JButton start, help, back;
 
+    /** text for controls */
     private JTextArea helpTextArea;
 
-    /*
-    Default constructor to create game
+    /**
+     * Default constructor to create game
      */
     public Game() {
         frame();
     }
 
-    /*
-    Label at bottom of screen for score
+    /**
+     * Label at bottom of screen for score
+     * @return score bar
      */
     public JLabel getStatusBar() {
         return scorebar;
     }
 
+    /**
+     * Starts the game
+     */
     private void startGame() {
 
         JFrame f = new JFrame();
@@ -58,6 +63,9 @@ public class Game extends JFrame implements ActionListener{
         board.start();
     }
 
+    /**
+     * Loads help menu window
+     */
     public void helpMenu() {
         helpWindow = new JFrame();
 
@@ -95,9 +103,9 @@ public class Game extends JFrame implements ActionListener{
         back.addActionListener(this);
     }
 
-    /*
-    Frame for menu screen
-      */
+    /**
+     * Frame for menu screen
+     */
     public void frame() {
 
         JFrame f = new JFrame();
@@ -128,6 +136,10 @@ public class Game extends JFrame implements ActionListener{
         help.addActionListener(this);
     }
 
+    /**
+     * Checks if button is clicked
+     * @param e action event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -142,8 +154,9 @@ public class Game extends JFrame implements ActionListener{
         }
     }
 
-    /*
-    Main method to run game
+    /**
+     * Main method to run game
+     * @param args args
      */
     public static void main(String[] args) {
         Game game = new Game();

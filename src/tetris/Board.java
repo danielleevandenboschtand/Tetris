@@ -13,42 +13,43 @@ import tetris.Piece.Tetris;
 
 public class Board extends JPanel implements ActionListener {
 
-    // width of game board
+    /** width of game board */
     private final int bWidth = 10;
 
-    // height of game board
+    /** height of game board */
     private final int bHeight = 22;
 
-    // timer used to regulate drop speeds
+    /** timer used to regulate drop speeds */
     private Timer timer;
 
-    // used to know when to get next piece
+    /** used to know when to get next piece */
     private boolean atBottom = false;
 
-    // used to know when game is started
+    /** used to know when game is started */
     private boolean started = false;
 
-    // used to know if game is paused
+    /** used to know if game is paused */
     private boolean paused = false;
 
-    // number of lines cleared
+    /** number of lines cleared */
     private int score = 0;
 
-    // current position of falling piece
+    /** current position of falling piece */
     private int curX = 0;
     private int curY = 0;
 
-    // bar to show score/game message
+    /** bar to show score/game message */
     private JLabel scorebar;
 
-    // current tetromino shape
+    /** current tetromino shape */
     private Piece curPiece;
 
-    // game board
+    /** game board */
     private Tetris[] board;
 
-    /*
-    Default constructor. Sets up game
+    /**
+     * Default constructor. Sets up game
+     * @param parent game object
      */
     public Board(Game parent) {
         setFocusable(true);
@@ -62,32 +63,34 @@ public class Board extends JPanel implements ActionListener {
         clear();
     }
 
-    /*
-     Gets square width
-     @returns int width of square
+    /**
+     * Gets square width
+     * @return int wirdth of square
      */
     private int sqWidth() {
         return (int) getSize().getWidth() / bWidth;
     }
 
-    /*
-     Gets square height
-     @returns int height of square
+    /**
+     * Gets square height
+     * @return int height of square
      */
     private int sqHeight() {
         return (int) getSize().getWidth() / bHeight;
     }
 
-    /*
-     Gets piece at coordinate position
-     @returns position of shape
+    /**
+     * Gets piece at coordinate position
+     * @param x coordinate
+     * @param y coordinate
+     * @return position of shape
      */
     private Tetris pieceAt(int x, int y) {
         return board[(y * bWidth) + x];
     }
 
-    /*
-     Resets game and starts a new one
+    /**
+     * Resets game and starts a new one
      */
     public void start() {
         // check if game is paused
@@ -104,8 +107,8 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
     }
 
-    /*
-     Pauses the game
+    /**
+     * Pauses the game
      */
     private void pause() {
 
@@ -124,10 +127,14 @@ public class Board extends JPanel implements ActionListener {
         repaint();
     }
 
-    /*
-     Fills color for pieces
+    /**
+     * Fills color for pieces
+     * @param g graphics object
+     * @param x coordinate
+     * @param y coordinate
+     * @param piece tetromino shape
      */
-    private void fillPiece(Graphics graphics, int x, int y, Tetris piece) {
+    private void fillPiece(Graphics g, int x, int y, Tetris piece) {
         Color colors[] = {
                 new Color(0, 0, 0),
                 new Color(255, 0, 0),
@@ -143,18 +150,19 @@ public class Board extends JPanel implements ActionListener {
         Color c = colors[piece.ordinal()];
 
         // logic to fill shapes with colors
-        graphics.setColor(c);
-        graphics.fillRect(x + 1, y + 1, sqWidth() - 2, sqHeight() - 2);
-        graphics.setColor(c.brighter());
-        graphics.drawLine(x, y + sqHeight() - 1, x, y);
-        graphics.drawLine(x, y, x + sqWidth() - 1, y);
-        graphics.setColor(c.darker());
-        graphics.drawLine(x + 1, y + sqHeight() - 1, x + sqWidth() - 1, y + sqHeight() - 1);
-        graphics.drawLine(x + sqWidth() - 1, y + sqHeight() - 1, x + sqWidth() - 1, y + 1);
+        g.setColor(c);
+        g.fillRect(x + 1, y + 1, sqWidth() - 2, sqHeight() - 2);
+        g.setColor(c.brighter());
+        g.drawLine(x, y + sqHeight() - 1, x, y);
+        g.drawLine(x, y, x + sqWidth() - 1, y);
+        g.setColor(c.darker());
+        g.drawLine(x + 1, y + sqHeight() - 1, x + sqWidth() - 1, y + sqHeight() - 1);
+        g.drawLine(x + sqWidth() - 1, y + sqHeight() - 1, x + sqWidth() - 1, y + 1);
     }
 
-    /*
-     Colors game piece
+    /**
+     * Colors game piece
+     * @param g graphics objects
      */
     public void paint(Graphics g) {
 
@@ -182,9 +190,12 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    /*
-     Checks if space is already occupied
-     @returns boolean
+    /**
+     * Checks if space is already occupied
+     * @param newPiece tetromino shape
+     * @param newX x coordinate
+     * @param newY y coordinate
+     * @return boolean
      */
     private boolean move(Piece newPiece, int newX, int newY) {
 
@@ -210,8 +221,8 @@ public class Board extends JPanel implements ActionListener {
         return true;
     }
 
-    /*
-     Drops piece one line down
+    /**
+     * Drops piece one line down
      */
     private void moveOneLineDown() {
         if (!move(curPiece, curX, curY - 1)) {
@@ -219,8 +230,8 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    /*
-     Clears board of all pieces
+    /**
+     * Clears board of all pieces
      */
     private void clear() {
         for (int i = 0; i < bHeight * bWidth; ++i) {
@@ -228,8 +239,8 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    /*
-     Removes line if full
+    /**
+     * Removes line if full
      */
     private void removeFullLines() {
         int lines = 0;
@@ -263,8 +274,8 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    /*
-     Checks if a line is full
+    /**
+     * Checks if a line is full
      */
     private void pieceDropped() {
         for (int i = 0; i < 4; ++i) {
@@ -280,8 +291,8 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    /*
-     Picks new piece to drop next
+    /**
+     * Picks new piece to drop next
      */
     private void newPiece() {
 
@@ -299,8 +310,8 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    /*
-     Drops piece into lowest position
+    /**
+     * Drops piece into lowest position
      */
     private void instantDrop() {
         int newY = curY;
@@ -315,8 +326,9 @@ public class Board extends JPanel implements ActionListener {
         pieceDropped();
     }
 
-    /*
-    Checks when to get new piece
+    /**
+     * Checks when to get new piece
+     * @param e action event
      */
     public void actionPerformed(ActionEvent e) {
 
@@ -329,10 +341,15 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    /*
-     Checks when keys are hit to make moves
+    /**
+     * Key adapter class
      */
     class TAdapter extends KeyAdapter {
+
+        /**
+         * Checks when keys are hit to make moves
+         * @param e key pressed
+         */
         public void keyPressed(KeyEvent e) {
 
             if (!started || curPiece.getPiece() == Tetris.emptyPiece) {
