@@ -5,28 +5,22 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Game extends JFrame implements ActionListener{
+class Game extends JFrame implements ActionListener{
     private JFrame helpWindow;
 
     /** bar to show score/game message */
-    private JLabel scorebar, helpText;
+    private JLabel scorebar;
 
     /** tetris logo */
-    private ImageIcon logo = new ImageIcon("tetris.png");
-
-    /** game title */
-    private JLabel title;
+    private final ImageIcon logo = new ImageIcon("tetris.png");
 
     /** buttons for game navigation */
     private JButton start, help, back;
 
-    /** text for controls */
-    private JTextArea helpTextArea;
-
     /**
      * Default constructor to create game
      */
-    public Game() {
+    private Game() {
         frame();
     }
 
@@ -49,7 +43,7 @@ public class Game extends JFrame implements ActionListener{
         f.setVisible(true);
         f.setSize(500, 550);
         f.setTitle("Tetris");
-        f.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // create score bar
         scorebar = new JLabel("Score: 0");
@@ -66,7 +60,7 @@ public class Game extends JFrame implements ActionListener{
     /**
      * Loads help menu window
      */
-    public void helpMenu() {
+    private void helpMenu() {
         helpWindow = new JFrame();
 
         // create help window
@@ -74,19 +68,20 @@ public class Game extends JFrame implements ActionListener{
         helpWindow.setSize(500, 550);
         helpWindow.setTitle("Tetris Help");
 
-        helpText = new JLabel("Tetris Gameplay");
+        JLabel helpText = new JLabel("Tetris Gameplay");
         helpWindow.add(helpText, BorderLayout.NORTH);
         helpText.setHorizontalAlignment(JLabel.CENTER);
         helpText.setFont(new Font("Arial Black", Font.PLAIN, 20));
 
-        helpTextArea = new JTextArea(
+        /* text for controls */
+        JTextArea helpTextArea = new JTextArea(
                 "                            Right:              Up Arrow\n" +
-                "                            Rotate Left:    Down Arrow\n" +
-                "                            Move Right:   Right Arrow\n" +
-                "                            Move Left:      Left Arrow\n" +
-                "                            Fast Drop:      Shift\n" +
-                "                            Instant Drop:  Space\n" +
-                "                            Pause:            p"
+                        "                            Rotate Left:    Down Arrow\n" +
+                        "                            Move Right:   Right Arrow\n" +
+                        "                            Move Left:      Left Arrow\n" +
+                        "                            Fast Drop:      Shift\n" +
+                        "                            Instant Drop:  Space\n" +
+                        "                            Pause:            p"
         );
         Insets i = new Insets(50,50,50,50);
         helpTextArea.setMargin(i);
@@ -106,7 +101,7 @@ public class Game extends JFrame implements ActionListener{
     /**
      * Frame for menu screen
      */
-    public void frame() {
+    private void frame() {
 
         JFrame f = new JFrame();
 
@@ -114,11 +109,12 @@ public class Game extends JFrame implements ActionListener{
         f.setVisible(true);
         f.setSize(500, 550);
         f.setTitle("Tetris");
-        f.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         JPanel p = new JPanel();
 
-        title = new JLabel(logo);
+        /* game title */
+        JLabel title = new JLabel(logo);
         start = new JButton("Start");
         start.setPreferredSize(new Dimension(100, 40));
 

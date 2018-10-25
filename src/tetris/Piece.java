@@ -6,16 +6,13 @@ import java.lang.Math;
 public class Piece {
 
     /** tetrominos shapes */
-    enum Tetris {emptyPiece, zPiece, sPiece, linePiece, tPiece, squarePiece, lPiece, mlPiece};
+    enum Tetris {emptyPiece, zPiece, sPiece, linePiece, tPiece, squarePiece, lPiece, mlPiece}
 
     /** tetrominos shape object */
     private Tetris pieces;
 
     /** coordinates to make tetromino piece */
-    private int pieceCoords[][];
-
-    /** array of coordinates of created piece shapes */
-    private int[][][] createCoord;
+    private final int[][] pieceCoords;
 
     /**
      * Default constructor sets pieceCoords with placeholder empty shape
@@ -31,38 +28,37 @@ public class Piece {
      */
     public void setPiece(Tetris shape) {
 
-        createCoord = new int[][][] {
+        /* array of coordinates of created piece shapes */
+        int[][][] createCoord = new int[][][]{
 
                 // empty shape
-                { {0, 0}, {0, 0}, {0, 0}, {0, 0} },
+                {{0, 0}, {0, 0}, {0, 0}, {0, 0}},
 
                 // Z shape
-                { {0, -1}, {0, 0}, {-1, 0}, {-1, 1} },
+                {{0, -1}, {0, 0}, {-1, 0}, {-1, 1}},
 
                 // S shape
-                { {0, -1}, {0, 0}, {1, 0}, {1, 1} },
+                {{0, -1}, {0, 0}, {1, 0}, {1, 1}},
 
                 // Line shape
-                { {0, -1}, {0, 0}, {0, 1}, {0, 2} },
+                {{0, -1}, {0, 0}, {0, 1}, {0, 2}},
 
                 // T shape
-                { {-1, 0}, {0, 0}, {1, 0}, {0, 1} },
+                {{-1, 0}, {0, 0}, {1, 0}, {0, 1}},
 
                 // Square shape
-                { {0, 0}, {1, 0}, {0, 1}, {1, 1} },
+                {{0, 0}, {1, 0}, {0, 1}, {1, 1}},
 
                 // L shape
-                { {-1, -1}, {0, -1}, {0, 0}, {0, 1} },
+                {{-1, -1}, {0, -1}, {0, 0}, {0, 1}},
 
                 // Mirrored L shape
-                { {1, -1}, {0, -1}, {0, 0}, {0, 1} }
+                {{1, -1}, {0, -1}, {0, 0}, {0, 1}}
         };
 
         // loop to set coordinates and build shapes
         for (int i = 0; i < 4 ; i++) {
-            for (int j = 0; j < 2; ++j) {
-                pieceCoords[i][j] = createCoord[shape.ordinal()][i][j];
-            }
+            System.arraycopy(createCoord[shape.ordinal()][i], 0, pieceCoords[i], 0, 2);
         }
 
         // set piece

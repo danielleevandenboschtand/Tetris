@@ -11,7 +11,7 @@ import javax.swing.*;
 
 import tetris.Piece.Tetris;
 
-public class Board extends JPanel implements ActionListener {
+class Board extends JPanel implements ActionListener {
 
     /** width of game board */
     private static final int bWidth = 10;
@@ -20,7 +20,7 @@ public class Board extends JPanel implements ActionListener {
     private static final int bHeight = 22;
 
     /** timer used to regulate drop speeds */
-    private Timer timer;
+    private final Timer timer;
 
     /** used to know when to get next piece */
     private boolean atBottom = false;
@@ -39,13 +39,13 @@ public class Board extends JPanel implements ActionListener {
     private int curY = 0;
 
     /** bar to show score/game message */
-    private JLabel scorebar;
+    private final JLabel scorebar;
 
     /** current tetromino shape */
     private Piece curPiece;
 
     /** game board */
-    private Tetris[] board;
+    private final Tetris[] board;
 
     /**
      * Default constructor. Sets up game
