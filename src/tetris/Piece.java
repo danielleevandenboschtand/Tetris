@@ -83,7 +83,7 @@ public class Piece {
      */
     public void pickRandomPiece() {
         Random rand = new Random();
-        int x = Math.abs(rand.nextInt()) % 7 + 1;
+        int x = rand.nextInt(Integer.MAX_VALUE) % 7 + 1;
         Tetris[] num = Tetris.values();
         setPiece(num[x]);
     }

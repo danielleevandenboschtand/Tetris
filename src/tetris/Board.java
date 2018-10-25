@@ -14,10 +14,10 @@ import tetris.Piece.Tetris;
 public class Board extends JPanel implements ActionListener {
 
     /** width of game board */
-    private final int bWidth = 10;
+    private static final int bWidth = 10;
 
     /** height of game board */
-    private final int bHeight = 22;
+    private static final int bHeight = 22;
 
     /** timer used to regulate drop speeds */
     private Timer timer;
@@ -401,6 +401,10 @@ public class Board extends JPanel implements ActionListener {
                 // speed up drop
                 case KeyEvent.VK_SHIFT:
                     moveOneLineDown();
+                    break;
+
+                // any other key
+                default :
                     break;
             }
         }

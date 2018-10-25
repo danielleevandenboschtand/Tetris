@@ -159,6 +159,6 @@ public class Game extends JFrame implements ActionListener{
      * @param args args
      */
     public static void main(String[] args) {
-        Game game = new Game();
+        new Game();
     }
 }
