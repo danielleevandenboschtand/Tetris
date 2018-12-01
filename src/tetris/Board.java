@@ -10,7 +10,6 @@ import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.Collections;
 import javax.swing.*;
 
 import tetris.Piece.Tetris;
