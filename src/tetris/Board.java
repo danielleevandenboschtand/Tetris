@@ -366,7 +366,7 @@ class Board extends JPanel implements ActionListener {
     /**
      * Saves scores to text file to keep track of high scores
      */
-    private void saveScores()  {
+    private void saveScores() {
 
         PrintWriter out;
         String filename = "scores.txt";
@@ -388,7 +388,7 @@ class Board extends JPanel implements ActionListener {
     /**
      * Loads scores from text file to keep track of high scores
      */
-    public void loadScores()  {
+    public void loadScores() {
 
         String filename = "scores.txt";
 
