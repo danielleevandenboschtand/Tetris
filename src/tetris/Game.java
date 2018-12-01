@@ -272,8 +272,9 @@ class Game extends JFrame implements ActionListener {
             int i = 0;
             while(fileReader.hasNextInt()) {
                 highScores[i] = fileReader.nextInt();
+                System.out.println(highScores[i]);
                 i++;
-                if (i == 14) {
+                if (i == 9) {
                     break;
                 }
             }
