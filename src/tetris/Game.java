@@ -123,7 +123,7 @@ class Game extends JFrame implements ActionListener {
         JPanel buttonPanel = new JPanel();
 
         easyButton = new JRadioButton("Easy");
-        mediumButton = new JRadioButton("Medium");
+        mediumButton = new JRadioButton("Normal");
         hardButton = new JRadioButton("Hard");
 
         //Group the radio buttons
@@ -139,6 +139,16 @@ class Game extends JFrame implements ActionListener {
         easyButton.addActionListener(this);
         mediumButton.addActionListener(this);
         hardButton.addActionListener(this);
+
+        if (speed == 100) {
+            hardButton.setSelected(true);
+        }
+        else if (speed == 700) {
+            easyButton.setSelected(true);
+        }
+        else {
+            mediumButton.setSelected(true);
+        }
 
         settingsWindow.add(buttonPanel);
 
