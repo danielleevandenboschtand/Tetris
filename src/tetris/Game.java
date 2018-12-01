@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Scanner;
 
 class Game extends JFrame implements ActionListener {
     private JFrame helpWindow, settingsWindow, highScoresWindow;
@@ -22,6 +26,9 @@ class Game extends JFrame implements ActionListener {
 
     /** speed of timer */
     private int speed = 400;
+
+    /** top ten scores */
+    private int[] highScores = new int[10];
 
     /**
      * Default constructor to create game
@@ -165,6 +172,26 @@ class Game extends JFrame implements ActionListener {
 
         highScoresWindow = new JFrame();
 
+        loadScores();
+
+        JPanel scoresPanel = new JPanel();
+
+        JTextArea scoreTextArea = new JTextArea(
+                highScores[highScores.length - 1] + "\n" +
+                highScores[highScores.length - 2] + "\n" +
+                highScores[highScores.length - 3] + "\n" +
+                highScores[highScores.length - 4] + "\n" +
+                highScores[highScores.length - 5] + "\n" +
+                highScores[highScores.length - 6] + "\n" +
+                highScores[highScores.length - 7] + "\n" +
+                highScores[highScores.length - 8] + "\n" +
+                highScores[highScores.length - 9] + "\n" +
+                highScores[highScores.length - 10] + "\n"
+        );
+
+        scoresPanel.add(scoreTextArea);
+        highScoresWindow.add(scoresPanel);
+
         // create help window
         highScoresWindow.setVisible(true);
         highScoresWindow.setSize(500, 550);
@@ -230,6 +257,31 @@ class Game extends JFrame implements ActionListener {
      */
     private void setSpeed(int s) {
         speed = s;
+    }
+
+    /**
+     * Loads scores from text file to keep track of high scores
+     */
+    public void loadScores() {
+
+        String filename = "scores.txt";
+
+        try {
+            // open the text file
+            Scanner fileReader = new Scanner(new File(filename));
+            int i = 0;
+            while(fileReader.hasNextInt()) {
+                highScores[i] = fileReader.nextInt();
+                i++;
+                if (i == 14) {
+                    break;
+                }
+            }
+        }
+        catch (FileNotFoundException error) {
+            System.out.println("File not found");
+        }
+        Arrays.sort(highScores);
     }
 
     /**

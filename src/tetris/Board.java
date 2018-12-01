@@ -50,9 +50,6 @@ class Board extends JPanel implements ActionListener {
     /** game board */
     private final Tetris[] board;
 
-    /** array of scores */
-    private int[] highScores;
-
     /**
      * Default constructor. Sets up game
      * @param parent game object
@@ -369,40 +366,32 @@ class Board extends JPanel implements ActionListener {
         }
     }
 
-    /**
-     * Loads scores from text file to keep track of high scores
-     */
-    public void loadScores() {
-
-        String filename = "scores.txt";
-
-        try {
-            // open the text file
-            Scanner fileReader = new Scanner(new File(filename));
-            int num = 0;
-
-            // loop for reading file
-            while(fileReader.hasNext()) {
-                num++;
-
-                for (int i = 0; i < num; i++) {
-                    highScores[i] = fileReader.nextInt();
-                }
-            }
-        }
-        catch (FileNotFoundException error) {
-            System.out.println("File not found");
-        }
-        Arrays.sort(highScores);
-    }
-
-    /**
-     * Getter for array of high score values
-     * @return high score array
-     */
-    public int[] getHighScores() {
-        return highScores;
-    }
+//    /**
+//     * Loads scores from text file to keep track of high scores
+//     */
+//    public void loadScores() {
+//
+//        String filename = "scores.txt";
+//
+//        try {
+//            // open the text file
+//            Scanner fileReader = new Scanner(new File(filename));
+//            int num = 0;
+//
+//            // loop for reading file
+//            while(fileReader.hasNext()) {
+//                num++;
+//
+//                for (int i = 0; i < num; i++) {
+//                    highScores[i] = fileReader.nextInt();
+//                }
+//            }
+//        }
+//        catch (FileNotFoundException error) {
+//            System.out.println("File not found");
+//        }
+//        Arrays.sort(highScores);
+//    }
 
     /**
      * Key adapter class
