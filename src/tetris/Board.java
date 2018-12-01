@@ -8,7 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Collections;
 import javax.swing.*;
 
 import tetris.Piece.Tetris;
@@ -351,7 +353,7 @@ class Board extends JPanel implements ActionListener {
      * Saves scores to text file to keep track of high scores
      * @param filename name of file
      */
-    public void saveScores(String filename)  {
+    private void saveScores(String filename)  {
 
         PrintWriter out = null;
 
@@ -393,6 +395,7 @@ class Board extends JPanel implements ActionListener {
         catch (FileNotFoundException error) {
             System.out.println("File not found");
         }
+        Arrays.sort(highScores);
     }
 
     /**
