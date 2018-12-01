@@ -23,7 +23,7 @@ class Board extends JPanel implements ActionListener {
     private static final int bHeight = 22;
 
     /** timer used to regulate drop speeds */
-    private final Timer timer;
+    private Timer timer;
 
     /** used to know when to get next piece */
     private boolean atBottom = false;
@@ -53,6 +53,9 @@ class Board extends JPanel implements ActionListener {
     /** array of scores */
     private int[] highScores;
 
+    /** true if time has been changed */
+    private boolean timeSet = false;
+
     /**
      * Default constructor. Sets up game
      * @param parent game object
@@ -60,13 +63,25 @@ class Board extends JPanel implements ActionListener {
     public Board(Game parent) {
         setFocusable(true);
         curPiece = new Piece();
-        timer = new Timer(400, this);
-        timer.start();
 
+        // checks if time has been changed
+        if(!timeSet) {
+            timer = new Timer(400, this);
+        }
+        timer.start();
         scorebar = parent.getStatusBar();
         board = new Tetris[bWidth * bHeight];
         addKeyListener(new TAdapter());
         clear();
+    }
+
+    /**
+     * Set speed of gameplay
+     * @param s speed of timer
+     */
+    public void setSpeed(int s) {
+        timer = new Timer(s, this);
+        timeSet = true;
     }
 
     /**
@@ -394,6 +409,14 @@ class Board extends JPanel implements ActionListener {
             System.out.println("File not found");
         }
         Arrays.sort(highScores);
+    }
+
+    /**
+     * Getter for array of high score values
+     * @return high score array
+     */
+    public int[] getHighScores() {
+        return highScores;
     }
 
     /**
