@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 class Game extends JFrame implements ActionListener {
-    private JFrame helpWindow;
+    private JFrame helpWindow, settingsWindow, highScoresWindow;
 
     /** bar to show score/game message */
     private JLabel scorebar;
@@ -15,7 +15,12 @@ class Game extends JFrame implements ActionListener {
     private final ImageIcon logo = new ImageIcon("tetris.png");
 
     /** buttons for game navigation */
-    private JButton start, help, back, settings, highscores;
+    private JButton start, help, helpBack, settings, settingsBack, highscores, highscoresBack;
+
+    /** settings radio buttons **/
+    JRadioButton easyButton, mediumButton, hardButton;
+
+    public int speed = 400;
 
     /**
      * Default constructor to create game
@@ -93,32 +98,58 @@ class Game extends JFrame implements ActionListener {
         helpTextArea.setWrapStyleWord(true);
         helpWindow.add(helpTextArea, BorderLayout.CENTER);
 
-        back = new JButton("Back");
-        helpWindow.add(back, BorderLayout.SOUTH);
-        back.addActionListener(this);
+        helpBack = new JButton("Back");
+        helpWindow.add(helpBack, BorderLayout.SOUTH);
+        helpBack.addActionListener(this);
     }
 
     /**
      * Loads settings menu
      */
     private void settingsMenu() {
-        JFrame settingsWindow;
-        JLabel settingsText;
-
         settingsWindow = new JFrame();
 
-        // create help window
+        JLabel settingsText = new JLabel("Settings");
+        settingsText.setHorizontalAlignment(JLabel.CENTER);
+        settingsText.setFont(new Font("Arial Black", Font.PLAIN, 20));
+        settingsWindow.add(settingsText, BorderLayout.NORTH);
+
+        // create settings window
         settingsWindow.setVisible(true);
         settingsWindow.setSize(500, 550);
         settingsWindow.setTitle("Tetris Settings");
 
+        JPanel buttonPanel = new JPanel();
+
+        easyButton = new JRadioButton("Easy");
+        mediumButton = new JRadioButton("Medium");
+        hardButton = new JRadioButton("Hard");
+
+        //Group the radio buttons
+        ButtonGroup group = new ButtonGroup();
+        group.add(easyButton);
+        group.add(mediumButton);
+        group.add(hardButton);
+
+        buttonPanel.add(easyButton);
+        buttonPanel.add(mediumButton);
+        buttonPanel.add(hardButton);
+
+        easyButton.addActionListener(this);
+        mediumButton.addActionListener(this);
+        hardButton.addActionListener(this);
+
+        settingsWindow.add(buttonPanel);
+
+        settingsBack = new JButton("Back");
+        settingsWindow.add(settingsBack, BorderLayout.SOUTH);
+        settingsBack.addActionListener(this);
     }
 
     /**
      * Loads high scores menu
      */
     private void highScoresMenu() {
-        JFrame highScoresWindow;
         JLabel highScoresText;
 
         highScoresWindow = new JFrame();
@@ -193,8 +224,20 @@ class Game extends JFrame implements ActionListener {
         if (e.getSource() == highscores) {
             highScoresMenu();
         }
-        if (e.getSource() == back) {
+        if (e.getSource() == settingsBack) {
+            settingsWindow.dispose();
+        }
+        if (e.getSource() == helpBack) {
             helpWindow.dispose();
+        }
+        if (e.getSource() == easyButton) {
+            setSpeed(200);
+        }
+        if (e.getSource() == mediumButton) {
+            setSpeed(400);
+        }
+        if (e.getSource() == hardButton) {
+            setSpeed(600);
         }
     }
 
