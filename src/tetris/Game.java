@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class Game extends JFrame implements ActionListener{
+class Game extends JFrame implements ActionListener {
     private JFrame helpWindow;
 
     /** bar to show score/game message */
@@ -15,7 +15,7 @@ class Game extends JFrame implements ActionListener{
     private final ImageIcon logo = new ImageIcon("tetris.png");
 
     /** buttons for game navigation */
-    private JButton start, help, back;
+    private JButton start, help, back, settings, highscores;
 
     /**
      * Default constructor to create game
@@ -99,6 +99,38 @@ class Game extends JFrame implements ActionListener{
     }
 
     /**
+     * Loads settings menu
+     */
+    private void settingsMenu() {
+        JFrame settingsWindow;
+        JLabel settingsText;
+
+        settingsWindow = new JFrame();
+
+        // create help window
+        settingsWindow.setVisible(true);
+        settingsWindow.setSize(500, 550);
+        settingsWindow.setTitle("Tetris Settings");
+
+    }
+
+    /**
+     * Loads high scores menu
+     */
+    private void highScoresMenu() {
+        JFrame highScoresWindow;
+        JLabel highScoresText;
+
+        highScoresWindow = new JFrame();
+
+        // create help window
+        highScoresWindow.setVisible(true);
+        highScoresWindow.setSize(500, 550);
+        highScoresWindow.setTitle("Tetris High Scores");
+
+    }
+
+    /**
      * Frame for menu screen
      */
     private void frame() {
@@ -121,15 +153,25 @@ class Game extends JFrame implements ActionListener{
         help = new JButton("Help");
         help.setPreferredSize(new Dimension(100, 40));
 
+        settings = new JButton("Settings");
+        settings.setPreferredSize(new Dimension(100, 40));
+
+        highscores = new JButton("High Scores");
+        highscores.setPreferredSize(new Dimension(100, 40));
+
         f.add(title, BorderLayout.NORTH);
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setFont(new Font("Arial Black", Font.PLAIN, 80));
         p.add(start);
         p.add(help);
+        p.add(settings);
+        p.add(highscores);
         f.add(p);
 
         start.addActionListener(this);
         help.addActionListener(this);
+        settings.addActionListener(this);
+        highscores.addActionListener(this);
     }
 
     /**
@@ -144,6 +186,12 @@ class Game extends JFrame implements ActionListener{
         }
         if (e.getSource() == help) {
             helpMenu();
+        }
+        if (e.getSource() == settings) {
+            settingsMenu();
+        }
+        if (e.getSource() == highscores) {
+            highScoresMenu();
         }
         if (e.getSource() == back) {
             helpWindow.dispose();
