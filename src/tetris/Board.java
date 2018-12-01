@@ -356,7 +356,7 @@ class Board extends JPanel implements ActionListener {
         PrintWriter out = null;
 
         try {
-            out = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+            out = new PrintWriter(new BufferedWriter(new FileWriter(filename, true)));
 
             // save scores
             out.append(String.valueOf(score * 100));
