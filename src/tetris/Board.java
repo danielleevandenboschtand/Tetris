@@ -86,7 +86,7 @@ class Board extends JPanel implements ActionListener {
 
     /**
      * Gets square width
-     * @return int wirdth of square
+     * @return int width of square
      */
     private int sqWidth() {
         return (int) getSize().getWidth() / bWidth;
