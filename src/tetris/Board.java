@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.*;
+import java.util.Scanner;
 import javax.swing.*;
 
 import tetris.Piece.Tetris;
@@ -46,6 +48,9 @@ class Board extends JPanel implements ActionListener {
 
     /** game board */
     private final Tetris[] board;
+
+    /** array of scores */
+    private int[] highScores;
 
     /**
      * Default constructor. Sets up game
@@ -307,6 +312,7 @@ class Board extends JPanel implements ActionListener {
             timer.stop();
             started = false;
             scorebar.setText("Game Over! Score: " + String.valueOf(score * 100));
+            saveScores("scores.txt");
         }
     }
 
@@ -338,6 +344,53 @@ class Board extends JPanel implements ActionListener {
             newPiece();
         } else {
             moveOneLineDown();
+        }
+    }
+
+    /**
+     * Saves scores to text file to keep track of high scores
+     * @param filename name of file
+     */
+    public void saveScores(String filename)  {
+
+        PrintWriter out = null;
+
+        try {
+            out = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+
+            // save scores
+            out.println(String.valueOf(score * 100));
+
+            out.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads scores from text file to keep track of high scores
+     * @param filename name of file
+     */
+    public void loadScores(String filename)  {
+
+        try {
+            // open the text file
+            Scanner fileReader = new Scanner(new File(filename));
+            int num = 0;
+
+            // loop for reading file
+            while(fileReader.hasNext()) {
+                num++;
+
+                for (int i = 0; i < num; i++) {
+                    highScores[i] = fileReader.nextInt();
+                }
+
+            }
+        }
+        catch (FileNotFoundException error) {
+            System.out.println("File not found");
         }
     }
 
