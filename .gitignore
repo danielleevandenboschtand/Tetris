@@ -2,6 +2,7 @@
 *.xml
 *.idea
 *.DS_STORE
+*.txt
 <<<<<<< HEAD
 ../../out/*
 =======
