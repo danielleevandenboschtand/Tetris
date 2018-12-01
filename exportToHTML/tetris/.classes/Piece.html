@@ -105,181 +105,184 @@
 <i>5</i>&nbsp;
 <i>6</i>&nbsp;public class Piece {
 <i>7</i>&nbsp;
-<i>8</i>&nbsp;    // tetrominos shapes
-<b class="fc"><i>9</i>&nbsp;    enum Tetris {emptyPiece, zPiece, sPiece, linePiece, tPiece, squarePiece, lPiece, mlPiece};</b>
+<i>8</i>&nbsp;    /** tetrominos shapes */
+<b class="fc"><i>9</i>&nbsp;    enum Tetris {emptyPiece, zPiece, sPiece, linePiece, tPiece, squarePiece, lPiece, mlPiece}</b>
 <i>10</i>&nbsp;
-<i>11</i>&nbsp;    // tetrominos shape object
+<i>11</i>&nbsp;    /** tetrominos shape object */
 <i>12</i>&nbsp;    private Tetris pieces;
 <i>13</i>&nbsp;
-<i>14</i>&nbsp;    // coordinates to make tetromino piece
-<i>15</i>&nbsp;    private int pieceCoords[][];
+<i>14</i>&nbsp;    /** coordinates to make tetromino piece */
+<i>15</i>&nbsp;    private final int[][] pieceCoords;
 <i>16</i>&nbsp;
-<i>17</i>&nbsp;    // array of coordinates of created piece shapes
-<i>18</i>&nbsp;    private int[][][] createCoord;
-<i>19</i>&nbsp;
-<i>20</i>&nbsp;    /*
-<i>21</i>&nbsp;    Default constructor sets pieceCoords with placeholder empty shape
-<i>22</i>&nbsp;     */
-<b class="fc"><i>23</i>&nbsp;    public Piece() {</b>
-<b class="fc"><i>24</i>&nbsp;        pieceCoords = new int[4][2];</b>
-<b class="fc"><i>25</i>&nbsp;        setPiece(Tetris.emptyPiece);</b>
-<b class="fc"><i>26</i>&nbsp;    }</b>
-<i>27</i>&nbsp;
-<i>28</i>&nbsp;    /*
-<i>29</i>&nbsp;    Creates new tetromino shape
-<i>30</i>&nbsp;     */
-<i>31</i>&nbsp;    public void setPiece(Tetris shape) {
-<i>32</i>&nbsp;
-<b class="fc"><i>33</i>&nbsp;        createCoord = new int[][][] {</b>
-<i>34</i>&nbsp;
-<i>35</i>&nbsp;                // empty shape
-<i>36</i>&nbsp;                { {0, 0}, {0, 0}, {0, 0}, {0, 0} },
-<i>37</i>&nbsp;
-<i>38</i>&nbsp;                // Z shape
-<i>39</i>&nbsp;                { {0, -1}, {0, 0}, {-1, 0}, {-1, 1} },
-<i>40</i>&nbsp;
-<i>41</i>&nbsp;                // S shape
-<i>42</i>&nbsp;                { {0, -1}, {0, 0}, {1, 0}, {1, 1} },
-<i>43</i>&nbsp;
-<i>44</i>&nbsp;                // Line shape
-<i>45</i>&nbsp;                { {0, -1}, {0, 0}, {0, 1}, {0, 2} },
-<i>46</i>&nbsp;
-<i>47</i>&nbsp;                // T shape
-<i>48</i>&nbsp;                { {-1, 0}, {0, 0}, {1, 0}, {0, 1} },
-<i>49</i>&nbsp;
-<i>50</i>&nbsp;                // Square shape
-<i>51</i>&nbsp;                { {0, 0}, {1, 0}, {0, 1}, {1, 1} },
-<i>52</i>&nbsp;
-<i>53</i>&nbsp;                // L shape
-<i>54</i>&nbsp;                { {-1, -1}, {0, -1}, {0, 0}, {0, 1} },
-<i>55</i>&nbsp;
-<i>56</i>&nbsp;                // Mirrored L shape
-<i>57</i>&nbsp;                { {1, -1}, {0, -1}, {0, 0}, {0, 1} }
-<i>58</i>&nbsp;        };
-<i>59</i>&nbsp;
-<i>60</i>&nbsp;        // loop to set coordinates and build shapes
-<b class="fc"><i>61</i>&nbsp;        for (int i = 0; i &lt; 4 ; i++) {</b>
-<b class="fc"><i>62</i>&nbsp;            for (int j = 0; j &lt; 2; ++j) {</b>
-<b class="fc"><i>63</i>&nbsp;                pieceCoords[i][j] = createCoord[shape.ordinal()][i][j];</b>
-<i>64</i>&nbsp;            }
-<i>65</i>&nbsp;        }
+<i>17</i>&nbsp;    /**
+<i>18</i>&nbsp;     * Default constructor sets pieceCoords with placeholder empty shape
+<i>19</i>&nbsp;     */
+<i>20</i>&nbsp;    public Piece() {
+<i>21</i>&nbsp;        pieceCoords = new int[4][2];
+<i>22</i>&nbsp;        setPiece(Tetris.emptyPiece);
+<b class="fc"><i>23</i>&nbsp;    }</b>
+<b class="fc"><i>24</i>&nbsp;</b>
+<b class="fc"><i>25</i>&nbsp;    /**</b>
+<b class="fc"><i>26</i>&nbsp;     * Creates new tetromino shape</b>
+<i>27</i>&nbsp;     * @param shape tetromino shape
+<i>28</i>&nbsp;     */
+<i>29</i>&nbsp;    public void setPiece(Tetris shape) {
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;        /* array of coordinates of created piece shapes */
+<i>32</i>&nbsp;        int[][][] createCoord = new int[][][]{
+<b class="fc"><i>33</i>&nbsp;</b>
+<i>34</i>&nbsp;                // empty shape
+<i>35</i>&nbsp;                {{0, 0}, {0, 0}, {0, 0}, {0, 0}},
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;                // Z shape
+<i>38</i>&nbsp;                {{0, -1}, {0, 0}, {-1, 0}, {-1, 1}},
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;                // S shape
+<i>41</i>&nbsp;                {{0, -1}, {0, 0}, {1, 0}, {1, 1}},
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;                // Line shape
+<i>44</i>&nbsp;                {{0, -1}, {0, 0}, {0, 1}, {0, 2}},
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;                // T shape
+<i>47</i>&nbsp;                {{-1, 0}, {0, 0}, {1, 0}, {0, 1}},
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;                // Square shape
+<i>50</i>&nbsp;                {{0, 0}, {1, 0}, {0, 1}, {1, 1}},
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;                // L shape
+<i>53</i>&nbsp;                {{-1, -1}, {0, -1}, {0, 0}, {0, 1}},
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;                // Mirrored L shape
+<i>56</i>&nbsp;                {{1, -1}, {0, -1}, {0, 0}, {0, 1}}
+<i>57</i>&nbsp;        };
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;        // loop to set coordinates and build shapes
+<i>60</i>&nbsp;        for (int i = 0; i &lt; 4 ; i++) {
+<b class="fc"><i>61</i>&nbsp;            System.arraycopy(createCoord[shape.ordinal()][i], 0, pieceCoords[i], 0, 2);</b>
+<b class="fc"><i>62</i>&nbsp;        }</b>
+<b class="fc"><i>63</i>&nbsp;</b>
+<i>64</i>&nbsp;        // set piece
+<i>65</i>&nbsp;        pieces = shape;
 <i>66</i>&nbsp;
-<i>67</i>&nbsp;        // set piece
-<b class="fc"><i>68</i>&nbsp;        pieces = shape;</b>
-<i>69</i>&nbsp;
-<b class="fc"><i>70</i>&nbsp;    }</b>
-<i>71</i>&nbsp;
-<i>72</i>&nbsp;    /*
-<i>73</i>&nbsp;    Returns tetris piece
-<i>74</i>&nbsp;    @returns Tetris piece object
-<i>75</i>&nbsp;     */
-<i>76</i>&nbsp;    public Tetris getPiece() {
-<b class="fc"><i>77</i>&nbsp;        return pieces;</b>
-<i>78</i>&nbsp;    }
-<i>79</i>&nbsp;
-<i>80</i>&nbsp;    /*
-<i>81</i>&nbsp;    Chooses a random tetromino piece
-<i>82</i>&nbsp;     */
-<i>83</i>&nbsp;    public void pickRandomPiece() {
-<b class="fc"><i>84</i>&nbsp;        Random rand = new Random();</b>
-<b class="fc"><i>85</i>&nbsp;        int x = Math.abs(rand.nextInt()) % 7 + 1;</b>
-<b class="fc"><i>86</i>&nbsp;        Tetris[] num = Tetris.values();</b>
-<b class="fc"><i>87</i>&nbsp;        setPiece(num[x]);</b>
-<b class="fc"><i>88</i>&nbsp;    }</b>
-<i>89</i>&nbsp;
-<i>90</i>&nbsp;    /*
-<i>91</i>&nbsp;    Used to adjust x coordinates when piece is rotated
-<i>92</i>&nbsp;     */
-<i>93</i>&nbsp;    private void changeX(int i, int x) {
-<b class="fc"><i>94</i>&nbsp;        pieceCoords[i][0] = x;</b>
-<b class="fc"><i>95</i>&nbsp;    }</b>
-<i>96</i>&nbsp;
-<i>97</i>&nbsp;    /*
-<i>98</i>&nbsp;    Used to adjust y coordinates when piece is rotated
-<i>99</i>&nbsp;     */
-<i>100</i>&nbsp;    private void changeY(int i, int y) {
-<b class="fc"><i>101</i>&nbsp;        pieceCoords[i][1] = y;</b>
-<b class="fc"><i>102</i>&nbsp;    }</b>
-<i>103</i>&nbsp;
-<i>104</i>&nbsp;    /*
-<i>105</i>&nbsp;    Used to adjust x coordinates when piece is rotated
-<i>106</i>&nbsp;    @returns int pieceCoords the new x coordinates
-<i>107</i>&nbsp;     */
-<i>108</i>&nbsp;    public int adjustX(int i) {
-<b class="fc"><i>109</i>&nbsp;        return pieceCoords[i][0];</b>
-<i>110</i>&nbsp;    }
-<i>111</i>&nbsp;
-<i>112</i>&nbsp;    /*
-<i>113</i>&nbsp;    Used to adjust y coordinates when piece is rotated
-<i>114</i>&nbsp;    @returns int pieceCoords the new y coordinates
-<i>115</i>&nbsp;     */
-<i>116</i>&nbsp;    public int adjustY(int i) {
-<b class="fc"><i>117</i>&nbsp;        return pieceCoords[i][1];</b>
-<i>118</i>&nbsp;    }
-<i>119</i>&nbsp;
-<i>120</i>&nbsp;    /*
-<i>121</i>&nbsp;    Rotates the tetromino to the right
-<i>122</i>&nbsp;    @returns Tetris rotPiece the new piece coordinates
-<i>123</i>&nbsp;     */
-<i>124</i>&nbsp;    public Piece rotateRight() {
-<i>125</i>&nbsp;
-<i>126</i>&nbsp;        // square piece doesn&#39;t change when rotated
-<b class="fc"><i>127</i>&nbsp;        if (pieces == Tetris.squarePiece) {</b>
-<b class="nc"><i>128</i>&nbsp;            return this;</b>
-<i>129</i>&nbsp;        }
-<i>130</i>&nbsp;
-<b class="fc"><i>131</i>&nbsp;        Piece rotPiece = new Piece();</b>
-<b class="fc"><i>132</i>&nbsp;        rotPiece.pieces = pieces;</b>
+<i>67</i>&nbsp;    }
+<b class="fc"><i>68</i>&nbsp;</b>
+<i>69</i>&nbsp;    /**
+<b class="fc"><i>70</i>&nbsp;     * Returns tetris piece</b>
+<i>71</i>&nbsp;     * @return Tetris piece object
+<i>72</i>&nbsp;     */
+<i>73</i>&nbsp;    public Tetris getPiece() {
+<i>74</i>&nbsp;        return pieces;
+<i>75</i>&nbsp;    }
+<i>76</i>&nbsp;
+<b class="fc"><i>77</i>&nbsp;    /**</b>
+<i>78</i>&nbsp;     * Chooses a random tetromino piece
+<i>79</i>&nbsp;     */
+<i>80</i>&nbsp;    public void pickRandomPiece() {
+<i>81</i>&nbsp;        Random rand = new Random();
+<i>82</i>&nbsp;        int x = rand.nextInt(Integer.MAX_VALUE) % 7 + 1;
+<i>83</i>&nbsp;        Tetris[] num = Tetris.values();
+<b class="fc"><i>84</i>&nbsp;        setPiece(num[x]);</b>
+<b class="fc"><i>85</i>&nbsp;    }</b>
+<b class="fc"><i>86</i>&nbsp;</b>
+<b class="fc"><i>87</i>&nbsp;    /**</b>
+<b class="fc"><i>88</i>&nbsp;     * Used to adjust x coordinates when piece is rotated</b>
+<i>89</i>&nbsp;     * @param i old x coordinate
+<i>90</i>&nbsp;     * @param x new x coordinate
+<i>91</i>&nbsp;     */
+<i>92</i>&nbsp;    private void changeX(int i, int x) {
+<i>93</i>&nbsp;        pieceCoords[i][0] = x;
+<b class="fc"><i>94</i>&nbsp;    }</b>
+<b class="fc"><i>95</i>&nbsp;</b>
+<i>96</i>&nbsp;    /**
+<i>97</i>&nbsp;     * Used to adjust y coordinates when piece is rotated
+<i>98</i>&nbsp;     * @param i old y coordinate
+<i>99</i>&nbsp;     * @param y nre y coordinate
+<i>100</i>&nbsp;     */
+<b class="fc"><i>101</i>&nbsp;    private void changeY(int i, int y) {</b>
+<b class="fc"><i>102</i>&nbsp;        pieceCoords[i][1] = y;</b>
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    /**
+<i>106</i>&nbsp;     * Used to adjust x coordinates when piece is rotated
+<i>107</i>&nbsp;     * @param i x coordinate
+<i>108</i>&nbsp;     * @return new coordinates
+<b class="fc"><i>109</i>&nbsp;     */</b>
+<i>110</i>&nbsp;    public int adjustX(int i) {
+<i>111</i>&nbsp;        return pieceCoords[i][0];
+<i>112</i>&nbsp;    }
+<i>113</i>&nbsp;
+<i>114</i>&nbsp;    /**
+<i>115</i>&nbsp;     * Used to adjust y coordinates when piece is rotated
+<i>116</i>&nbsp;     * @param i y coordinate
+<b class="fc"><i>117</i>&nbsp;     * @return new coordinates</b>
+<i>118</i>&nbsp;     */
+<i>119</i>&nbsp;    public int adjustY(int i) {
+<i>120</i>&nbsp;        return pieceCoords[i][1];
+<i>121</i>&nbsp;    }
+<i>122</i>&nbsp;
+<i>123</i>&nbsp;    /**
+<i>124</i>&nbsp;     * Rotates the tetromino to the right
+<i>125</i>&nbsp;     * @return Tetris rotPiece the new piece coordinates
+<i>126</i>&nbsp;     */
+<b class="fc"><i>127</i>&nbsp;    public Piece rotateRight() {</b>
+<b class="nc"><i>128</i>&nbsp;</b>
+<i>129</i>&nbsp;        // square piece doesn&#39;t change when rotated
+<i>130</i>&nbsp;        if (pieces == Tetris.squarePiece) {
+<b class="fc"><i>131</i>&nbsp;            return this;</b>
+<b class="fc"><i>132</i>&nbsp;        }</b>
 <i>133</i>&nbsp;
-<i>134</i>&nbsp;        // change coordinates of shape from rotation
-<b class="fc"><i>135</i>&nbsp;        for (int i = 0; i &lt; 4; ++i) {</b>
-<b class="fc"><i>136</i>&nbsp;            rotPiece.changeX(i, -adjustY(i));</b>
-<b class="fc"><i>137</i>&nbsp;            rotPiece.changeY(i, adjustX(i));</b>
-<i>138</i>&nbsp;        }
-<b class="fc"><i>139</i>&nbsp;        return rotPiece;</b>
-<i>140</i>&nbsp;    }
-<i>141</i>&nbsp;
-<i>142</i>&nbsp;    /*
-<i>143</i>&nbsp;    Rotates the tetromino to the left
-<i>144</i>&nbsp;    @returns Tetris rotPiece the new piece coordinates
-<i>145</i>&nbsp;     */
-<i>146</i>&nbsp;    public Piece rotateLeft() {
-<i>147</i>&nbsp;
-<i>148</i>&nbsp;        // square piece doesn&#39;t change when rotated
-<b class="fc"><i>149</i>&nbsp;        if (pieces == Tetris.squarePiece) {</b>
-<b class="nc"><i>150</i>&nbsp;            return this;</b>
-<i>151</i>&nbsp;        }
-<i>152</i>&nbsp;
-<b class="fc"><i>153</i>&nbsp;        Piece rotPiece = new Piece();</b>
-<b class="fc"><i>154</i>&nbsp;        rotPiece.pieces = pieces;</b>
+<i>134</i>&nbsp;        Piece rotPiece = new Piece();
+<b class="fc"><i>135</i>&nbsp;        rotPiece.pieces = pieces;</b>
+<b class="fc"><i>136</i>&nbsp;</b>
+<b class="fc"><i>137</i>&nbsp;        // change coordinates of shape from rotation</b>
+<i>138</i>&nbsp;        for (int i = 0; i &lt; 4; ++i) {
+<b class="fc"><i>139</i>&nbsp;            rotPiece.changeX(i, -adjustY(i));</b>
+<i>140</i>&nbsp;            rotPiece.changeY(i, adjustX(i));
+<i>141</i>&nbsp;        }
+<i>142</i>&nbsp;        return rotPiece;
+<i>143</i>&nbsp;    }
+<i>144</i>&nbsp;
+<i>145</i>&nbsp;    /**
+<i>146</i>&nbsp;     * Rotates the tetromino to the left
+<i>147</i>&nbsp;     * @return Tetris rotPiece the new piece coordinates
+<i>148</i>&nbsp;     */
+<b class="fc"><i>149</i>&nbsp;    public Piece rotateLeft() {</b>
+<b class="nc"><i>150</i>&nbsp;</b>
+<i>151</i>&nbsp;        // square piece doesn&#39;t change when rotated
+<i>152</i>&nbsp;        if (pieces == Tetris.squarePiece) {
+<b class="fc"><i>153</i>&nbsp;            return this;</b>
+<b class="fc"><i>154</i>&nbsp;        }</b>
 <i>155</i>&nbsp;
-<i>156</i>&nbsp;        // change coordinates of shape from rotation
-<b class="fc"><i>157</i>&nbsp;        for (int i = 0; i &lt; 4; ++i) {</b>
-<b class="fc"><i>158</i>&nbsp;            rotPiece.changeX(i, adjustY(i));</b>
-<b class="fc"><i>159</i>&nbsp;            rotPiece.changeY(i, -adjustX(i));</b>
-<i>160</i>&nbsp;        }
-<b class="fc"><i>161</i>&nbsp;        return rotPiece;</b>
-<i>162</i>&nbsp;    }
-<i>163</i>&nbsp;
-<i>164</i>&nbsp;    /*
-<i>165</i>&nbsp;    Sets where the piece starts from the top based on the size of the piece
-<i>166</i>&nbsp;    @returns int min the minimum top-position
-<i>167</i>&nbsp;     */
-<i>168</i>&nbsp;    public int minY()
-<i>169</i>&nbsp;    {
-<b class="fc"><i>170</i>&nbsp;        int min = pieceCoords[0][1];</b>
-<b class="fc"><i>171</i>&nbsp;        for (int i = 0; i &lt; 4; i++) {</b>
-<b class="fc"><i>172</i>&nbsp;            min = Math.min(min, pieceCoords[i][1]);</b>
-<i>173</i>&nbsp;        }
-<b class="fc"><i>174</i>&nbsp;        return min;</b>
-<i>175</i>&nbsp;    }
-<i>176</i>&nbsp;}
+<i>156</i>&nbsp;        Piece rotPiece = new Piece();
+<b class="fc"><i>157</i>&nbsp;        rotPiece.pieces = pieces;</b>
+<b class="fc"><i>158</i>&nbsp;</b>
+<b class="fc"><i>159</i>&nbsp;        // change coordinates of shape from rotation</b>
+<i>160</i>&nbsp;        for (int i = 0; i &lt; 4; ++i) {
+<b class="fc"><i>161</i>&nbsp;            rotPiece.changeX(i, adjustY(i));</b>
+<i>162</i>&nbsp;            rotPiece.changeY(i, -adjustX(i));
+<i>163</i>&nbsp;        }
+<i>164</i>&nbsp;        return rotPiece;
+<i>165</i>&nbsp;    }
+<i>166</i>&nbsp;
+<i>167</i>&nbsp;    /**
+<i>168</i>&nbsp;     * Sets where the piece starts from the top based on the size of the piece
+<i>169</i>&nbsp;     * @return int min the minimum top-position
+<b class="fc"><i>170</i>&nbsp;     */</b>
+<b class="fc"><i>171</i>&nbsp;    public int minY()</b>
+<b class="fc"><i>172</i>&nbsp;    {</b>
+<i>173</i>&nbsp;        int min = pieceCoords[0][1];
+<b class="fc"><i>174</i>&nbsp;        for (int i = 0; i &lt; 4; i++) {</b>
+<i>175</i>&nbsp;            min = Math.min(min, pieceCoords[i][1]);
+<i>176</i>&nbsp;        }
+<i>177</i>&nbsp;        return min;
+<i>178</i>&nbsp;    }
+<i>179</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2018-10-23 22:03</div>
+    <div style="float:right;">generated on 2018-10-26 10:08</div>
 </div>
 </body>
 </html>

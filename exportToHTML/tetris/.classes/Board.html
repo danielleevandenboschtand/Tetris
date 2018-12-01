@@ -111,390 +111,411 @@
 <i>11</i>&nbsp;
 <i>12</i>&nbsp;import tetris.Piece.Tetris;
 <i>13</i>&nbsp;
-<b class="fc"><i>14</i>&nbsp;public class Board extends JPanel implements ActionListener {</b>
+<b class="fc"><i>14</i>&nbsp;class Board extends JPanel implements ActionListener {</b>
 <i>15</i>&nbsp;
-<i>16</i>&nbsp;    // width of game board
-<b class="fc"><i>17</i>&nbsp;    private final int bWidth = 10;</b>
+<i>16</i>&nbsp;    /** width of game board */
+<b class="fc"><i>17</i>&nbsp;    private static final int bWidth = 10;</b>
 <i>18</i>&nbsp;
-<i>19</i>&nbsp;    // height of game board
-<b class="fc"><i>20</i>&nbsp;    private final int bHeight = 22;</b>
+<i>19</i>&nbsp;    /** height of game board */
+<b class="fc"><i>20</i>&nbsp;    private static final int bHeight = 22;</b>
 <i>21</i>&nbsp;
-<i>22</i>&nbsp;    // timer used to regulate drop speeds
-<i>23</i>&nbsp;    private Timer timer;
+<i>22</i>&nbsp;    /** timer used to regulate drop speeds */
+<i>23</i>&nbsp;    private final Timer timer;
 <i>24</i>&nbsp;
-<i>25</i>&nbsp;    // used to know when to get next piece
+<i>25</i>&nbsp;    /** used to know when to get next piece */
 <b class="fc"><i>26</i>&nbsp;    private boolean atBottom = false;</b>
 <i>27</i>&nbsp;
-<i>28</i>&nbsp;    // used to know when game is started
+<i>28</i>&nbsp;    /** used to know when game is started */
 <b class="fc"><i>29</i>&nbsp;    private boolean started = false;</b>
 <i>30</i>&nbsp;
-<i>31</i>&nbsp;    // used to know if game is paused
+<i>31</i>&nbsp;    /** used to know if game is paused */
 <b class="fc"><i>32</i>&nbsp;    private boolean paused = false;</b>
 <i>33</i>&nbsp;
-<i>34</i>&nbsp;    // number of lines cleared
+<i>34</i>&nbsp;    /** number of lines cleared */
 <b class="fc"><i>35</i>&nbsp;    private int score = 0;</b>
 <i>36</i>&nbsp;
-<i>37</i>&nbsp;    // current position of falling piece
+<i>37</i>&nbsp;    /** current position of falling piece */
 <b class="fc"><i>38</i>&nbsp;    private int curX = 0;</b>
 <b class="fc"><i>39</i>&nbsp;    private int curY = 0;</b>
 <i>40</i>&nbsp;
-<i>41</i>&nbsp;    // bar to show score/game message
-<i>42</i>&nbsp;    private JLabel scorebar;
+<i>41</i>&nbsp;    /** bar to show score/game message */
+<i>42</i>&nbsp;    private final JLabel scorebar;
 <i>43</i>&nbsp;
-<i>44</i>&nbsp;    // current tetromino shape
+<i>44</i>&nbsp;    /** current tetromino shape */
 <i>45</i>&nbsp;    private Piece curPiece;
 <i>46</i>&nbsp;
-<i>47</i>&nbsp;    // game board
-<i>48</i>&nbsp;    private Tetris[] board;
+<i>47</i>&nbsp;    /** game board */
+<i>48</i>&nbsp;    private final Tetris[] board;
 <i>49</i>&nbsp;
-<i>50</i>&nbsp;    /*
-<i>51</i>&nbsp;    Default constructor. Sets up game
-<i>52</i>&nbsp;     */
-<b class="fc"><i>53</i>&nbsp;    public Board(Game parent) {</b>
-<b class="fc"><i>54</i>&nbsp;        setFocusable(true);</b>
-<b class="fc"><i>55</i>&nbsp;        curPiece = new Piece();</b>
-<b class="fc"><i>56</i>&nbsp;        timer = new Timer(400, this);</b>
-<b class="fc"><i>57</i>&nbsp;        timer.start();</b>
-<i>58</i>&nbsp;
-<b class="fc"><i>59</i>&nbsp;        scorebar = parent.getStatusBar();</b>
-<b class="fc"><i>60</i>&nbsp;        board = new Tetris[bWidth * bHeight];</b>
-<b class="fc"><i>61</i>&nbsp;        addKeyListener(new TAdapter());</b>
-<b class="fc"><i>62</i>&nbsp;        clear();</b>
-<b class="fc"><i>63</i>&nbsp;    }</b>
-<i>64</i>&nbsp;
-<i>65</i>&nbsp;    /*
-<i>66</i>&nbsp;     Gets square width
-<i>67</i>&nbsp;     @returns int width of square
-<i>68</i>&nbsp;     */
-<i>69</i>&nbsp;    private int sqWidth() {
-<b class="fc"><i>70</i>&nbsp;        return (int) getSize().getWidth() / bWidth;</b>
-<i>71</i>&nbsp;    }
-<i>72</i>&nbsp;
-<i>73</i>&nbsp;    /*
-<i>74</i>&nbsp;     Gets square height
-<i>75</i>&nbsp;     @returns int height of square
-<i>76</i>&nbsp;     */
-<i>77</i>&nbsp;    private int sqHeight() {
-<b class="fc"><i>78</i>&nbsp;        return (int) getSize().getWidth() / bHeight;</b>
-<i>79</i>&nbsp;    }
-<i>80</i>&nbsp;
-<i>81</i>&nbsp;    /*
-<i>82</i>&nbsp;     Gets piece at coordinate position
-<i>83</i>&nbsp;     @returns position of shape
-<i>84</i>&nbsp;     */
-<i>85</i>&nbsp;    private Tetris pieceAt(int x, int y) {
-<b class="fc"><i>86</i>&nbsp;        return board[(y * bWidth) + x];</b>
-<i>87</i>&nbsp;    }
-<i>88</i>&nbsp;
-<i>89</i>&nbsp;    /*
-<i>90</i>&nbsp;     Resets game and starts a new one
-<i>91</i>&nbsp;     */
-<i>92</i>&nbsp;    public void start() {
-<i>93</i>&nbsp;        // check if game is paused
-<b class="fc"><i>94</i>&nbsp;        if (paused) {</b>
-<b class="nc"><i>95</i>&nbsp;            return;</b>
-<i>96</i>&nbsp;        }
-<i>97</i>&nbsp;
-<b class="fc"><i>98</i>&nbsp;        started = true;</b>
-<b class="fc"><i>99</i>&nbsp;        atBottom = false;</b>
-<b class="fc"><i>100</i>&nbsp;        score = 0;</b>
-<b class="fc"><i>101</i>&nbsp;        clear();</b>
-<i>102</i>&nbsp;
-<b class="fc"><i>103</i>&nbsp;        newPiece();</b>
-<b class="fc"><i>104</i>&nbsp;        timer.start();</b>
-<b class="fc"><i>105</i>&nbsp;    }</b>
-<i>106</i>&nbsp;
-<i>107</i>&nbsp;    /*
-<i>108</i>&nbsp;     Pauses the game
-<i>109</i>&nbsp;     */
-<i>110</i>&nbsp;    private void pause() {
-<i>111</i>&nbsp;
-<i>112</i>&nbsp;        // check if game is already paused
-<b class="nc"><i>113</i>&nbsp;        if (!started)</b>
-<b class="nc"><i>114</i>&nbsp;            return;</b>
-<i>115</i>&nbsp;
-<b class="nc"><i>116</i>&nbsp;        paused = !paused;</b>
-<b class="nc"><i>117</i>&nbsp;        if (paused) {</b>
-<b class="nc"><i>118</i>&nbsp;            timer.stop();</b>
-<b class="nc"><i>119</i>&nbsp;            scorebar.setText(&quot;Paused&quot;);</b>
-<i>120</i>&nbsp;        } else {
-<b class="nc"><i>121</i>&nbsp;            timer.start();</b>
-<b class="nc"><i>122</i>&nbsp;            scorebar.setText(&quot;Score: &quot; + String.valueOf(score * 100));</b>
-<i>123</i>&nbsp;        }
-<b class="nc"><i>124</i>&nbsp;        repaint();</b>
-<b class="nc"><i>125</i>&nbsp;    }</b>
-<i>126</i>&nbsp;
-<i>127</i>&nbsp;    /*
-<i>128</i>&nbsp;     Fills color for pieces
-<i>129</i>&nbsp;     */
-<i>130</i>&nbsp;    private void fillPiece(Graphics graphics, int x, int y, Tetris piece) {
-<b class="fc"><i>131</i>&nbsp;        Color colors[] = {</b>
-<i>132</i>&nbsp;                new Color(0, 0, 0),
-<i>133</i>&nbsp;                new Color(255, 0, 0),
-<i>134</i>&nbsp;                new Color(0, 255, 37),
-<i>135</i>&nbsp;                new Color(0, 10, 255),
-<i>136</i>&nbsp;                new Color(240, 238, 0),
-<i>137</i>&nbsp;                new Color(204, 0, 222),
-<i>138</i>&nbsp;                new Color(0, 241, 239),
-<i>139</i>&nbsp;                new Color(255, 154, 0)
-<i>140</i>&nbsp;        };
-<i>141</i>&nbsp;
-<i>142</i>&nbsp;        // set of colors
-<b class="fc"><i>143</i>&nbsp;        Color c = colors[piece.ordinal()];</b>
-<i>144</i>&nbsp;
-<i>145</i>&nbsp;        // logic to fill shapes with colors
-<b class="fc"><i>146</i>&nbsp;        graphics.setColor(c);</b>
-<b class="fc"><i>147</i>&nbsp;        graphics.fillRect(x + 1, y + 1, sqWidth() - 2, sqHeight() - 2);</b>
-<b class="fc"><i>148</i>&nbsp;        graphics.setColor(c.brighter());</b>
-<b class="fc"><i>149</i>&nbsp;        graphics.drawLine(x, y + sqHeight() - 1, x, y);</b>
-<b class="fc"><i>150</i>&nbsp;        graphics.drawLine(x, y, x + sqWidth() - 1, y);</b>
-<b class="fc"><i>151</i>&nbsp;        graphics.setColor(c.darker());</b>
-<b class="fc"><i>152</i>&nbsp;        graphics.drawLine(x + 1, y + sqHeight() - 1, x + sqWidth() - 1, y + sqHeight() - 1);</b>
-<b class="fc"><i>153</i>&nbsp;        graphics.drawLine(x + sqWidth() - 1, y + sqHeight() - 1, x + sqWidth() - 1, y + 1);</b>
-<b class="fc"><i>154</i>&nbsp;    }</b>
-<i>155</i>&nbsp;
-<i>156</i>&nbsp;    /*
-<i>157</i>&nbsp;     Colors game piece
-<i>158</i>&nbsp;     */
-<i>159</i>&nbsp;    public void paint(Graphics g) {
-<i>160</i>&nbsp;
-<b class="fc"><i>161</i>&nbsp;        super.paint(g);</b>
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * Default constructor. Sets up game
+<i>52</i>&nbsp;     * @param parent game object
+<b class="fc"><i>53</i>&nbsp;     */</b>
+<b class="fc"><i>54</i>&nbsp;    public Board(Game parent) {</b>
+<b class="fc"><i>55</i>&nbsp;        setFocusable(true);</b>
+<b class="fc"><i>56</i>&nbsp;        curPiece = new Piece();</b>
+<b class="fc"><i>57</i>&nbsp;        timer = new Timer(400, this);</b>
+<i>58</i>&nbsp;        timer.start();
+<b class="fc"><i>59</i>&nbsp;</b>
+<b class="fc"><i>60</i>&nbsp;        scorebar = parent.getStatusBar();</b>
+<b class="fc"><i>61</i>&nbsp;        board = new Tetris[bWidth * bHeight];</b>
+<b class="fc"><i>62</i>&nbsp;        addKeyListener(new TAdapter());</b>
+<b class="fc"><i>63</i>&nbsp;        clear();</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    /**
+<i>67</i>&nbsp;     * Gets square width
+<i>68</i>&nbsp;     * @return int wirdth of square
+<i>69</i>&nbsp;     */
+<b class="fc"><i>70</i>&nbsp;    private int sqWidth() {</b>
+<i>71</i>&nbsp;        return (int) getSize().getWidth() / bWidth;
+<i>72</i>&nbsp;    }
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;    /**
+<i>75</i>&nbsp;     * Gets square height
+<i>76</i>&nbsp;     * @return int height of square
+<i>77</i>&nbsp;     */
+<b class="fc"><i>78</i>&nbsp;    private int sqHeight() {</b>
+<i>79</i>&nbsp;        return (int) getSize().getWidth() / bHeight;
+<i>80</i>&nbsp;    }
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    /**
+<i>83</i>&nbsp;     * Gets piece at coordinate position
+<i>84</i>&nbsp;     * @param x coordinate
+<i>85</i>&nbsp;     * @param y coordinate
+<b class="fc"><i>86</i>&nbsp;     * @return position of shape</b>
+<i>87</i>&nbsp;     */
+<i>88</i>&nbsp;    private Tetris pieceAt(int x, int y) {
+<i>89</i>&nbsp;        return board[(y * bWidth) + x];
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    /**
+<i>93</i>&nbsp;     * Resets game and starts a new one
+<b class="fc"><i>94</i>&nbsp;     */</b>
+<b class="nc"><i>95</i>&nbsp;    public void start() {</b>
+<i>96</i>&nbsp;        // check if game is paused
+<i>97</i>&nbsp;        if (paused) {
+<b class="fc"><i>98</i>&nbsp;            return;</b>
+<b class="fc"><i>99</i>&nbsp;        }</b>
+<b class="fc"><i>100</i>&nbsp;</b>
+<b class="fc"><i>101</i>&nbsp;        started = true;</b>
+<i>102</i>&nbsp;        atBottom = false;
+<b class="fc"><i>103</i>&nbsp;        score = 0;</b>
+<b class="fc"><i>104</i>&nbsp;        clear();</b>
+<b class="fc"><i>105</i>&nbsp;</b>
+<i>106</i>&nbsp;        newPiece();
+<i>107</i>&nbsp;        timer.start();
+<i>108</i>&nbsp;    }
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    /**
+<i>111</i>&nbsp;     * Pauses the game
+<i>112</i>&nbsp;     */
+<b class="nc"><i>113</i>&nbsp;    private void pause() {</b>
+<b class="nc"><i>114</i>&nbsp;</b>
+<i>115</i>&nbsp;        // check if game is already paused
+<b class="nc"><i>116</i>&nbsp;        if (!started)</b>
+<b class="nc"><i>117</i>&nbsp;            return;</b>
+<b class="nc"><i>118</i>&nbsp;</b>
+<b class="nc"><i>119</i>&nbsp;        paused = !paused;</b>
+<i>120</i>&nbsp;        if (paused) {
+<b class="nc"><i>121</i>&nbsp;            timer.stop();</b>
+<b class="nc"><i>122</i>&nbsp;            scorebar.setText(&quot;Paused&quot;);</b>
+<i>123</i>&nbsp;        } else {
+<b class="nc"><i>124</i>&nbsp;            timer.start();</b>
+<b class="nc"><i>125</i>&nbsp;            scorebar.setText(&quot;Score: &quot; + String.valueOf(score * 100));</b>
+<i>126</i>&nbsp;        }
+<i>127</i>&nbsp;        repaint();
+<i>128</i>&nbsp;    }
+<i>129</i>&nbsp;
+<i>130</i>&nbsp;    /**
+<b class="fc"><i>131</i>&nbsp;     * Fills color for pieces</b>
+<i>132</i>&nbsp;     * @param g graphics object
+<i>133</i>&nbsp;     * @param x coordinate
+<i>134</i>&nbsp;     * @param y coordinate
+<i>135</i>&nbsp;     * @param piece tetromino shape
+<i>136</i>&nbsp;     */
+<i>137</i>&nbsp;    private void fillPiece(Graphics g, int x, int y, Tetris piece) {
+<i>138</i>&nbsp;        Color colors[] = {
+<i>139</i>&nbsp;                new Color(0, 0, 0),
+<i>140</i>&nbsp;                new Color(255, 0, 0),
+<i>141</i>&nbsp;                new Color(0, 255, 37),
+<i>142</i>&nbsp;                new Color(0, 10, 255),
+<b class="fc"><i>143</i>&nbsp;                new Color(240, 238, 0),</b>
+<i>144</i>&nbsp;                new Color(204, 0, 222),
+<i>145</i>&nbsp;                new Color(0, 241, 239),
+<b class="fc"><i>146</i>&nbsp;                new Color(255, 154, 0)</b>
+<b class="fc"><i>147</i>&nbsp;        };</b>
+<b class="fc"><i>148</i>&nbsp;</b>
+<b class="fc"><i>149</i>&nbsp;        // set of colors</b>
+<b class="fc"><i>150</i>&nbsp;        Color c = colors[piece.ordinal()];</b>
+<b class="fc"><i>151</i>&nbsp;</b>
+<b class="fc"><i>152</i>&nbsp;        // logic to fill shapes with colors</b>
+<b class="fc"><i>153</i>&nbsp;        g.setColor(c);</b>
+<b class="fc"><i>154</i>&nbsp;        g.fillRect(x + 1, y + 1, sqWidth() - 2, sqHeight() - 2);</b>
+<i>155</i>&nbsp;        g.setColor(c.brighter());
+<i>156</i>&nbsp;        g.drawLine(x, y + sqHeight() - 1, x, y);
+<i>157</i>&nbsp;        g.drawLine(x, y, x + sqWidth() - 1, y);
+<i>158</i>&nbsp;        g.setColor(c.darker());
+<i>159</i>&nbsp;        g.drawLine(x + 1, y + sqHeight() - 1, x + sqWidth() - 1, y + sqHeight() - 1);
+<i>160</i>&nbsp;        g.drawLine(x + sqWidth() - 1, y + sqHeight() - 1, x + sqWidth() - 1, y + 1);
+<b class="fc"><i>161</i>&nbsp;    }</b>
 <i>162</i>&nbsp;
-<b class="fc"><i>163</i>&nbsp;        Dimension s = getSize();</b>
-<i>164</i>&nbsp;
-<b class="fc"><i>165</i>&nbsp;        int boardTop = (int) s.getHeight() - bHeight * sqHeight();</b>
-<i>166</i>&nbsp;
-<b class="fc"><i>167</i>&nbsp;        for (int i = 0; i &lt; bHeight; ++i) {</b>
-<b class="fc"><i>168</i>&nbsp;            for (int j = 0; j &lt; bWidth; ++j) {</b>
-<b class="fc"><i>169</i>&nbsp;                Tetris shape = pieceAt(j, bHeight - i - 1);</b>
-<b class="fc"><i>170</i>&nbsp;                if (shape != Tetris.emptyPiece) {</b>
-<b class="fc"><i>171</i>&nbsp;                    fillPiece(g, j * sqWidth(), boardTop + i * sqHeight(), shape);</b>
-<i>172</i>&nbsp;                }
-<i>173</i>&nbsp;            }
-<i>174</i>&nbsp;        }
-<i>175</i>&nbsp;
-<b class="fc"><i>176</i>&nbsp;        if (curPiece.getPiece() != Tetris.emptyPiece) {</b>
-<b class="fc"><i>177</i>&nbsp;            for (int i = 0; i &lt; 4; ++i) {</b>
-<b class="fc"><i>178</i>&nbsp;                int x = curX + curPiece.adjustX(i);</b>
-<b class="fc"><i>179</i>&nbsp;                int y = curY - curPiece.adjustY(i);</b>
-<b class="fc"><i>180</i>&nbsp;                fillPiece(g, x * sqWidth(), boardTop + (bHeight - y - 1) * sqHeight(), curPiece.getPiece());</b>
+<b class="fc"><i>163</i>&nbsp;    /**</b>
+<i>164</i>&nbsp;     * Colors game piece
+<b class="fc"><i>165</i>&nbsp;     * @param g graphics objects</b>
+<i>166</i>&nbsp;     */
+<b class="fc"><i>167</i>&nbsp;    public void paint(Graphics g) {</b>
+<b class="fc"><i>168</i>&nbsp;</b>
+<b class="fc"><i>169</i>&nbsp;        super.paint(g);</b>
+<b class="fc"><i>170</i>&nbsp;</b>
+<b class="fc"><i>171</i>&nbsp;        Dimension s = getSize();</b>
+<i>172</i>&nbsp;
+<i>173</i>&nbsp;        int boardTop = (int) s.getHeight() - bHeight * sqHeight();
+<i>174</i>&nbsp;
+<i>175</i>&nbsp;        for (int i = 0; i &lt; bHeight; ++i) {
+<b class="fc"><i>176</i>&nbsp;            for (int j = 0; j &lt; bWidth; ++j) {</b>
+<b class="fc"><i>177</i>&nbsp;                Tetris shape = pieceAt(j, bHeight - i - 1);</b>
+<b class="fc"><i>178</i>&nbsp;                if (shape != Tetris.emptyPiece) {</b>
+<b class="fc"><i>179</i>&nbsp;                    fillPiece(g, j * sqWidth(), boardTop + i * sqHeight(), shape);</b>
+<b class="fc"><i>180</i>&nbsp;                }</b>
 <i>181</i>&nbsp;            }
 <i>182</i>&nbsp;        }
-<b class="fc"><i>183</i>&nbsp;    }</b>
-<i>184</i>&nbsp;
-<i>185</i>&nbsp;    /*
-<i>186</i>&nbsp;     Checks if space is already occupied
-<i>187</i>&nbsp;     @returns boolean
-<i>188</i>&nbsp;     */
-<i>189</i>&nbsp;    private boolean move(Piece newPiece, int newX, int newY) {
-<i>190</i>&nbsp;
-<i>191</i>&nbsp;        // try move
-<b class="fc"><i>192</i>&nbsp;        for (int i = 0; i &lt; 4; ++i) {</b>
-<b class="fc"><i>193</i>&nbsp;            int x = newX + newPiece.adjustX(i);</b>
-<b class="fc"><i>194</i>&nbsp;            int y = newY - newPiece.adjustY(i);</b>
-<i>195</i>&nbsp;
-<i>196</i>&nbsp;            // check if piece has room to attempt move
-<b class="fc"><i>197</i>&nbsp;            if (x &lt; 0 || x &gt;= bWidth || y &lt; 0 || y &gt;= bHeight) {</b>
-<b class="fc"><i>198</i>&nbsp;                return false;</b>
-<i>199</i>&nbsp;            }
-<b class="fc"><i>200</i>&nbsp;            if (pieceAt(x, y) != Tetris.emptyPiece) {</b>
-<b class="fc"><i>201</i>&nbsp;                return false;</b>
-<i>202</i>&nbsp;            }
-<i>203</i>&nbsp;        }
-<i>204</i>&nbsp;
-<i>205</i>&nbsp;        // set new piece
-<b class="fc"><i>206</i>&nbsp;        curPiece = newPiece;</b>
-<b class="fc"><i>207</i>&nbsp;        curX = newX;</b>
-<b class="fc"><i>208</i>&nbsp;        curY = newY;</b>
-<b class="fc"><i>209</i>&nbsp;        repaint();</b>
-<b class="fc"><i>210</i>&nbsp;        return true;</b>
-<i>211</i>&nbsp;    }
-<i>212</i>&nbsp;
-<i>213</i>&nbsp;    /*
-<i>214</i>&nbsp;     Drops piece one line down
-<i>215</i>&nbsp;     */
-<i>216</i>&nbsp;    private void moveOneLineDown() {
-<b class="fc"><i>217</i>&nbsp;        if (!move(curPiece, curX, curY - 1)) {</b>
-<b class="fc"><i>218</i>&nbsp;            pieceDropped();</b>
-<i>219</i>&nbsp;        }
-<b class="fc"><i>220</i>&nbsp;    }</b>
-<i>221</i>&nbsp;
-<i>222</i>&nbsp;    /*
-<i>223</i>&nbsp;     Clears board of all pieces
-<i>224</i>&nbsp;     */
-<i>225</i>&nbsp;    private void clear() {
-<b class="fc"><i>226</i>&nbsp;        for (int i = 0; i &lt; bHeight * bWidth; ++i) {</b>
-<b class="fc"><i>227</i>&nbsp;            board[i] = Tetris.emptyPiece;</b>
-<i>228</i>&nbsp;        }
-<b class="fc"><i>229</i>&nbsp;    }</b>
-<i>230</i>&nbsp;
-<i>231</i>&nbsp;    /*
-<i>232</i>&nbsp;     Removes line if full
-<i>233</i>&nbsp;     */
-<i>234</i>&nbsp;    private void removeFullLines() {
-<b class="fc"><i>235</i>&nbsp;        int lines = 0;</b>
-<i>236</i>&nbsp;
-<b class="fc"><i>237</i>&nbsp;        for (int i = bHeight - 1; i &gt;= 0; --i) {</b>
-<b class="fc"><i>238</i>&nbsp;            boolean fullLine = true;</b>
-<i>239</i>&nbsp;
-<b class="fc"><i>240</i>&nbsp;            for (int j = 0; j &lt; bWidth; ++j) {</b>
-<b class="fc"><i>241</i>&nbsp;                if (pieceAt(j, i) == Tetris.emptyPiece) {</b>
-<b class="fc"><i>242</i>&nbsp;                    fullLine = false;</b>
-<b class="fc"><i>243</i>&nbsp;                    break;</b>
-<i>244</i>&nbsp;                }
-<i>245</i>&nbsp;            }
-<i>246</i>&nbsp;
-<b class="fc"><i>247</i>&nbsp;            if (fullLine) {</b>
-<b class="fc"><i>248</i>&nbsp;                ++lines;</b>
-<b class="fc"><i>249</i>&nbsp;                for (int k = i; k &lt; bHeight - 1; ++k) {</b>
-<b class="fc"><i>250</i>&nbsp;                    for (int j = 0; j &lt; bWidth; ++j)</b>
-<b class="fc"><i>251</i>&nbsp;                        board[(k * bWidth) + j] = pieceAt(j, k + 1);</b>
-<i>252</i>&nbsp;                }
-<i>253</i>&nbsp;            }
-<i>254</i>&nbsp;        }
-<i>255</i>&nbsp;
-<i>256</i>&nbsp;        // add removed lines to score
-<b class="fc"><i>257</i>&nbsp;        if (lines &gt; 0) {</b>
-<b class="fc"><i>258</i>&nbsp;            score += lines;</b>
-<b class="fc"><i>259</i>&nbsp;            scorebar.setText(&quot;Score: &quot; + String.valueOf(score * 100));</b>
-<b class="fc"><i>260</i>&nbsp;            atBottom = true;</b>
-<b class="fc"><i>261</i>&nbsp;            curPiece.setPiece(Tetris.emptyPiece);</b>
-<b class="fc"><i>262</i>&nbsp;            repaint();</b>
-<i>263</i>&nbsp;        }
-<b class="fc"><i>264</i>&nbsp;    }</b>
-<i>265</i>&nbsp;
-<i>266</i>&nbsp;    /*
-<i>267</i>&nbsp;     Checks if a line is full
-<i>268</i>&nbsp;     */
-<i>269</i>&nbsp;    private void pieceDropped() {
-<b class="fc"><i>270</i>&nbsp;        for (int i = 0; i &lt; 4; ++i) {</b>
-<b class="fc"><i>271</i>&nbsp;            int x = curX + curPiece.adjustX(i);</b>
-<b class="fc"><i>272</i>&nbsp;            int y = curY - curPiece.adjustY(i);</b>
-<b class="fc"><i>273</i>&nbsp;            board[(y * bWidth) + x] = curPiece.getPiece();</b>
+<b class="fc"><i>183</i>&nbsp;</b>
+<i>184</i>&nbsp;        if (curPiece.getPiece() != Tetris.emptyPiece) {
+<i>185</i>&nbsp;            for (int i = 0; i &lt; 4; ++i) {
+<i>186</i>&nbsp;                int x = curX + curPiece.adjustX(i);
+<i>187</i>&nbsp;                int y = curY - curPiece.adjustY(i);
+<i>188</i>&nbsp;                fillPiece(g, x * sqWidth(), boardTop + (bHeight - y - 1) * sqHeight(), curPiece.getPiece());
+<i>189</i>&nbsp;            }
+<i>190</i>&nbsp;        }
+<i>191</i>&nbsp;    }
+<b class="fc"><i>192</i>&nbsp;</b>
+<b class="fc"><i>193</i>&nbsp;    /**</b>
+<b class="fc"><i>194</i>&nbsp;     * Checks if space is already occupied</b>
+<i>195</i>&nbsp;     * @param newPiece tetromino shape
+<i>196</i>&nbsp;     * @param newX x coordinate
+<b class="fc"><i>197</i>&nbsp;     * @param newY y coordinate</b>
+<b class="fc"><i>198</i>&nbsp;     * @return boolean</b>
+<i>199</i>&nbsp;     */
+<b class="fc"><i>200</i>&nbsp;    private boolean move(Piece newPiece, int newX, int newY) {</b>
+<b class="fc"><i>201</i>&nbsp;</b>
+<i>202</i>&nbsp;        // try move
+<i>203</i>&nbsp;        for (int i = 0; i &lt; 4; ++i) {
+<i>204</i>&nbsp;            int x = newX + newPiece.adjustX(i);
+<i>205</i>&nbsp;            int y = newY - newPiece.adjustY(i);
+<b class="fc"><i>206</i>&nbsp;</b>
+<b class="fc"><i>207</i>&nbsp;            // check if piece has room to attempt move</b>
+<b class="fc"><i>208</i>&nbsp;            if (x &lt; 0 || x &gt;= bWidth || y &lt; 0 || y &gt;= bHeight) {</b>
+<b class="fc"><i>209</i>&nbsp;                return false;</b>
+<b class="fc"><i>210</i>&nbsp;            }</b>
+<i>211</i>&nbsp;            if (pieceAt(x, y) != Tetris.emptyPiece) {
+<i>212</i>&nbsp;                return false;
+<i>213</i>&nbsp;            }
+<i>214</i>&nbsp;        }
+<i>215</i>&nbsp;
+<i>216</i>&nbsp;        // set new piece
+<b class="fc"><i>217</i>&nbsp;        curPiece = newPiece;</b>
+<b class="fc"><i>218</i>&nbsp;        curX = newX;</b>
+<i>219</i>&nbsp;        curY = newY;
+<b class="fc"><i>220</i>&nbsp;        repaint();</b>
+<i>221</i>&nbsp;        return true;
+<i>222</i>&nbsp;    }
+<i>223</i>&nbsp;
+<i>224</i>&nbsp;    /**
+<i>225</i>&nbsp;     * Drops piece one line down
+<b class="fc"><i>226</i>&nbsp;     */</b>
+<b class="fc"><i>227</i>&nbsp;    private void moveOneLineDown() {</b>
+<i>228</i>&nbsp;        if (!move(curPiece, curX, curY - 1)) {
+<b class="fc"><i>229</i>&nbsp;            pieceDropped();</b>
+<i>230</i>&nbsp;        }
+<i>231</i>&nbsp;    }
+<i>232</i>&nbsp;
+<i>233</i>&nbsp;    /**
+<i>234</i>&nbsp;     * Clears board of all pieces
+<b class="fc"><i>235</i>&nbsp;     */</b>
+<i>236</i>&nbsp;    private void clear() {
+<b class="fc"><i>237</i>&nbsp;        for (int i = 0; i &lt; bHeight * bWidth; ++i) {</b>
+<b class="fc"><i>238</i>&nbsp;            board[i] = Tetris.emptyPiece;</b>
+<i>239</i>&nbsp;        }
+<b class="fc"><i>240</i>&nbsp;    }</b>
+<b class="fc"><i>241</i>&nbsp;</b>
+<b class="fc"><i>242</i>&nbsp;    /**</b>
+<b class="fc"><i>243</i>&nbsp;     * Removes line if full</b>
+<i>244</i>&nbsp;     */
+<i>245</i>&nbsp;    private void removeFullLines() {
+<i>246</i>&nbsp;        int lines = 0;
+<b class="fc"><i>247</i>&nbsp;</b>
+<b class="fc"><i>248</i>&nbsp;        for (int i = bHeight - 1; i &gt;= 0; --i) {</b>
+<b class="fc"><i>249</i>&nbsp;            boolean fullLine = true;</b>
+<b class="fc"><i>250</i>&nbsp;</b>
+<b class="fc"><i>251</i>&nbsp;            for (int j = 0; j &lt; bWidth; ++j) {</b>
+<i>252</i>&nbsp;                if (pieceAt(j, i) == Tetris.emptyPiece) {
+<i>253</i>&nbsp;                    fullLine = false;
+<i>254</i>&nbsp;                    break;
+<i>255</i>&nbsp;                }
+<i>256</i>&nbsp;            }
+<b class="fc"><i>257</i>&nbsp;</b>
+<b class="fc"><i>258</i>&nbsp;            if (fullLine) {</b>
+<b class="fc"><i>259</i>&nbsp;                ++lines;</b>
+<b class="fc"><i>260</i>&nbsp;                for (int k = i; k &lt; bHeight - 1; ++k) {</b>
+<b class="fc"><i>261</i>&nbsp;                    for (int j = 0; j &lt; bWidth; ++j)</b>
+<b class="fc"><i>262</i>&nbsp;                        board[(k * bWidth) + j] = pieceAt(j, k + 1);</b>
+<i>263</i>&nbsp;                }
+<b class="fc"><i>264</i>&nbsp;            }</b>
+<i>265</i>&nbsp;        }
+<i>266</i>&nbsp;
+<i>267</i>&nbsp;        // add removed lines to score
+<i>268</i>&nbsp;        if (lines &gt; 0) {
+<i>269</i>&nbsp;            score += lines;
+<b class="fc"><i>270</i>&nbsp;            scorebar.setText(&quot;Score: &quot; + String.valueOf(score * 100));</b>
+<b class="fc"><i>271</i>&nbsp;            atBottom = true;</b>
+<b class="fc"><i>272</i>&nbsp;            curPiece.setPiece(Tetris.emptyPiece);</b>
+<b class="fc"><i>273</i>&nbsp;            repaint();</b>
 <i>274</i>&nbsp;        }
-<b class="fc"><i>275</i>&nbsp;        removeFullLines();</b>
+<b class="fc"><i>275</i>&nbsp;    }</b>
 <i>276</i>&nbsp;
-<i>277</i>&nbsp;        // check if piece is at the bottom
-<b class="fc"><i>278</i>&nbsp;        if (!atBottom) {</b>
-<b class="fc"><i>279</i>&nbsp;            newPiece();</b>
-<i>280</i>&nbsp;        }
-<b class="fc"><i>281</i>&nbsp;    }</b>
-<i>282</i>&nbsp;
-<i>283</i>&nbsp;    /*
-<i>284</i>&nbsp;     Picks new piece to drop next
-<i>285</i>&nbsp;     */
-<i>286</i>&nbsp;    private void newPiece() {
+<i>277</i>&nbsp;    /**
+<b class="fc"><i>278</i>&nbsp;     * Checks if a line is full</b>
+<b class="fc"><i>279</i>&nbsp;     */</b>
+<i>280</i>&nbsp;    private void pieceDropped() {
+<b class="fc"><i>281</i>&nbsp;        for (int i = 0; i &lt; 4; ++i) {</b>
+<i>282</i>&nbsp;            int x = curX + curPiece.adjustX(i);
+<i>283</i>&nbsp;            int y = curY - curPiece.adjustY(i);
+<i>284</i>&nbsp;            board[(y * bWidth) + x] = curPiece.getPiece();
+<i>285</i>&nbsp;        }
+<i>286</i>&nbsp;        removeFullLines();
 <i>287</i>&nbsp;
-<i>288</i>&nbsp;        // pick next piece
-<b class="fc"><i>289</i>&nbsp;        curPiece.pickRandomPiece();</b>
-<b class="fc"><i>290</i>&nbsp;        curX = bWidth / 2 + 1;</b>
-<b class="fc"><i>291</i>&nbsp;        curY = bHeight - 1 + curPiece.minY();</b>
-<i>292</i>&nbsp;
-<i>293</i>&nbsp;        // check if board is full
-<b class="fc"><i>294</i>&nbsp;        if (!move(curPiece, curX, curY)) {</b>
-<b class="fc"><i>295</i>&nbsp;            curPiece.setPiece(Tetris.emptyPiece);</b>
-<b class="fc"><i>296</i>&nbsp;            timer.stop();</b>
-<b class="fc"><i>297</i>&nbsp;            started = false;</b>
-<b class="fc"><i>298</i>&nbsp;            scorebar.setText(&quot;Game Over! Score: &quot; + String.valueOf(score * 100));</b>
-<i>299</i>&nbsp;        }
-<b class="fc"><i>300</i>&nbsp;    }</b>
-<i>301</i>&nbsp;
-<i>302</i>&nbsp;    /*
-<i>303</i>&nbsp;     Drops piece into lowest position
-<i>304</i>&nbsp;     */
-<i>305</i>&nbsp;    private void instantDrop() {
-<b class="fc"><i>306</i>&nbsp;        int newY = curY;</b>
-<i>307</i>&nbsp;
-<i>308</i>&nbsp;        // drop piece while there is an empty line below
-<b class="fc"><i>309</i>&nbsp;        while (newY &gt; 0) {</b>
-<b class="fc"><i>310</i>&nbsp;            if (!move(curPiece, curX, newY - 1)) {</b>
-<b class="fc"><i>311</i>&nbsp;                break;</b>
-<i>312</i>&nbsp;            }
-<b class="fc"><i>313</i>&nbsp;            --newY;</b>
-<i>314</i>&nbsp;        }
-<b class="fc"><i>315</i>&nbsp;        pieceDropped();</b>
-<b class="fc"><i>316</i>&nbsp;    }</b>
-<i>317</i>&nbsp;
-<i>318</i>&nbsp;    /*
-<i>319</i>&nbsp;    Checks when to get new piece
-<i>320</i>&nbsp;     */
-<i>321</i>&nbsp;    public void actionPerformed(ActionEvent e) {
-<i>322</i>&nbsp;
-<i>323</i>&nbsp;        // check if piece is at bottom
-<b class="fc"><i>324</i>&nbsp;        if (atBottom) {</b>
-<b class="fc"><i>325</i>&nbsp;            atBottom = false;</b>
-<b class="fc"><i>326</i>&nbsp;            newPiece();</b>
-<i>327</i>&nbsp;        } else {
-<b class="fc"><i>328</i>&nbsp;            moveOneLineDown();</b>
-<i>329</i>&nbsp;        }
-<b class="fc"><i>330</i>&nbsp;    }</b>
-<i>331</i>&nbsp;
-<i>332</i>&nbsp;    /*
-<i>333</i>&nbsp;     Checks when keys are hit to make moves
-<i>334</i>&nbsp;     */
-<b class="fc"><i>335</i>&nbsp;    class TAdapter extends KeyAdapter {</b>
-<i>336</i>&nbsp;        public void keyPressed(KeyEvent e) {
-<i>337</i>&nbsp;
-<b class="fc"><i>338</i>&nbsp;            if (!started || curPiece.getPiece() == Tetris.emptyPiece) {</b>
-<b class="fc"><i>339</i>&nbsp;                return;</b>
-<i>340</i>&nbsp;            }
-<i>341</i>&nbsp;
-<i>342</i>&nbsp;            // code for key pressed
-<b class="fc"><i>343</i>&nbsp;            int keycode = e.getKeyCode();</b>
-<i>344</i>&nbsp;
-<i>345</i>&nbsp;            // pause game
-<b class="fc"><i>346</i>&nbsp;            if (keycode == &#39;p&#39; || keycode == &#39;P&#39;) {</b>
-<b class="nc"><i>347</i>&nbsp;                pause();</b>
-<b class="nc"><i>348</i>&nbsp;                return;</b>
-<i>349</i>&nbsp;            }
-<i>350</i>&nbsp;
-<i>351</i>&nbsp;            // can&#39;t do moves of game is paused
-<b class="fc"><i>352</i>&nbsp;            if (paused) {</b>
-<b class="nc"><i>353</i>&nbsp;                return;</b>
-<i>354</i>&nbsp;            }
-<i>355</i>&nbsp;
-<i>356</i>&nbsp;            // controls for moves
-<b class="fc"><i>357</i>&nbsp;            switch (keycode) {</b>
+<i>288</i>&nbsp;        // check if piece is at the bottom
+<b class="fc"><i>289</i>&nbsp;        if (!atBottom) {</b>
+<b class="fc"><i>290</i>&nbsp;            newPiece();</b>
+<b class="fc"><i>291</i>&nbsp;        }</b>
+<i>292</i>&nbsp;    }
+<i>293</i>&nbsp;
+<b class="fc"><i>294</i>&nbsp;    /**</b>
+<b class="fc"><i>295</i>&nbsp;     * Picks new piece to drop next</b>
+<b class="fc"><i>296</i>&nbsp;     */</b>
+<b class="fc"><i>297</i>&nbsp;    private void newPiece() {</b>
+<b class="fc"><i>298</i>&nbsp;</b>
+<i>299</i>&nbsp;        // pick next piece
+<b class="fc"><i>300</i>&nbsp;        curPiece.pickRandomPiece();</b>
+<i>301</i>&nbsp;        curX = bWidth / 2 + 1;
+<i>302</i>&nbsp;        curY = bHeight - 1 + curPiece.minY();
+<i>303</i>&nbsp;
+<i>304</i>&nbsp;        // check if board is full
+<i>305</i>&nbsp;        if (!move(curPiece, curX, curY)) {
+<b class="fc"><i>306</i>&nbsp;            curPiece.setPiece(Tetris.emptyPiece);</b>
+<i>307</i>&nbsp;            timer.stop();
+<i>308</i>&nbsp;            started = false;
+<b class="fc"><i>309</i>&nbsp;            scorebar.setText(&quot;Game Over! Score: &quot; + String.valueOf(score * 100));</b>
+<b class="fc"><i>310</i>&nbsp;        }</b>
+<b class="fc"><i>311</i>&nbsp;    }</b>
+<i>312</i>&nbsp;
+<b class="fc"><i>313</i>&nbsp;    /**</b>
+<i>314</i>&nbsp;     * Drops piece into lowest position
+<b class="fc"><i>315</i>&nbsp;     */</b>
+<b class="fc"><i>316</i>&nbsp;    private void instantDrop() {</b>
+<i>317</i>&nbsp;        int newY = curY;
+<i>318</i>&nbsp;
+<i>319</i>&nbsp;        // drop piece while there is an empty line below
+<i>320</i>&nbsp;        while (newY &gt; 0) {
+<i>321</i>&nbsp;            if (!move(curPiece, curX, newY - 1)) {
+<i>322</i>&nbsp;                break;
+<i>323</i>&nbsp;            }
+<b class="fc"><i>324</i>&nbsp;            --newY;</b>
+<b class="fc"><i>325</i>&nbsp;        }</b>
+<b class="fc"><i>326</i>&nbsp;        pieceDropped();</b>
+<i>327</i>&nbsp;    }
+<b class="fc"><i>328</i>&nbsp;</b>
+<i>329</i>&nbsp;    /**
+<b class="fc"><i>330</i>&nbsp;     * Checks when to get new piece</b>
+<i>331</i>&nbsp;     * @param e action event
+<i>332</i>&nbsp;     */
+<i>333</i>&nbsp;    public void actionPerformed(ActionEvent e) {
+<i>334</i>&nbsp;
+<b class="fc"><i>335</i>&nbsp;        // check if piece is at bottom</b>
+<i>336</i>&nbsp;        if (atBottom) {
+<i>337</i>&nbsp;            atBottom = false;
+<b class="fc"><i>338</i>&nbsp;            newPiece();</b>
+<b class="fc"><i>339</i>&nbsp;        } else {</b>
+<i>340</i>&nbsp;            moveOneLineDown();
+<i>341</i>&nbsp;        }
+<i>342</i>&nbsp;    }
+<b class="fc"><i>343</i>&nbsp;</b>
+<i>344</i>&nbsp;    /**
+<i>345</i>&nbsp;     * Key adapter class
+<b class="fc"><i>346</i>&nbsp;     */</b>
+<b class="nc"><i>347</i>&nbsp;    class TAdapter extends KeyAdapter {</b>
+<b class="nc"><i>348</i>&nbsp;</b>
+<i>349</i>&nbsp;        /**
+<i>350</i>&nbsp;         * Checks when keys are hit to make moves
+<i>351</i>&nbsp;         * @param e key pressed
+<b class="fc"><i>352</i>&nbsp;         */</b>
+<b class="nc"><i>353</i>&nbsp;        public void keyPressed(KeyEvent e) {</b>
+<i>354</i>&nbsp;
+<i>355</i>&nbsp;            if (!started || curPiece.getPiece() == Tetris.emptyPiece) {
+<i>356</i>&nbsp;                return;
+<b class="fc"><i>357</i>&nbsp;            }</b>
 <i>358</i>&nbsp;
-<i>359</i>&nbsp;                // move left
-<i>360</i>&nbsp;                case KeyEvent.VK_LEFT:
-<b class="fc"><i>361</i>&nbsp;                    move(curPiece, curX - 1, curY);</b>
-<b class="fc"><i>362</i>&nbsp;                    break;</b>
-<i>363</i>&nbsp;
-<i>364</i>&nbsp;                // move right
-<i>365</i>&nbsp;                case KeyEvent.VK_RIGHT:
-<b class="fc"><i>366</i>&nbsp;                    move(curPiece, curX + 1, curY);</b>
-<b class="fc"><i>367</i>&nbsp;                    break;</b>
-<i>368</i>&nbsp;
-<i>369</i>&nbsp;                // rotate left
-<i>370</i>&nbsp;                case KeyEvent.VK_DOWN:
-<b class="fc"><i>371</i>&nbsp;                    move(curPiece.rotateLeft(), curX, curY);</b>
-<b class="fc"><i>372</i>&nbsp;                    break;</b>
-<i>373</i>&nbsp;
-<i>374</i>&nbsp;                // rotate right
-<i>375</i>&nbsp;                case KeyEvent.VK_UP:
-<b class="fc"><i>376</i>&nbsp;                    move(curPiece.rotateRight(), curX, curY);</b>
-<b class="fc"><i>377</i>&nbsp;                    break;</b>
-<i>378</i>&nbsp;
-<i>379</i>&nbsp;                // instant drop to bottom
-<i>380</i>&nbsp;                case KeyEvent.VK_SPACE:
-<b class="fc"><i>381</i>&nbsp;                    instantDrop();</b>
-<b class="fc"><i>382</i>&nbsp;                    break;</b>
-<i>383</i>&nbsp;
-<i>384</i>&nbsp;                // speed up drop
-<i>385</i>&nbsp;                case KeyEvent.VK_SHIFT:
-<b class="fc"><i>386</i>&nbsp;                    moveOneLineDown();</b>
-<i>387</i>&nbsp;                    break;
-<i>388</i>&nbsp;            }
-<b class="fc"><i>389</i>&nbsp;        }</b>
-<i>390</i>&nbsp;    }
-<i>391</i>&nbsp;}
+<i>359</i>&nbsp;            // code for key pressed
+<i>360</i>&nbsp;            int keycode = e.getKeyCode();
+<b class="fc"><i>361</i>&nbsp;</b>
+<b class="fc"><i>362</i>&nbsp;            // pause game</b>
+<i>363</i>&nbsp;            if (keycode == &#39;p&#39; || keycode == &#39;P&#39;) {
+<i>364</i>&nbsp;                pause();
+<i>365</i>&nbsp;                return;
+<b class="fc"><i>366</i>&nbsp;            }</b>
+<b class="fc"><i>367</i>&nbsp;</b>
+<i>368</i>&nbsp;            // can&#39;t do moves of game is paused
+<i>369</i>&nbsp;            if (paused) {
+<i>370</i>&nbsp;                return;
+<b class="fc"><i>371</i>&nbsp;            }</b>
+<b class="fc"><i>372</i>&nbsp;</b>
+<i>373</i>&nbsp;            // controls for moves
+<i>374</i>&nbsp;            switch (keycode) {
+<i>375</i>&nbsp;
+<b class="fc"><i>376</i>&nbsp;                // move left</b>
+<b class="fc"><i>377</i>&nbsp;                case KeyEvent.VK_LEFT:</b>
+<i>378</i>&nbsp;                    move(curPiece, curX - 1, curY);
+<i>379</i>&nbsp;                    break;
+<i>380</i>&nbsp;
+<b class="fc"><i>381</i>&nbsp;                // move right</b>
+<b class="fc"><i>382</i>&nbsp;                case KeyEvent.VK_RIGHT:</b>
+<i>383</i>&nbsp;                    move(curPiece, curX + 1, curY);
+<i>384</i>&nbsp;                    break;
+<i>385</i>&nbsp;
+<b class="fc"><i>386</i>&nbsp;                // rotate left</b>
+<i>387</i>&nbsp;                case KeyEvent.VK_DOWN:
+<i>388</i>&nbsp;                    move(curPiece.rotateLeft(), curX, curY);
+<b class="fc"><i>389</i>&nbsp;                    break;</b>
+<i>390</i>&nbsp;
+<i>391</i>&nbsp;                // rotate right
+<i>392</i>&nbsp;                case KeyEvent.VK_UP:
+<i>393</i>&nbsp;                    move(curPiece.rotateRight(), curX, curY);
+<i>394</i>&nbsp;                    break;
+<i>395</i>&nbsp;
+<i>396</i>&nbsp;                // instant drop to bottom
+<i>397</i>&nbsp;                case KeyEvent.VK_SPACE:
+<i>398</i>&nbsp;                    instantDrop();
+<i>399</i>&nbsp;                    break;
+<i>400</i>&nbsp;
+<i>401</i>&nbsp;                // speed up drop
+<i>402</i>&nbsp;                case KeyEvent.VK_SHIFT:
+<i>403</i>&nbsp;                    moveOneLineDown();
+<i>404</i>&nbsp;                    break;
+<i>405</i>&nbsp;
+<i>406</i>&nbsp;                // any other key
+<i>407</i>&nbsp;                default :
+<i>408</i>&nbsp;                    break;
+<i>409</i>&nbsp;            }
+<i>410</i>&nbsp;        }
+<i>411</i>&nbsp;    }
+<i>412</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2018-10-23 22:03</div>
+    <div style="float:right;">generated on 2018-10-26 10:08</div>
 </div>
 </body>
 </html>
