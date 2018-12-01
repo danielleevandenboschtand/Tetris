@@ -328,7 +328,7 @@ class Board extends JPanel implements ActionListener {
             timer.stop();
             started = false;
             scorebar.setText("Game Over! Score: " + String.valueOf(score * 100));
-            saveScores("scores.txt");
+            saveScores();
         }
     }
 
@@ -365,11 +365,11 @@ class Board extends JPanel implements ActionListener {
 
     /**
      * Saves scores to text file to keep track of high scores
-     * @param filename name of file
      */
-    private void saveScores(String filename)  {
+    private void saveScores()  {
 
-        PrintWriter out = null;
+        PrintWriter out;
+        String filename = "scores.txt";
 
         try {
             out = new PrintWriter(new BufferedWriter(new FileWriter(filename, true)));
@@ -387,9 +387,10 @@ class Board extends JPanel implements ActionListener {
 
     /**
      * Loads scores from text file to keep track of high scores
-     * @param filename name of file
      */
-    public void loadScores(String filename)  {
+    public void loadScores()  {
+
+        String filename = "scores.txt";
 
         try {
             // open the text file
