@@ -53,9 +53,6 @@ class Board extends JPanel implements ActionListener {
     /** array of scores */
     private int[] highScores;
 
-    /** true if time has been changed */
-    private boolean timeSet = false;
-
     /**
      * Default constructor. Sets up game
      * @param parent game object
@@ -63,25 +60,12 @@ class Board extends JPanel implements ActionListener {
     public Board(Game parent) {
         setFocusable(true);
         curPiece = new Piece();
-
-        // checks if time has been changed
-        if(!timeSet) {
-            timer = new Timer(400, this);
-        }
+        timer = new Timer(parent.getSpeed(), this);
         timer.start();
         scorebar = parent.getStatusBar();
         board = new Tetris[bWidth * bHeight];
         addKeyListener(new TAdapter());
         clear();
-    }
-
-    /**
-     * Set speed of gameplay
-     * @param s speed of timer
-     */
-    public void setSpeed(int s) {
-        timer = new Timer(s, this);
-        timeSet = true;
     }
 
     /**

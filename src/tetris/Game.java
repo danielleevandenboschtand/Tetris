@@ -18,9 +18,10 @@ class Game extends JFrame implements ActionListener {
     private JButton start, help, helpBack, settings, settingsBack, highscores, highscoresBack;
 
     /** settings radio buttons **/
-    JRadioButton easyButton, mediumButton, hardButton;
+    private JRadioButton easyButton, mediumButton, hardButton;
 
-    public int speed = 400;
+    /** speed of timer */
+    private int speed = 400;
 
     /**
      * Default constructor to create game
@@ -206,6 +207,22 @@ class Game extends JFrame implements ActionListener {
     }
 
     /**
+     * Getter for game speed
+     * @return
+     */
+    public int getSpeed() {
+        return speed;
+    }
+
+    /**
+     * Setter for game speed
+     * @param s speed fo drop
+     */
+    private void setSpeed(int s) {
+        speed = s;
+    }
+
+    /**
      * Checks if button is clicked
      * @param e action event
      */
@@ -231,13 +248,13 @@ class Game extends JFrame implements ActionListener {
             helpWindow.dispose();
         }
         if (e.getSource() == easyButton) {
-            setSpeed(200);
+            setSpeed(700);
         }
         if (e.getSource() == mediumButton) {
             setSpeed(400);
         }
         if (e.getSource() == hardButton) {
-            setSpeed(600);
+            setSpeed(100);
         }
     }
 
