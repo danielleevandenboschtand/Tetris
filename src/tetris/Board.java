@@ -389,7 +389,6 @@ class Board extends JPanel implements ActionListener {
                 for (int i = 0; i < num; i++) {
                     highScores[i] = fileReader.nextInt();
                 }
-
             }
         }
         catch (FileNotFoundException error) {
