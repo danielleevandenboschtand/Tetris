@@ -267,14 +267,15 @@ class Game extends JFrame implements ActionListener {
         String filename = "scores.txt";
 
         try {
+
             // open the text file
             Scanner fileReader = new Scanner(new File(filename));
             int i = 0;
+
             while(fileReader.hasNextInt()) {
                 highScores[i] = fileReader.nextInt();
-                System.out.println(highScores[i]);
                 i++;
-                if (i == 9) {
+                if (!fileReader.hasNextInt()) {
                     break;
                 }
             }
