@@ -28,7 +28,7 @@ class Game extends JFrame implements ActionListener {
     private int speed = 400;
 
     /** top ten scores */
-    private int[] highScores = new int[10];
+    private int[] scores = new int[50];
 
     /**
      * Default constructor to create game
@@ -176,17 +176,25 @@ class Game extends JFrame implements ActionListener {
 
         JPanel scoresPanel = new JPanel();
 
+        int count = 0;
+        for (int i = 0; i < scores.length - 1; i++) {
+            if (scores[i] == 0) {
+                count = i - 1;
+                break;
+            }
+        }
+
         JTextArea scoreTextArea = new JTextArea(
-                highScores[highScores.length - 1] + "\n" +
-                highScores[highScores.length - 2] + "\n" +
-                highScores[highScores.length - 3] + "\n" +
-                highScores[highScores.length - 4] + "\n" +
-                highScores[highScores.length - 5] + "\n" +
-                highScores[highScores.length - 6] + "\n" +
-                highScores[highScores.length - 7] + "\n" +
-                highScores[highScores.length - 8] + "\n" +
-                highScores[highScores.length - 9] + "\n" +
-                highScores[highScores.length - 10] + "\n"
+                scores[count - 1] + "\n" +
+                scores[count - 2] + "\n" +
+                scores[count - 3] + "\n" +
+                scores[count - 4] + "\n" +
+                scores[count - 5] + "\n" +
+                scores[count - 6] + "\n" +
+                scores[count - 7] + "\n" +
+                scores[count - 8] + "\n" +
+                scores[count - 9] + "\n" +
+                scores[count - 10] + "\n"
         );
 
         scoresPanel.add(scoreTextArea);
@@ -245,7 +253,7 @@ class Game extends JFrame implements ActionListener {
 
     /**
      * Getter for game speed
-     * @return
+     * @return speed of timer
      */
     public int getSpeed() {
         return speed;
@@ -273,17 +281,16 @@ class Game extends JFrame implements ActionListener {
             int i = 0;
 
             while(fileReader.hasNextInt()) {
-                highScores[i] = fileReader.nextInt();
+                scores[i] = fileReader.nextInt();
                 i++;
-                if (!fileReader.hasNextInt()) {
-                    break;
-                }
+                fileReader.next();
             }
         }
         catch (FileNotFoundException error) {
             System.out.println("File not found");
         }
-        Arrays.sort(highScores);
+        Arrays.sort(scores);
+        System.out.println(scores[16]);
     }
 
     /**
