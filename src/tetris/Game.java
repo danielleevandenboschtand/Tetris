@@ -180,6 +180,7 @@ class Game extends JFrame implements ActionListener {
         scoreTextArea.setEditable(false);
 
         for (int i = 0; i < orderedScores.length; i++) {
+            scoreTextArea.append((i + 1) + ". ");
             scoreTextArea.append(Integer.toString(orderedScores[i]) + "\n");
         }
 
