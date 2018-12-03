@@ -50,6 +50,8 @@ class Board extends JPanel implements ActionListener {
     /** game board */
     private final Tetris[] board;
 
+    private int[] scores = new int[10];
+
     /**
      * Default constructor. Sets up game
      * @param parent game object
@@ -58,6 +60,7 @@ class Board extends JPanel implements ActionListener {
         setFocusable(true);
         curPiece = new Piece();
         timer = new Timer(parent.getSpeed(), this);
+        scores = parent.getScores();
         timer.start();
         scorebar = parent.getStatusBar();
         board = new Tetris[bWidth * bHeight];
@@ -309,8 +312,36 @@ class Board extends JPanel implements ActionListener {
             timer.stop();
             started = false;
             scorebar.setText("Game Over! Score: " + String.valueOf(score * 100));
-            saveScores();
+            if ( Integer.parseInt(String.valueOf(score * 100)) > scores[9] ) {
+                scores[9] = Integer.parseInt(String.valueOf(score * 100));
+                saveScores();
+            }
         }
+    }
+
+    /**
+     * Saves scores to text file to keep track of high scores
+     */
+    private void saveScores() {
+
+        PrintWriter out;
+        String filename = "scores.txt";
+
+        try {
+            out = new PrintWriter(new BufferedWriter(new FileWriter(filename, false)));
+
+            // reset file
+//            out.write(" ");
+            for (int i = 0; i < 10; i++) {
+                out.append(Integer.toString(scores[i]) + "\n");
+            }
+
+            out.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("saved scores");
     }
 
     /**
@@ -343,55 +374,6 @@ class Board extends JPanel implements ActionListener {
             moveOneLineDown();
         }
     }
-
-    /**
-     * Saves scores to text file to keep track of high scores
-     */
-    private void saveScores() {
-
-        PrintWriter out;
-        String filename = "scores.txt";
-
-        try {
-            out = new PrintWriter(new BufferedWriter(new FileWriter(filename, true)));
-
-            // save scores
-            out.append(String.valueOf(score * 100));
-            out.append("\n");
-
-            out.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-//    /**
-//     * Loads scores from text file to keep track of high scores
-//     */
-//    public void loadScores() {
-//
-//        String filename = "scores.txt";
-//
-//        try {
-//            // open the text file
-//            Scanner fileReader = new Scanner(new File(filename));
-//            int num = 0;
-//
-//            // loop for reading file
-//            while(fileReader.hasNext()) {
-//                num++;
-//
-//                for (int i = 0; i < num; i++) {
-//                    highScores[i] = fileReader.nextInt();
-//                }
-//            }
-//        }
-//        catch (FileNotFoundException error) {
-//            System.out.println("File not found");
-//        }
-//        Arrays.sort(highScores);
-//    }
 
     /**
      * Key adapter class

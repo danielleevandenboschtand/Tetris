@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 class Game extends JFrame implements ActionListener {
@@ -28,7 +29,8 @@ class Game extends JFrame implements ActionListener {
     private int speed = 400;
 
     /** top ten scores */
-    private int[] scores = new int[50];
+    int[] scores = new int[10];
+    int[] orderedScores = new int[10];
 
     /**
      * Default constructor to create game
@@ -172,35 +174,19 @@ class Game extends JFrame implements ActionListener {
 
         highScoresWindow = new JFrame();
 
-        loadScores();
-
         JPanel scoresPanel = new JPanel();
 
-        int count = 0;
-        for (int i = 0; i < scores.length - 1; i++) {
-            if (scores[i] == 0) {
-                count = i - 1;
-                break;
-            }
-        }
+        JTextArea scoreTextArea = new JTextArea();
+        scoreTextArea.setEditable(false);
 
-        JTextArea scoreTextArea = new JTextArea(
-                scores[count - 1] + "\n" +
-                scores[count - 2] + "\n" +
-                scores[count - 3] + "\n" +
-                scores[count - 4] + "\n" +
-                scores[count - 5] + "\n" +
-                scores[count - 6] + "\n" +
-                scores[count - 7] + "\n" +
-                scores[count - 8] + "\n" +
-                scores[count - 9] + "\n" +
-                scores[count - 10] + "\n"
-        );
+        for (int i = 0; i < orderedScores.length; i++) {
+            scoreTextArea.append(Integer.toString(orderedScores[i]) + "\n");
+        }
 
         scoresPanel.add(scoreTextArea);
         highScoresWindow.add(scoresPanel);
 
-        // create help window
+        // create scores window
         highScoresWindow.setVisible(true);
         highScoresWindow.setSize(500, 550);
         highScoresWindow.setTitle("Tetris High Scores");
@@ -235,6 +221,8 @@ class Game extends JFrame implements ActionListener {
 
         highscores = new JButton("High Scores");
         highscores.setPreferredSize(new Dimension(100, 40));
+
+        loadScores();
 
         f.add(title, BorderLayout.NORTH);
         title.setHorizontalAlignment(JLabel.CENTER);
@@ -272,25 +260,40 @@ class Game extends JFrame implements ActionListener {
      */
     public void loadScores() {
 
-        String filename = "scores.txt";
-
         try {
 
             // open the text file
-            Scanner fileReader = new Scanner(new File(filename));
+            File file = new File("scores.txt");
+            int currentLine;
             int i = 0;
+            Scanner sc = new Scanner(file);
 
-            while(fileReader.hasNextInt()) {
-                scores[i] = fileReader.nextInt();
+            while (sc.hasNextLine()) {
+                currentLine = Integer.parseInt(sc.nextLine());
+                scores[i] = currentLine;
                 i++;
-                fileReader.next();
             }
         }
         catch (FileNotFoundException error) {
             System.out.println("File not found");
         }
+
         Arrays.sort(scores);
-        System.out.println(scores[16]);
+
+        int j = 9;
+
+        for (int i = 0; i < scores.length; i++) {
+            orderedScores[j] = scores[i];
+            j--;
+        }
+    }
+
+    /**
+     * Getter for high scores
+     * @return speed of timer
+     */
+    public int[] getScores() {
+        return orderedScores;
     }
 
     /**
