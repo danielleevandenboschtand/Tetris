@@ -170,9 +170,12 @@ class Game extends JFrame implements ActionListener {
      * Loads high scores menu
      */
     private void highScoresMenu() {
-        JLabel highScoresText;
-
         highScoresWindow = new JFrame();
+
+        JLabel highScoresText = new JLabel("High Scores");
+        highScoresWindow.add(highScoresText, BorderLayout.NORTH);
+        highScoresText.setHorizontalAlignment(JLabel.CENTER);
+        highScoresText.setFont(new Font("Arial Black", Font.PLAIN, 20));
 
         JPanel scoresPanel = new JPanel();
 
@@ -184,6 +187,8 @@ class Game extends JFrame implements ActionListener {
             scoreTextArea.append(Integer.toString(orderedScores[i]) + "\n");
         }
 
+        scoreTextArea.setFont(new Font("Arial Black", Font.PLAIN, 16));
+
         scoresPanel.add(scoreTextArea);
         highScoresWindow.add(scoresPanel);
 
@@ -192,6 +197,9 @@ class Game extends JFrame implements ActionListener {
         highScoresWindow.setSize(500, 550);
         highScoresWindow.setTitle("High Scores");
 
+        highscoresBack = new JButton("Back");
+        highScoresWindow.add(highscoresBack, BorderLayout.SOUTH);
+        highscoresBack.addActionListener(this);
     }
 
     /**
@@ -321,6 +329,9 @@ class Game extends JFrame implements ActionListener {
         }
         if (e.getSource() == helpBack) {
             helpWindow.dispose();
+        }
+        if (e.getSource() == highscoresBack) {
+            highScoresWindow.dispose();
         }
         if (e.getSource() == easyButton) {
             setSpeed(700);
