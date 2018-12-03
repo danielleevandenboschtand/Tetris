@@ -29,8 +29,8 @@ class Game extends JFrame implements ActionListener {
     private int speed = 400;
 
     /** top ten scores */
-    int[] scores = new int[10];
-    int[] orderedScores = new int[10];
+    private int[] scores = new int[10];
+    private int[] orderedScores = new int[10];
 
     /**
      * Default constructor to create game
@@ -127,7 +127,7 @@ class Game extends JFrame implements ActionListener {
         // create settings window
         settingsWindow.setVisible(true);
         settingsWindow.setSize(500, 550);
-        settingsWindow.setTitle("Tetris Settings");
+        settingsWindow.setTitle("Settings");
 
         JPanel buttonPanel = new JPanel();
 
@@ -180,7 +180,7 @@ class Game extends JFrame implements ActionListener {
         scoreTextArea.setEditable(false);
 
         for (int i = 0; i < orderedScores.length; i++) {
-            scoreTextArea.append((i + 1) + ". ");
+            scoreTextArea.append((i + 1) + ".  ");
             scoreTextArea.append(Integer.toString(orderedScores[i]) + "\n");
         }
 
@@ -190,7 +190,7 @@ class Game extends JFrame implements ActionListener {
         // create scores window
         highScoresWindow.setVisible(true);
         highScoresWindow.setSize(500, 550);
-        highScoresWindow.setTitle("Tetris High Scores");
+        highScoresWindow.setTitle("High Scores");
 
     }
 
@@ -259,7 +259,7 @@ class Game extends JFrame implements ActionListener {
     /**
      * Loads scores from text file to keep track of high scores
      */
-    public void loadScores() {
+    private void loadScores() {
 
         try {
 
