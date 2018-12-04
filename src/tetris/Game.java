@@ -35,7 +35,7 @@ class Game extends JFrame implements ActionListener {
     private int[] orderedScores = new int[10];
 
     /** color selector */
-    int color;
+    private int color;
 
     /**
      * Default constructor to create game
