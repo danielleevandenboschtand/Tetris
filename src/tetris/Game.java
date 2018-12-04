@@ -326,11 +326,11 @@ class Game extends JFrame implements ActionListener {
     }
 
     /**
-     * Returns num to slect color
+     * Returns num to select color
      * @return int for color
      */
     public int getColorNum() {
-        return 5;
+        return color;
     }
 
     /**
