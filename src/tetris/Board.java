@@ -52,7 +52,7 @@ class Board extends JPanel implements ActionListener {
     private int[] scores = new int[10];
 
     /** color selector */
-    int color;
+    private int color;
 
     /**
      * Default constructor. Sets up game
@@ -140,7 +140,7 @@ class Board extends JPanel implements ActionListener {
      * @param c int to choose color array
      * @return color array to use
      */
-    private Color[] setColor(int c) {
+    private Color[] chooseColor(int c) {
 
         // set colors
         Color colors[];
@@ -240,7 +240,6 @@ class Board extends JPanel implements ActionListener {
                     new Color(255, 154, 0)
             };
         }
-
         return colors;
     }
 
@@ -252,7 +251,7 @@ class Board extends JPanel implements ActionListener {
      * @param piece tetromino shape
      */
     private void fillPiece(Graphics g, int x, int y, Tetris piece) {
-        Color colors[] = setColor(color);
+        Color colors[] = chooseColor(color);
 
         // set of colors
         Color c = colors[piece.ordinal()];

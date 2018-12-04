@@ -140,11 +140,33 @@ class Game extends JFrame implements ActionListener {
         mediumButton = new JRadioButton("Normal");
         hardButton = new JRadioButton("Hard");
 
+        defaultColors = new JRadioButton("Default");
+        dullColors = new JRadioButton("Dull");
+        blackAndWhiteColors = new JRadioButton("Black and White");
+        fallColors = new JRadioButton("Fall");
+        springColors = new JRadioButton("Spring");
+        blackColors = new JRadioButton("Black");
+
         //Group the radio buttons
         ButtonGroup group = new ButtonGroup();
         group.add(easyButton);
         group.add(mediumButton);
         group.add(hardButton);
+
+        ButtonGroup colorGroup = new ButtonGroup();
+        colorGroup.add(defaultColors);
+        colorGroup.add(dullColors);
+        colorGroup.add(blackAndWhiteColors);
+        colorGroup.add(fallColors);
+        colorGroup.add(springColors);
+        colorGroup.add(blackColors);
+
+        buttonPanel.add(defaultColors);
+        buttonPanel.add(dullColors);
+        buttonPanel.add(blackAndWhiteColors);
+        buttonPanel.add(fallColors);
+        buttonPanel.add(springColors);
+        buttonPanel.add(blackColors);
 
         buttonPanel.add(easyButton);
         buttonPanel.add(mediumButton);
@@ -153,6 +175,13 @@ class Game extends JFrame implements ActionListener {
         easyButton.addActionListener(this);
         mediumButton.addActionListener(this);
         hardButton.addActionListener(this);
+
+        defaultColors.addActionListener(this);
+        dullColors.addActionListener(this);
+        blackAndWhiteColors.addActionListener(this);
+        fallColors.addActionListener(this);
+        springColors.addActionListener(this);
+        blackColors.addActionListener(this);
 
         if (speed == 100) {
             hardButton.setSelected(true);
@@ -164,40 +193,26 @@ class Game extends JFrame implements ActionListener {
             mediumButton.setSelected(true);
         }
 
+        if (color == 1) {
+            dullColors.setSelected(true);
+        }
+        else if (color == 2) {
+            blackAndWhiteColors.setSelected(true);
+        }
+        else if (color == 3) {
+            fallColors.setSelected(true);
+        }
+        else if (color == 4) {
+            springColors.setSelected(true);
+        }
+        else if (color == 5) {
+            blackColors.setSelected(true);
+        }
+        else {
+            defaultColors.setSelected(true);
+        }
+
         settingsWindow.add(buttonPanel);
-
-        JPanel colorPanel = new JPanel();
-
-        defaultColors = new JRadioButton("Default");
-        dullColors = new JRadioButton("Dull");
-        blackAndWhiteColors = new JRadioButton("Black and White");
-        fallColors = new JRadioButton("Fall");
-        springColors = new JRadioButton("Spring");
-        blackColors = new JRadioButton("Black");
-
-        ButtonGroup colorGroup = new ButtonGroup();
-        colorGroup.add(defaultColors);
-        colorGroup.add(dullColors);
-        colorGroup.add(blackAndWhiteColors);
-        colorGroup.add(fallColors);
-        colorGroup.add(springColors);
-        colorGroup.add(blackColors);
-
-        colorPanel.add(defaultColors);
-        colorPanel.add(dullColors);
-        colorPanel.add(blackAndWhiteColors);
-        colorPanel.add(fallColors);
-        colorPanel.add(springColors);
-        colorPanel.add(blackColors);
-
-        defaultColors.addActionListener(this);
-        dullColors.addActionListener(this);
-        blackAndWhiteColors.addActionListener(this);
-        fallColors.addActionListener(this);
-        springColors.addActionListener(this);
-        blackColors.addActionListener(this);
-
-        settingsWindow.add(colorPanel);
 
         settingsBack = new JButton("Back");
         settingsWindow.add(settingsBack, BorderLayout.SOUTH);
