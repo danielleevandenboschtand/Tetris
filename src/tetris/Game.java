@@ -24,12 +24,18 @@ class Game extends JFrame implements ActionListener {
     /** settings radio buttons **/
     private JRadioButton easyButton, mediumButton, hardButton;
 
+    /** color radio buttons */
+    private JRadioButton defaultColors, dullColors, blackAndWhiteColors, fallColors, springColors, blackColors;
+
     /** speed of timer */
     private int speed = 400;
 
     /** top ten scores */
     private int[] scores = new int[10];
     private int[] orderedScores = new int[10];
+
+    /** color selector */
+    int color;
 
     /**
      * Default constructor to create game
@@ -160,6 +166,39 @@ class Game extends JFrame implements ActionListener {
 
         settingsWindow.add(buttonPanel);
 
+        JPanel colorPanel = new JPanel();
+
+        defaultColors = new JRadioButton("Default");
+        dullColors = new JRadioButton("Dull");
+        blackAndWhiteColors = new JRadioButton("Black and White");
+        fallColors = new JRadioButton("Fall");
+        springColors = new JRadioButton("Spring");
+        blackColors = new JRadioButton("Black");
+
+        ButtonGroup colorGroup = new ButtonGroup();
+        colorGroup.add(defaultColors);
+        colorGroup.add(dullColors);
+        colorGroup.add(blackAndWhiteColors);
+        colorGroup.add(fallColors);
+        colorGroup.add(springColors);
+        colorGroup.add(blackColors);
+
+        colorPanel.add(defaultColors);
+        colorPanel.add(dullColors);
+        colorPanel.add(blackAndWhiteColors);
+        colorPanel.add(fallColors);
+        colorPanel.add(springColors);
+        colorPanel.add(blackColors);
+
+        defaultColors.addActionListener(this);
+        dullColors.addActionListener(this);
+        blackAndWhiteColors.addActionListener(this);
+        fallColors.addActionListener(this);
+        springColors.addActionListener(this);
+        blackColors.addActionListener(this);
+
+        settingsWindow.add(colorPanel);
+
         settingsBack = new JButton("Back");
         settingsWindow.add(settingsBack, BorderLayout.SOUTH);
         settingsBack.addActionListener(this);
@@ -264,6 +303,22 @@ class Game extends JFrame implements ActionListener {
     }
 
     /**
+     * Sets num to select color
+     * @param c int for color
+     */
+    private void setColorNum(int c) {
+        color = c;
+    }
+
+    /**
+     * Returns num to slect color
+     * @return int for color
+     */
+    public int getColorNum() {
+        return 5;
+    }
+
+    /**
      * Loads scores from text file to keep track of high scores
      */
     private void loadScores() {
@@ -340,6 +395,24 @@ class Game extends JFrame implements ActionListener {
         }
         if (e.getSource() == hardButton) {
             setSpeed(100);
+        }
+        if (e.getSource() == defaultColors) {
+            setColorNum(0);
+        }
+        if (e.getSource() == dullColors) {
+            setColorNum(1);
+        }
+        if (e.getSource() == blackAndWhiteColors) {
+            setColorNum(2);
+        }
+        if (e.getSource() == fallColors) {
+            setColorNum(3);
+        }
+        if (e.getSource() == springColors) {
+            setColorNum(4);
+        }
+        if (e.getSource() == blackColors) {
+            setColorNum(5);
         }
     }
 

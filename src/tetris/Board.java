@@ -48,7 +48,11 @@ class Board extends JPanel implements ActionListener {
     /** game board */
     private final Tetris[] board;
 
+    /** array for high scores */
     private int[] scores = new int[10];
+
+    /** color selector */
+    int color;
 
     /**
      * Default constructor. Sets up game
@@ -58,6 +62,7 @@ class Board extends JPanel implements ActionListener {
         setFocusable(true);
         curPiece = new Piece();
         timer = new Timer(parent.getSpeed(), this);
+        color = parent.getColorNum();
         scores = parent.getScores();
         timer.start();
         scorebar = parent.getStatusBar();
@@ -131,6 +136,115 @@ class Board extends JPanel implements ActionListener {
     }
 
     /**
+     * Set colors to use for tetromino pieces
+     * @param c int to choose color array
+     * @return color array to use
+     */
+    private Color[] setColor(int c) {
+
+        // set colors
+        Color colors[];
+
+        // default colors
+        if (c == 0) {
+            colors = new Color[]{
+                    new Color(0, 0, 0),
+                    new Color(255, 0, 0),
+                    new Color(0, 255, 37),
+                    new Color(0, 10, 255),
+                    new Color(240, 238, 0),
+                    new Color(204, 0, 222),
+                    new Color(0, 241, 239),
+                    new Color(255, 154, 0)
+            };
+        }
+        // dull colors
+        else if (c == 1) {
+            colors = new Color[]{
+                    new Color(0, 0, 0),
+                    new Color(135, 0, 0),
+                    new Color(0, 125, 22),
+                    new Color(0, 4, 130),
+                    new Color(179, 178, 0),
+                    new Color(123, 0, 133),
+                    new Color(0, 128, 127),
+                    new Color(182, 110, 0)
+            };
+        }
+        // black and white colors
+        else if (c == 2) {
+            colors = new Color[]{
+                    new Color(0, 0, 0),
+                    new Color(255, 255, 255),
+                    new Color(168, 168, 168),
+                    new Color(21, 21, 21),
+                    new Color(113, 113, 113),
+                    new Color(73, 73, 73),
+                    new Color(100, 100, 100),
+                    new Color(220, 220, 220)
+            };
+        }
+
+        // fall colors
+        else if (c == 3) {
+            colors = new Color[]{
+                    new Color(0, 0, 0),
+                    new Color(187, 0, 0),
+                    new Color(238, 236, 0),
+                    new Color(242, 140, 0),
+                    new Color(192, 111, 0),
+                    new Color(172, 171, 0),
+                    new Color(242, 0, 0),
+                    new Color(154, 88, 0)
+            };
+        }
+
+        // spring colors
+        else if (c == 4) {
+            colors = new Color[]{
+                    new Color(0, 0, 0),
+                    new Color(0, 232, 255),
+                    new Color(0, 255, 44),
+                    new Color(0, 169, 29),
+                    new Color(255, 253, 0),
+                    new Color(255, 0, 254),
+                    new Color(177, 0, 176),
+                    new Color(0, 10, 255)
+            };
+        }
+
+        // black colors
+        else if (c == 5) {
+            colors = new Color[]{
+                    new Color(0, 0, 0),
+                    new Color(0, 0, 0),
+                    new Color(0, 0, 0),
+                    new Color(0, 0, 0),
+                    new Color(0, 0, 0),
+                    new Color(0, 0, 0),
+                    new Color(0, 0, 0),
+                    new Color(0, 0, 0)
+            };
+        }
+
+        // set default colors
+        else {
+            colors = new Color[]{
+                    new Color(0, 0, 0),
+                    new Color(255, 0, 0),
+                    new Color(0, 255, 37),
+                    new Color(0, 10, 255),
+                    new Color(240, 238, 0),
+                    new Color(204, 0, 222),
+                    new Color(0, 241, 239),
+                    new Color(255, 154, 0)
+            };
+        }
+
+        return colors;
+    }
+
+    /**
      * Fills color for pieces
      * @param g graphics object
      * @param x coordinate
@@ -138,16 +252,7 @@ class Board extends JPanel implements ActionListener {
      * @param piece tetromino shape
      */
     private void fillPiece(Graphics g, int x, int y, Tetris piece) {
-        Color colors[] = {
-                new Color(0, 0, 0),
-                new Color(255, 0, 0),
-                new Color(0, 255, 37),
-                new Color(0, 10, 255),
-                new Color(240, 238, 0),
-                new Color(204, 0, 222),
-                new Color(0, 241, 239),
-                new Color(255, 154, 0)
-        };
+        Color colors[] = setColor(color);
 
         // set of colors
         Color c = colors[piece.ordinal()];
@@ -339,7 +444,6 @@ class Board extends JPanel implements ActionListener {
         catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("saved scores");
     }
 
     /**
