@@ -161,16 +161,26 @@ class Game extends JFrame implements ActionListener {
         colorGroup.add(springColors);
         colorGroup.add(blackColors);
 
+        JTextArea difficultyLabel = new JTextArea("Difficulty");
+        difficultyLabel.setEditable(false);
+        difficultyLabel.setFont(new Font("Arial Black", Font.PLAIN, 16));
+        buttonPanel.add(difficultyLabel);
+
+        buttonPanel.add(easyButton);
+        buttonPanel.add(mediumButton);
+        buttonPanel.add(hardButton);
+
+        JTextArea themeLabel = new JTextArea("Theme");
+        themeLabel.setEditable(false);
+        themeLabel.setFont(new Font("Arial Black", Font.PLAIN, 16));
+        buttonPanel.add(themeLabel);
+
         buttonPanel.add(defaultColors);
         buttonPanel.add(dullColors);
         buttonPanel.add(blackAndWhiteColors);
         buttonPanel.add(fallColors);
         buttonPanel.add(springColors);
         buttonPanel.add(blackColors);
-
-        buttonPanel.add(easyButton);
-        buttonPanel.add(mediumButton);
-        buttonPanel.add(hardButton);
 
         easyButton.addActionListener(this);
         mediumButton.addActionListener(this);
