@@ -54,6 +54,9 @@ class Board extends JPanel implements ActionListener {
     /** color selector */
     private int color;
 
+    /** multiplier for score */
+    private double scoreMultiplier;
+
     /**
      * Default constructor. Sets up game
      * @param parent game object
@@ -69,6 +72,24 @@ class Board extends JPanel implements ActionListener {
         board = new Tetris[bWidth * bHeight];
         addKeyListener(new TAdapter());
         clear();
+    }
+
+    /**
+     * Change score multiplier based on timer speed
+     */
+    private void changeScoreMultiplier() {
+        int timerSpeed = timer.getDelay();
+
+        // set score multiplier
+        if (timerSpeed == 100) {
+            scoreMultiplier = 2;
+        }
+        else if (timerSpeed == 700) {
+            scoreMultiplier = 0.5;
+        }
+        else {
+            scoreMultiplier = 1;
+        }
     }
 
     /**
@@ -130,7 +151,8 @@ class Board extends JPanel implements ActionListener {
             scorebar.setText("Paused");
         } else {
             timer.start();
-            scorebar.setText("Score: " + String.valueOf(score * 100));
+            changeScoreMultiplier();
+            scorebar.setText("Score: " + String.valueOf((int)(score * 100 * scoreMultiplier)));
         }
         repaint();
     }
@@ -374,7 +396,8 @@ class Board extends JPanel implements ActionListener {
         // add removed lines to score
         if (lines > 0) {
             score += lines;
-            scorebar.setText("Score: " + String.valueOf(score * 100));
+            changeScoreMultiplier();
+            scorebar.setText("Score: " + String.valueOf((int)(score * 100 * scoreMultiplier)));
             atBottom = true;
             curPiece.setPiece(Tetris.emptyPiece);
             repaint();
@@ -422,12 +445,14 @@ class Board extends JPanel implements ActionListener {
             timer.stop();
             started = false;
             if ( Integer.parseInt(String.valueOf(score * 100)) > scores[9] ) {
-                scorebar.setText("New High Score! Score: " + String.valueOf(score * 100));
+                changeScoreMultiplier();
+                scorebar.setText("New High Score! Score: " + String.valueOf((int)(score * 100 * scoreMultiplier)));
                 scores[9] = Integer.parseInt(String.valueOf(score * 100));
                 saveScores();
             }
             else {
-                scorebar.setText("Game Over! Score: " + String.valueOf(score * 100));
+                changeScoreMultiplier();
+                scorebar.setText("Game Over! Score: " + String.valueOf((int)(score * 100 * scoreMultiplier)));
             }
         }
     }
