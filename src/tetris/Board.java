@@ -408,6 +408,14 @@ class Board extends JPanel implements ActionListener {
         curX = bWidth / 2 + 1;
         curY = bHeight - 1 + curPiece.minY();
 
+        gameOver();
+    }
+
+    /**
+     * Logic for when game is over
+     */
+    private void gameOver() {
+
         // check if board is full
         if (!move(curPiece, curX, curY)) {
             curPiece.setPiece(Tetris.emptyPiece);
