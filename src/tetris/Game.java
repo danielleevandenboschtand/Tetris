@@ -280,7 +280,7 @@ class Game extends JFrame implements ActionListener {
 
         JPanel p = new JPanel();
 
-        /* game title */
+        // game title
         JLabel title = new JLabel(logo);
         start = new JButton("Start");
         start.setPreferredSize(new Dimension(100, 40));
@@ -370,8 +370,8 @@ class Game extends JFrame implements ActionListener {
 
         int j = 9;
 
-        for (int i = 0; i < scores.length; i++) {
-            orderedScores[j] = scores[i];
+        for (int score : scores) {
+            orderedScores[j] = score;
             j--;
         }
     }
