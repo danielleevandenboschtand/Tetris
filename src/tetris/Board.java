@@ -421,10 +421,13 @@ class Board extends JPanel implements ActionListener {
             curPiece.setPiece(Tetris.emptyPiece);
             timer.stop();
             started = false;
-            scorebar.setText("Game Over! Score: " + String.valueOf(score * 100));
             if ( Integer.parseInt(String.valueOf(score * 100)) > scores[9] ) {
+                scorebar.setText("New High Score! Score: " + String.valueOf(score * 100));
                 scores[9] = Integer.parseInt(String.valueOf(score * 100));
                 saveScores();
+            }
+            else {
+                scorebar.setText("Game Over! Score: " + String.valueOf(score * 100));
             }
         }
     }
