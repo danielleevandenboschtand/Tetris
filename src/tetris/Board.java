@@ -454,6 +454,19 @@ class Board extends JPanel implements ActionListener {
                 changeScoreMultiplier();
                 scorebar.setText("Game Over! Score: " + String.valueOf((int)(score * 100 * scoreMultiplier)));
             }
+
+            String[] options = {"Yes", "No"};
+            int x = JOptionPane.showOptionDialog(null, "Start a New Game?",
+                    "Click a button",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+            // check popup options
+            if (x == 0) {
+                new Game();
+            }
+            else {
+                System.exit(0);
+            }
         }
     }
 

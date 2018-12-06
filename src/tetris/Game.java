@@ -40,7 +40,7 @@ class Game extends JFrame implements ActionListener {
     /**
      * Default constructor to create game
      */
-    private Game() {
+    public Game() {
         frame();
     }
 
