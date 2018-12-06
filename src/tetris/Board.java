@@ -484,7 +484,7 @@ class Board extends JPanel implements ActionListener {
             // reset file
 //            out.write(" ");
             for (int i = 0; i < 10; i++) {
-                out.append(Integer.toString(scores[i]) + "\n");
+                out.append(Integer.toString(scores[i])).append("\n");
             }
 
             out.close();

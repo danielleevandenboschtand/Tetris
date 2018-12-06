@@ -93,7 +93,7 @@ class Game extends JFrame implements ActionListener {
         helpText.setHorizontalAlignment(JLabel.CENTER);
         helpText.setFont(new Font("Arial Black", Font.PLAIN, 20));
 
-        /* text for controls */
+        // text for controls
         JTextArea helpTextArea = new JTextArea(
                 "                            Right:              Up Arrow\n" +
                         "                            Rotate Left:    Down Arrow\n" +
@@ -101,7 +101,11 @@ class Game extends JFrame implements ActionListener {
                         "                            Move Left:      Left Arrow\n" +
                         "                            Fast Drop:      Shift\n" +
                         "                            Instant Drop:  Space\n" +
-                        "                            Pause:            p"
+                        "                            Pause:            p" +
+                        "\n\n\n" +
+                        "                    Easy Difficulty: 50 points per line cleared" +
+                        "                         Normal Difficulty: 100 points per line cleared" +
+                        "                          Hard Difficulty: 200 points per line cleared"
         );
         Insets i = new Insets(50,50,50,50);
         helpTextArea.setMargin(i);
