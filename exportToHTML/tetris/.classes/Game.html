@@ -53,15 +53,15 @@
     100%
   </span>
   <span class="absValue">
-    (7/ 7)
+    (17/ 17)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    96.3%
   </span>
   <span class="absValue">
-    (64/ 64)
+    (234/ 243)
   </span>
 </td>
 </tr>
@@ -78,166 +78,506 @@
 <i>4</i>&nbsp;import java.awt.*;
 <i>5</i>&nbsp;import java.awt.event.ActionEvent;
 <i>6</i>&nbsp;import java.awt.event.ActionListener;
-<i>7</i>&nbsp;
-<i>8</i>&nbsp;class Game extends JFrame implements ActionListener{
-<i>9</i>&nbsp;    private JFrame helpWindow;
+<i>7</i>&nbsp;import java.io.*;
+<i>8</i>&nbsp;import java.util.Arrays;
+<i>9</i>&nbsp;import java.util.Scanner;
 <i>10</i>&nbsp;
-<i>11</i>&nbsp;    /** bar to show score/game message */
-<i>12</i>&nbsp;    private JLabel scorebar;
+<i>11</i>&nbsp;public class Game extends JFrame implements ActionListener {
+<i>12</i>&nbsp;    private JFrame helpWindow, settingsWindow, highScoresWindow;
 <i>13</i>&nbsp;
-<i>14</i>&nbsp;    /** tetris logo */
-<i>15</i>&nbsp;    private final ImageIcon logo = new ImageIcon(&quot;tetris.png&quot;);
+<i>14</i>&nbsp;    /** bar to show score/game message */
+<i>15</i>&nbsp;    private JLabel scorebar;
 <i>16</i>&nbsp;
-<i>17</i>&nbsp;    /** buttons for game navigation */
-<i>18</i>&nbsp;    private JButton start, help, back;
+<i>17</i>&nbsp;    /** tetris logo */
+<b class="fc"><i>18</i>&nbsp;    private final ImageIcon logo = new ImageIcon(&quot;tetris.png&quot;);</b>
 <i>19</i>&nbsp;
-<i>20</i>&nbsp;    /**
-<i>21</i>&nbsp;     * Default constructor to create game
-<i>22</i>&nbsp;     */
-<i>23</i>&nbsp;    private Game() {
-<i>24</i>&nbsp;        frame();
-<i>25</i>&nbsp;    }
-<b class="fc"><i>26</i>&nbsp;</b>
-<b class="fc"><i>27</i>&nbsp;    /**</b>
-<b class="fc"><i>28</i>&nbsp;     * Label at bottom of screen for score</b>
-<i>29</i>&nbsp;     * @return score bar
-<i>30</i>&nbsp;     */
-<i>31</i>&nbsp;    public JLabel getStatusBar() {
-<i>32</i>&nbsp;        return scorebar;
-<i>33</i>&nbsp;    }
-<b class="fc"><i>34</i>&nbsp;</b>
-<i>35</i>&nbsp;    /**
-<i>36</i>&nbsp;     * Starts the game
-<i>37</i>&nbsp;     */
-<i>38</i>&nbsp;    private void startGame() {
-<b class="fc"><i>39</i>&nbsp;</b>
-<i>40</i>&nbsp;        JFrame f = new JFrame();
-<i>41</i>&nbsp;
-<b class="fc"><i>42</i>&nbsp;        // create game window</b>
-<b class="fc"><i>43</i>&nbsp;        f.setVisible(true);</b>
-<b class="fc"><i>44</i>&nbsp;        f.setSize(500, 550);</b>
-<b class="fc"><i>45</i>&nbsp;        f.setTitle(&quot;Tetris&quot;);</b>
-<i>46</i>&nbsp;        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+<i>20</i>&nbsp;    /** buttons for game navigation */
+<i>21</i>&nbsp;    private JButton start, help, helpBack, settings, settingsBack, highscores, highscoresBack;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /** settings radio buttons **/
+<i>24</i>&nbsp;    private JRadioButton easyButton, mediumButton, hardButton;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /** color radio buttons */
+<i>27</i>&nbsp;    private JRadioButton defaultColors, dullColors, blackAndWhiteColors, fallColors, springColors, blackColors;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /** speed of timer */
+<b class="fc"><i>30</i>&nbsp;    private int speed = 400;</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /** current player name */
+<i>33</i>&nbsp;    private String playerName;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /** high scores array **/
+<b class="fc"><i>36</i>&nbsp;    private String[][] highScores = new String[10][2];</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    /** color selector */
+<i>39</i>&nbsp;    private int color;
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * Default constructor to create game
+<i>43</i>&nbsp;     */
+<b class="fc"><i>44</i>&nbsp;    public Game() {</b>
+<b class="fc"><i>45</i>&nbsp;        frame();</b>
+<b class="fc"><i>46</i>&nbsp;    }</b>
 <i>47</i>&nbsp;
-<b class="fc"><i>48</i>&nbsp;        // create score bar</b>
-<i>49</i>&nbsp;        scorebar = new JLabel(&quot;Score: 0&quot;);
-<b class="fc"><i>50</i>&nbsp;</b>
-<b class="fc"><i>51</i>&nbsp;        f.add(scorebar, BorderLayout.NORTH);</b>
-<b class="fc"><i>52</i>&nbsp;        scorebar.setHorizontalAlignment(JLabel.CENTER);</b>
-<i>53</i>&nbsp;        scorebar.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 20));
-<b class="fc"><i>54</i>&nbsp;</b>
-<b class="fc"><i>55</i>&nbsp;        Board board = new Board(this);</b>
-<b class="fc"><i>56</i>&nbsp;        f.add(board);</b>
-<b class="fc"><i>57</i>&nbsp;        board.start();</b>
-<i>58</i>&nbsp;    }
-<i>59</i>&nbsp;
-<b class="fc"><i>60</i>&nbsp;    /**</b>
-<i>61</i>&nbsp;     * Loads help menu window
-<i>62</i>&nbsp;     */
-<b class="fc"><i>63</i>&nbsp;    private void helpMenu() {</b>
-<b class="fc"><i>64</i>&nbsp;        helpWindow = new JFrame();</b>
-<b class="fc"><i>65</i>&nbsp;</b>
-<i>66</i>&nbsp;        // create help window
-<b class="fc"><i>67</i>&nbsp;        helpWindow.setVisible(true);</b>
-<b class="fc"><i>68</i>&nbsp;        helpWindow.setSize(500, 550);</b>
-<b class="fc"><i>69</i>&nbsp;        helpWindow.setTitle(&quot;Tetris Help&quot;);</b>
-<b class="fc"><i>70</i>&nbsp;</b>
-<i>71</i>&nbsp;        JLabel helpText = new JLabel(&quot;Tetris Gameplay&quot;);
-<b class="fc"><i>72</i>&nbsp;        helpWindow.add(helpText, BorderLayout.NORTH);</b>
-<i>73</i>&nbsp;        helpText.setHorizontalAlignment(JLabel.CENTER);
-<i>74</i>&nbsp;        helpText.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 20));
+<i>48</i>&nbsp;    /**
+<i>49</i>&nbsp;     * Label at bottom of screen for score
+<i>50</i>&nbsp;     * @return score bar
+<i>51</i>&nbsp;     */
+<i>52</i>&nbsp;    public JLabel getStatusBar() {
+<b class="fc"><i>53</i>&nbsp;        return scorebar;</b>
+<i>54</i>&nbsp;    }
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    /**
+<i>57</i>&nbsp;     * Starts the game
+<i>58</i>&nbsp;     */
+<i>59</i>&nbsp;    private void startGame() {
+<i>60</i>&nbsp;
+<b class="fc"><i>61</i>&nbsp;        JFrame f = new JFrame();</b>
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;        // create game window
+<b class="fc"><i>64</i>&nbsp;        f.setVisible(true);</b>
+<b class="fc"><i>65</i>&nbsp;        f.setSize(500, 550);</b>
+<b class="fc"><i>66</i>&nbsp;        f.setTitle(&quot;Tetris&quot;);</b>
+<b class="fc"><i>67</i>&nbsp;        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);</b>
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;        // create score bar
+<b class="fc"><i>70</i>&nbsp;        scorebar = new JLabel(&quot;Score: 0&quot;);</b>
+<i>71</i>&nbsp;
+<b class="fc"><i>72</i>&nbsp;        f.add(scorebar, BorderLayout.NORTH);</b>
+<b class="fc"><i>73</i>&nbsp;        scorebar.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>74</i>&nbsp;        scorebar.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 20));</b>
 <i>75</i>&nbsp;
-<i>76</i>&nbsp;        /* text for controls */
-<i>77</i>&nbsp;        JTextArea helpTextArea = new JTextArea(
-<i>78</i>&nbsp;                &quot;                            Right:              Up Arrow\n&quot; +
-<i>79</i>&nbsp;                        &quot;                            Rotate Left:    Down Arrow\n&quot; +
-<i>80</i>&nbsp;                        &quot;                            Move Right:   Right Arrow\n&quot; +
-<b class="fc"><i>81</i>&nbsp;                        &quot;                            Move Left:      Left Arrow\n&quot; +</b>
-<b class="fc"><i>82</i>&nbsp;                        &quot;                            Fast Drop:      Shift\n&quot; +</b>
-<i>83</i>&nbsp;                        &quot;                            Instant Drop:  Space\n&quot; +
-<b class="fc"><i>84</i>&nbsp;                        &quot;                            Pause:            p&quot;</b>
-<i>85</i>&nbsp;        );
-<b class="fc"><i>86</i>&nbsp;        Insets i = new Insets(50,50,50,50);</b>
-<b class="fc"><i>87</i>&nbsp;        helpTextArea.setMargin(i);</b>
-<b class="fc"><i>88</i>&nbsp;</b>
-<b class="fc"><i>89</i>&nbsp;        helpTextArea.setEditable(false);</b>
-<i>90</i>&nbsp;
-<b class="fc"><i>91</i>&nbsp;        helpTextArea.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 16));</b>
-<b class="fc"><i>92</i>&nbsp;        helpTextArea.setLineWrap(true);</b>
-<b class="fc"><i>93</i>&nbsp;        helpTextArea.setWrapStyleWord(true);</b>
-<b class="fc"><i>94</i>&nbsp;        helpWindow.add(helpTextArea, BorderLayout.CENTER);</b>
-<i>95</i>&nbsp;
-<i>96</i>&nbsp;        back = new JButton(&quot;Back&quot;);
-<i>97</i>&nbsp;        helpWindow.add(back, BorderLayout.SOUTH);
-<i>98</i>&nbsp;        back.addActionListener(this);
-<i>99</i>&nbsp;    }
-<i>100</i>&nbsp;
-<b class="fc"><i>101</i>&nbsp;    /**</b>
-<i>102</i>&nbsp;     * Frame for menu screen
-<i>103</i>&nbsp;     */
-<b class="fc"><i>104</i>&nbsp;    private void frame() {</b>
-<b class="fc"><i>105</i>&nbsp;</b>
-<b class="fc"><i>106</i>&nbsp;        JFrame f = new JFrame();</b>
-<b class="fc"><i>107</i>&nbsp;</b>
-<i>108</i>&nbsp;        // create game window
-<b class="fc"><i>109</i>&nbsp;        f.setVisible(true);</b>
-<i>110</i>&nbsp;        f.setSize(500, 550);
-<b class="fc"><i>111</i>&nbsp;        f.setTitle(&quot;Tetris&quot;);</b>
-<b class="fc"><i>112</i>&nbsp;        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);</b>
-<b class="fc"><i>113</i>&nbsp;</b>
-<i>114</i>&nbsp;        JPanel p = new JPanel();
-<b class="fc"><i>115</i>&nbsp;</b>
-<b class="fc"><i>116</i>&nbsp;        /* game title */</b>
-<b class="fc"><i>117</i>&nbsp;        JLabel title = new JLabel(logo);</b>
-<b class="fc"><i>118</i>&nbsp;        start = new JButton(&quot;Start&quot;);</b>
-<b class="fc"><i>119</i>&nbsp;        start.setPreferredSize(new Dimension(100, 40));</b>
-<b class="fc"><i>120</i>&nbsp;</b>
-<i>121</i>&nbsp;        help = new JButton(&quot;Help&quot;);
-<b class="fc"><i>122</i>&nbsp;        help.setPreferredSize(new Dimension(100, 40));</b>
-<b class="fc"><i>123</i>&nbsp;</b>
-<b class="fc"><i>124</i>&nbsp;        f.add(title, BorderLayout.NORTH);</b>
-<i>125</i>&nbsp;        title.setHorizontalAlignment(JLabel.CENTER);
-<i>126</i>&nbsp;        title.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 80));
-<i>127</i>&nbsp;        p.add(start);
-<i>128</i>&nbsp;        p.add(help);
-<b class="fc"><i>129</i>&nbsp;        f.add(p);</b>
-<b class="fc"><i>130</i>&nbsp;</b>
-<i>131</i>&nbsp;        start.addActionListener(this);
-<b class="fc"><i>132</i>&nbsp;        help.addActionListener(this);</b>
-<b class="fc"><i>133</i>&nbsp;    }</b>
-<i>134</i>&nbsp;
-<b class="fc"><i>135</i>&nbsp;    /**</b>
-<b class="fc"><i>136</i>&nbsp;     * Checks if button is clicked</b>
-<i>137</i>&nbsp;     * @param e action event
-<b class="fc"><i>138</i>&nbsp;     */</b>
-<i>139</i>&nbsp;    @Override
-<i>140</i>&nbsp;    public void actionPerformed(ActionEvent e) {
+<b class="fc"><i>76</i>&nbsp;        Board board = new Board(this);</b>
+<b class="fc"><i>77</i>&nbsp;        f.add(board);</b>
+<b class="fc"><i>78</i>&nbsp;        board.start();</b>
+<b class="fc"><i>79</i>&nbsp;    }</b>
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    /**
+<i>82</i>&nbsp;     * Loads help menu window
+<i>83</i>&nbsp;     */
+<i>84</i>&nbsp;    private void helpMenu() {
+<b class="fc"><i>85</i>&nbsp;        helpWindow = new JFrame();</b>
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;        // create help window
+<b class="fc"><i>88</i>&nbsp;        helpWindow.setVisible(true);</b>
+<b class="fc"><i>89</i>&nbsp;        helpWindow.setSize(500, 550);</b>
+<b class="fc"><i>90</i>&nbsp;        helpWindow.setTitle(&quot;Tetris Help&quot;);</b>
+<i>91</i>&nbsp;
+<b class="fc"><i>92</i>&nbsp;        JLabel helpText = new JLabel(&quot;Tetris Gameplay&quot;);</b>
+<b class="fc"><i>93</i>&nbsp;        helpWindow.add(helpText, BorderLayout.NORTH);</b>
+<b class="fc"><i>94</i>&nbsp;        helpText.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>95</i>&nbsp;        helpText.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 20));</b>
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;        // text for controls
+<b class="fc"><i>98</i>&nbsp;        JTextArea helpTextArea = new JTextArea(</b>
+<i>99</i>&nbsp;                &quot;                            Right:              Up Arrow\n&quot; +
+<i>100</i>&nbsp;                        &quot;                            Rotate Left:    Down Arrow\n&quot; +
+<i>101</i>&nbsp;                        &quot;                            Move Right:   Right Arrow\n&quot; +
+<i>102</i>&nbsp;                        &quot;                            Move Left:      Left Arrow\n&quot; +
+<i>103</i>&nbsp;                        &quot;                            Fast Drop:      Shift\n&quot; +
+<i>104</i>&nbsp;                        &quot;                            Instant Drop:  Space\n&quot; +
+<i>105</i>&nbsp;                        &quot;                            Pause:            p&quot; +
+<i>106</i>&nbsp;                        &quot;\n\n\n&quot; +
+<i>107</i>&nbsp;                        &quot;                    Easy Difficulty: 50 points per line cleared&quot; +
+<i>108</i>&nbsp;                        &quot;                         Normal Difficulty: 100 points per line cleared&quot; +
+<i>109</i>&nbsp;                        &quot;                          Hard Difficulty: 200 points per line cleared&quot;
+<i>110</i>&nbsp;        );
+<b class="fc"><i>111</i>&nbsp;        Insets i = new Insets(50,50,50,50);</b>
+<b class="fc"><i>112</i>&nbsp;        helpTextArea.setMargin(i);</b>
+<i>113</i>&nbsp;
+<b class="fc"><i>114</i>&nbsp;        helpTextArea.setEditable(false);</b>
+<i>115</i>&nbsp;
+<b class="fc"><i>116</i>&nbsp;        helpTextArea.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 16));</b>
+<b class="fc"><i>117</i>&nbsp;        helpTextArea.setLineWrap(true);</b>
+<b class="fc"><i>118</i>&nbsp;        helpTextArea.setWrapStyleWord(true);</b>
+<b class="fc"><i>119</i>&nbsp;        helpWindow.add(helpTextArea, BorderLayout.CENTER);</b>
+<i>120</i>&nbsp;
+<b class="fc"><i>121</i>&nbsp;        helpBack = new JButton(&quot;Back&quot;);</b>
+<b class="fc"><i>122</i>&nbsp;        helpWindow.add(helpBack, BorderLayout.SOUTH);</b>
+<b class="fc"><i>123</i>&nbsp;        helpBack.addActionListener(this);</b>
+<b class="fc"><i>124</i>&nbsp;    }</b>
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;    /**
+<i>127</i>&nbsp;     * Loads settings menu
+<i>128</i>&nbsp;     */
+<i>129</i>&nbsp;    private void settingsMenu() {
+<b class="fc"><i>130</i>&nbsp;        settingsWindow = new JFrame();</b>
+<i>131</i>&nbsp;
+<b class="fc"><i>132</i>&nbsp;        JLabel settingsText = new JLabel(&quot;Settings&quot;);</b>
+<b class="fc"><i>133</i>&nbsp;        settingsText.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>134</i>&nbsp;        settingsText.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 20));</b>
+<b class="fc"><i>135</i>&nbsp;        settingsWindow.add(settingsText, BorderLayout.NORTH);</b>
+<i>136</i>&nbsp;
+<i>137</i>&nbsp;        // create settings window
+<b class="fc"><i>138</i>&nbsp;        settingsWindow.setVisible(true);</b>
+<b class="fc"><i>139</i>&nbsp;        settingsWindow.setSize(500, 550);</b>
+<b class="fc"><i>140</i>&nbsp;        settingsWindow.setTitle(&quot;Settings&quot;);</b>
 <i>141</i>&nbsp;
-<i>142</i>&nbsp;        if (e.getSource() == start) {
-<i>143</i>&nbsp;            startGame();
-<b class="fc"><i>144</i>&nbsp;        }</b>
-<b class="fc"><i>145</i>&nbsp;        if (e.getSource() == help) {</b>
-<i>146</i>&nbsp;            helpMenu();
-<i>147</i>&nbsp;        }
-<i>148</i>&nbsp;        if (e.getSource() == back) {
-<i>149</i>&nbsp;            helpWindow.dispose();
-<i>150</i>&nbsp;        }
-<i>151</i>&nbsp;    }
-<i>152</i>&nbsp;
-<i>153</i>&nbsp;    /**
-<i>154</i>&nbsp;     * Main method to run game
-<i>155</i>&nbsp;     * @param args args
-<i>156</i>&nbsp;     */
-<i>157</i>&nbsp;    public static void main(String[] args) {
-<i>158</i>&nbsp;        new Game();
-<i>159</i>&nbsp;    }
-<i>160</i>&nbsp;}
+<b class="fc"><i>142</i>&nbsp;        JPanel buttonPanel = new JPanel();</b>
+<i>143</i>&nbsp;
+<b class="fc"><i>144</i>&nbsp;        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));</b>
+<i>145</i>&nbsp;
+<b class="fc"><i>146</i>&nbsp;        easyButton = new JRadioButton(&quot;Easy&quot;);</b>
+<b class="fc"><i>147</i>&nbsp;        mediumButton = new JRadioButton(&quot;Normal&quot;);</b>
+<b class="fc"><i>148</i>&nbsp;        hardButton = new JRadioButton(&quot;Hard&quot;);</b>
+<i>149</i>&nbsp;
+<b class="fc"><i>150</i>&nbsp;        defaultColors = new JRadioButton(&quot;Default&quot;);</b>
+<b class="fc"><i>151</i>&nbsp;        dullColors = new JRadioButton(&quot;Dull&quot;);</b>
+<b class="fc"><i>152</i>&nbsp;        blackAndWhiteColors = new JRadioButton(&quot;Black and White&quot;);</b>
+<b class="fc"><i>153</i>&nbsp;        fallColors = new JRadioButton(&quot;Fall&quot;);</b>
+<b class="fc"><i>154</i>&nbsp;        springColors = new JRadioButton(&quot;Spring&quot;);</b>
+<b class="fc"><i>155</i>&nbsp;        blackColors = new JRadioButton(&quot;Black&quot;);</b>
+<i>156</i>&nbsp;
+<i>157</i>&nbsp;        //Group the radio buttons
+<b class="fc"><i>158</i>&nbsp;        ButtonGroup group = new ButtonGroup();</b>
+<b class="fc"><i>159</i>&nbsp;        group.add(easyButton);</b>
+<b class="fc"><i>160</i>&nbsp;        group.add(mediumButton);</b>
+<b class="fc"><i>161</i>&nbsp;        group.add(hardButton);</b>
+<i>162</i>&nbsp;
+<b class="fc"><i>163</i>&nbsp;        buttonPanel.add(Box.createRigidArea(new Dimension(2,2)));</b>
+<i>164</i>&nbsp;
+<b class="fc"><i>165</i>&nbsp;        ButtonGroup colorGroup = new ButtonGroup();</b>
+<b class="fc"><i>166</i>&nbsp;        colorGroup.add(defaultColors);</b>
+<b class="fc"><i>167</i>&nbsp;        colorGroup.add(dullColors);</b>
+<b class="fc"><i>168</i>&nbsp;        colorGroup.add(blackAndWhiteColors);</b>
+<b class="fc"><i>169</i>&nbsp;        colorGroup.add(fallColors);</b>
+<b class="fc"><i>170</i>&nbsp;        colorGroup.add(springColors);</b>
+<b class="fc"><i>171</i>&nbsp;        colorGroup.add(blackColors);</b>
+<i>172</i>&nbsp;
+<b class="fc"><i>173</i>&nbsp;        JTextField difficultyLabel = new JTextField(&quot;Difficulty&quot;);</b>
+<b class="fc"><i>174</i>&nbsp;        difficultyLabel.setEditable(false);</b>
+<b class="fc"><i>175</i>&nbsp;        difficultyLabel.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 16));</b>
+<b class="fc"><i>176</i>&nbsp;        buttonPanel.add(difficultyLabel);</b>
+<i>177</i>&nbsp;
+<b class="fc"><i>178</i>&nbsp;        buttonPanel.add(easyButton);</b>
+<b class="fc"><i>179</i>&nbsp;        buttonPanel.add(mediumButton);</b>
+<b class="fc"><i>180</i>&nbsp;        buttonPanel.add(hardButton);</b>
+<i>181</i>&nbsp;
+<b class="fc"><i>182</i>&nbsp;        JTextField themeLabel = new JTextField(&quot;Theme&quot;);</b>
+<b class="fc"><i>183</i>&nbsp;        themeLabel.setEditable(false);</b>
+<b class="fc"><i>184</i>&nbsp;        themeLabel.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 16));</b>
+<b class="fc"><i>185</i>&nbsp;        buttonPanel.add(themeLabel);</b>
+<i>186</i>&nbsp;
+<b class="fc"><i>187</i>&nbsp;        buttonPanel.add(defaultColors);</b>
+<b class="fc"><i>188</i>&nbsp;        buttonPanel.add(dullColors);</b>
+<b class="fc"><i>189</i>&nbsp;        buttonPanel.add(blackAndWhiteColors);</b>
+<b class="fc"><i>190</i>&nbsp;        buttonPanel.add(fallColors);</b>
+<b class="fc"><i>191</i>&nbsp;        buttonPanel.add(springColors);</b>
+<b class="fc"><i>192</i>&nbsp;        buttonPanel.add(blackColors);</b>
+<i>193</i>&nbsp;
+<b class="fc"><i>194</i>&nbsp;        easyButton.addActionListener(this);</b>
+<b class="fc"><i>195</i>&nbsp;        mediumButton.addActionListener(this);</b>
+<b class="fc"><i>196</i>&nbsp;        hardButton.addActionListener(this);</b>
+<i>197</i>&nbsp;
+<b class="fc"><i>198</i>&nbsp;        defaultColors.addActionListener(this);</b>
+<b class="fc"><i>199</i>&nbsp;        dullColors.addActionListener(this);</b>
+<b class="fc"><i>200</i>&nbsp;        blackAndWhiteColors.addActionListener(this);</b>
+<b class="fc"><i>201</i>&nbsp;        fallColors.addActionListener(this);</b>
+<b class="fc"><i>202</i>&nbsp;        springColors.addActionListener(this);</b>
+<b class="fc"><i>203</i>&nbsp;        blackColors.addActionListener(this);</b>
+<i>204</i>&nbsp;
+<b class="fc"><i>205</i>&nbsp;        if (speed == 100) {</b>
+<b class="nc"><i>206</i>&nbsp;            hardButton.setSelected(true);</b>
+<i>207</i>&nbsp;        }
+<b class="fc"><i>208</i>&nbsp;        else if (speed == 700) {</b>
+<b class="nc"><i>209</i>&nbsp;            easyButton.setSelected(true);</b>
+<i>210</i>&nbsp;        }
+<i>211</i>&nbsp;        else {
+<b class="fc"><i>212</i>&nbsp;            mediumButton.setSelected(true);</b>
+<i>213</i>&nbsp;        }
+<i>214</i>&nbsp;
+<b class="fc"><i>215</i>&nbsp;        if (color == 1) {</b>
+<b class="nc"><i>216</i>&nbsp;            dullColors.setSelected(true);</b>
+<i>217</i>&nbsp;        }
+<b class="fc"><i>218</i>&nbsp;        else if (color == 2) {</b>
+<b class="nc"><i>219</i>&nbsp;            blackAndWhiteColors.setSelected(true);</b>
+<i>220</i>&nbsp;        }
+<b class="fc"><i>221</i>&nbsp;        else if (color == 3) {</b>
+<b class="nc"><i>222</i>&nbsp;            fallColors.setSelected(true);</b>
+<i>223</i>&nbsp;        }
+<b class="fc"><i>224</i>&nbsp;        else if (color == 4) {</b>
+<b class="nc"><i>225</i>&nbsp;            springColors.setSelected(true);</b>
+<i>226</i>&nbsp;        }
+<b class="fc"><i>227</i>&nbsp;        else if (color == 5) {</b>
+<b class="nc"><i>228</i>&nbsp;            blackColors.setSelected(true);</b>
+<i>229</i>&nbsp;        }
+<i>230</i>&nbsp;        else {
+<b class="fc"><i>231</i>&nbsp;            defaultColors.setSelected(true);</b>
+<i>232</i>&nbsp;        }
+<i>233</i>&nbsp;
+<b class="fc"><i>234</i>&nbsp;        settingsWindow.add(buttonPanel);</b>
+<i>235</i>&nbsp;
+<b class="fc"><i>236</i>&nbsp;        settingsBack = new JButton(&quot;Back&quot;);</b>
+<b class="fc"><i>237</i>&nbsp;        settingsWindow.add(settingsBack, BorderLayout.SOUTH);</b>
+<b class="fc"><i>238</i>&nbsp;        settingsBack.addActionListener(this);</b>
+<b class="fc"><i>239</i>&nbsp;    }</b>
+<i>240</i>&nbsp;
+<i>241</i>&nbsp;    /**
+<i>242</i>&nbsp;     * Loads high scores menu
+<i>243</i>&nbsp;     */
+<i>244</i>&nbsp;    private void highScoresMenu() {
+<b class="fc"><i>245</i>&nbsp;        highScoresWindow = new JFrame();</b>
+<i>246</i>&nbsp;
+<b class="fc"><i>247</i>&nbsp;        JLabel highScoresText = new JLabel(&quot;High Scores&quot;);</b>
+<b class="fc"><i>248</i>&nbsp;        highScoresWindow.add(highScoresText, BorderLayout.NORTH);</b>
+<b class="fc"><i>249</i>&nbsp;        highScoresText.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>250</i>&nbsp;        highScoresText.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 20));</b>
+<i>251</i>&nbsp;
+<b class="fc"><i>252</i>&nbsp;        JPanel scoresPanel = new JPanel();</b>
+<i>253</i>&nbsp;
+<b class="fc"><i>254</i>&nbsp;        JTextArea scoreTextArea = new JTextArea();</b>
+<b class="fc"><i>255</i>&nbsp;        scoreTextArea.setEditable(false);</b>
+<i>256</i>&nbsp;
+<b class="fc"><i>257</i>&nbsp;        scoreTextArea.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 16));</b>
+<i>258</i>&nbsp;
+<b class="fc"><i>259</i>&nbsp;        for (int j = 0; j &lt; highScores.length; j++) {</b>
+<b class="fc"><i>260</i>&nbsp;            for (int k = 0; k &lt; 2; k++) {</b>
+<b class="fc"><i>261</i>&nbsp;                scoreTextArea.append(highScores[j][k]);</b>
+<b class="fc"><i>262</i>&nbsp;                if ( k==0 ) {</b>
+<b class="fc"><i>263</i>&nbsp;                    scoreTextArea.append(&quot;: &quot;);</b>
+<i>264</i>&nbsp;                } else {
+<b class="fc"><i>265</i>&nbsp;                    scoreTextArea.append(&quot;\n&quot;);</b>
+<i>266</i>&nbsp;                }
+<i>267</i>&nbsp;            }
+<i>268</i>&nbsp;
+<i>269</i>&nbsp;        }
+<i>270</i>&nbsp;
+<b class="fc"><i>271</i>&nbsp;        scoresPanel.add(scoreTextArea);</b>
+<b class="fc"><i>272</i>&nbsp;        highScoresWindow.add(scoresPanel);</b>
+<i>273</i>&nbsp;
+<i>274</i>&nbsp;        // create scores window
+<b class="fc"><i>275</i>&nbsp;        highScoresWindow.setVisible(true);</b>
+<b class="fc"><i>276</i>&nbsp;        highScoresWindow.setSize(500, 550);</b>
+<b class="fc"><i>277</i>&nbsp;        highScoresWindow.setTitle(&quot;High Scores&quot;);</b>
+<i>278</i>&nbsp;
+<b class="fc"><i>279</i>&nbsp;        highscoresBack = new JButton(&quot;Back&quot;);</b>
+<b class="fc"><i>280</i>&nbsp;        highScoresWindow.add(highscoresBack, BorderLayout.SOUTH);</b>
+<b class="fc"><i>281</i>&nbsp;        highscoresBack.addActionListener(this);</b>
+<b class="fc"><i>282</i>&nbsp;    }</b>
+<i>283</i>&nbsp;
+<i>284</i>&nbsp;
+<i>285</i>&nbsp;
+<i>286</i>&nbsp;    /**
+<i>287</i>&nbsp;     * Frame for menu screen
+<i>288</i>&nbsp;     */
+<i>289</i>&nbsp;    private void frame() {
+<i>290</i>&nbsp;
+<b class="fc"><i>291</i>&nbsp;        JFrame f = new JFrame();</b>
+<i>292</i>&nbsp;
+<b class="fc"><i>293</i>&nbsp;        playerName = JOptionPane.showInputDialog(&quot;Please Enter First Name&quot;);</b>
+<i>294</i>&nbsp;
+<i>295</i>&nbsp;        // create game window
+<b class="fc"><i>296</i>&nbsp;        f.setVisible(true);</b>
+<b class="fc"><i>297</i>&nbsp;        f.setSize(500, 550);</b>
+<b class="fc"><i>298</i>&nbsp;        f.setTitle(&quot;Tetris&quot;);</b>
+<b class="fc"><i>299</i>&nbsp;        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);</b>
+<i>300</i>&nbsp;
+<b class="fc"><i>301</i>&nbsp;        JPanel p = new JPanel();</b>
+<i>302</i>&nbsp;
+<i>303</i>&nbsp;        // game title
+<b class="fc"><i>304</i>&nbsp;        JLabel title = new JLabel(logo);</b>
+<b class="fc"><i>305</i>&nbsp;        start = new JButton(&quot;Start&quot;);</b>
+<b class="fc"><i>306</i>&nbsp;        start.setPreferredSize(new Dimension(100, 40));</b>
+<i>307</i>&nbsp;
+<b class="fc"><i>308</i>&nbsp;        help = new JButton(&quot;Help&quot;);</b>
+<b class="fc"><i>309</i>&nbsp;        help.setPreferredSize(new Dimension(100, 40));</b>
+<i>310</i>&nbsp;
+<b class="fc"><i>311</i>&nbsp;        settings = new JButton(&quot;Settings&quot;);</b>
+<b class="fc"><i>312</i>&nbsp;        settings.setPreferredSize(new Dimension(100, 40));</b>
+<i>313</i>&nbsp;
+<b class="fc"><i>314</i>&nbsp;        highscores = new JButton(&quot;High Scores&quot;);</b>
+<b class="fc"><i>315</i>&nbsp;        highscores.setPreferredSize(new Dimension(100, 40));</b>
+<i>316</i>&nbsp;
+<b class="fc"><i>317</i>&nbsp;        loadScores();</b>
+<i>318</i>&nbsp;
+<b class="fc"><i>319</i>&nbsp;        f.add(title, BorderLayout.NORTH);</b>
+<b class="fc"><i>320</i>&nbsp;        title.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>321</i>&nbsp;        title.setFont(new Font(&quot;Arial Black&quot;, Font.PLAIN, 80));</b>
+<b class="fc"><i>322</i>&nbsp;        p.add(start);</b>
+<b class="fc"><i>323</i>&nbsp;        p.add(help);</b>
+<b class="fc"><i>324</i>&nbsp;        p.add(settings);</b>
+<b class="fc"><i>325</i>&nbsp;        p.add(highscores);</b>
+<b class="fc"><i>326</i>&nbsp;        f.add(p);</b>
+<i>327</i>&nbsp;
+<b class="fc"><i>328</i>&nbsp;        start.addActionListener(this);</b>
+<b class="fc"><i>329</i>&nbsp;        help.addActionListener(this);</b>
+<b class="fc"><i>330</i>&nbsp;        settings.addActionListener(this);</b>
+<b class="fc"><i>331</i>&nbsp;        highscores.addActionListener(this);</b>
+<b class="fc"><i>332</i>&nbsp;    }</b>
+<i>333</i>&nbsp;
+<i>334</i>&nbsp;    /**
+<i>335</i>&nbsp;     * Getter for game speed
+<i>336</i>&nbsp;     * @return int speed of timer
+<i>337</i>&nbsp;     */
+<i>338</i>&nbsp;    public int getSpeed() {
+<b class="fc"><i>339</i>&nbsp;        return speed;</b>
+<i>340</i>&nbsp;    }
+<i>341</i>&nbsp;
+<i>342</i>&nbsp;    /**
+<i>343</i>&nbsp;     * Getter for current player name
+<i>344</i>&nbsp;     * @return String playerName
+<i>345</i>&nbsp;     */
+<i>346</i>&nbsp;    public String getPlayerName() {
+<b class="fc"><i>347</i>&nbsp;        return playerName;</b>
+<i>348</i>&nbsp;    }
+<i>349</i>&nbsp;
+<i>350</i>&nbsp;    /**
+<i>351</i>&nbsp;     * Setter for game speed
+<i>352</i>&nbsp;     * @param s speed fo drop
+<i>353</i>&nbsp;     */
+<i>354</i>&nbsp;    private void setSpeed(int s) {
+<b class="fc"><i>355</i>&nbsp;        speed = s;</b>
+<b class="fc"><i>356</i>&nbsp;    }</b>
+<i>357</i>&nbsp;
+<i>358</i>&nbsp;    /**
+<i>359</i>&nbsp;     * Sets num to select color
+<i>360</i>&nbsp;     * @param c int for color
+<i>361</i>&nbsp;     */
+<i>362</i>&nbsp;    private void setColorNum(int c) {
+<b class="fc"><i>363</i>&nbsp;        color = c;</b>
+<b class="fc"><i>364</i>&nbsp;    }</b>
+<i>365</i>&nbsp;
+<i>366</i>&nbsp;    /**
+<i>367</i>&nbsp;     * Returns num to select color
+<i>368</i>&nbsp;     * @return int for color
+<i>369</i>&nbsp;     */
+<i>370</i>&nbsp;    public int getColorNum() {
+<b class="fc"><i>371</i>&nbsp;        return color;</b>
+<i>372</i>&nbsp;    }
+<i>373</i>&nbsp;
+<i>374</i>&nbsp;    /**
+<i>375</i>&nbsp;     * Loads scores from file to keep track of high scores
+<i>376</i>&nbsp;     */
+<i>377</i>&nbsp;    private void loadScores() {
+<i>378</i>&nbsp;
+<b class="fc"><i>379</i>&nbsp;        String csvFile = &quot;highscores.dat&quot;;</b>
+<b class="fc"><i>380</i>&nbsp;        String line = &quot;&quot;;</b>
+<b class="fc"><i>381</i>&nbsp;        String csvSplitBy = &quot;,&quot;;</b>
+<b class="fc"><i>382</i>&nbsp;        int rowCounter = 0;</b>
+<i>383</i>&nbsp;
+<b class="fc"><i>384</i>&nbsp;        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {</b>
+<i>385</i>&nbsp;
+<b class="fc"><i>386</i>&nbsp;            while ((line = br.readLine()) != null) {</b>
+<i>387</i>&nbsp;
+<i>388</i>&nbsp;                // use comma as separator
+<b class="fc"><i>389</i>&nbsp;                String[] tempScores = line.split(csvSplitBy);</b>
+<b class="fc"><i>390</i>&nbsp;                for (int colCounter = 0; colCounter &lt; tempScores.length; colCounter++) {</b>
+<b class="fc"><i>391</i>&nbsp;                    highScores[rowCounter][colCounter] = tempScores[colCounter];</b>
+<i>392</i>&nbsp;                }
+<b class="fc"><i>393</i>&nbsp;                rowCounter++;</b>
+<b class="fc"><i>394</i>&nbsp;            }</b>
+<i>395</i>&nbsp;
+<b class="fc"><i>396</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>397</i>&nbsp;            e.printStackTrace();</b>
+<b class="fc"><i>398</i>&nbsp;        }</b>
+<i>399</i>&nbsp;
+<b class="fc"><i>400</i>&nbsp;        sortScores(highScores);</b>
+<b class="fc"><i>401</i>&nbsp;    }</b>
+<i>402</i>&nbsp;
+<i>403</i>&nbsp;    private static void sortScores(String[][] arr) {
+<b class="fc"><i>404</i>&nbsp;        int n = arr.length;</b>
+<i>405</i>&nbsp;
+<i>406</i>&nbsp;        // run bubble sort on this 2d array based on the values in the 2nd column!
+<b class="fc"><i>407</i>&nbsp;        for (int i = 0; i &lt; n - 1; i++) {</b>
+<b class="fc"><i>408</i>&nbsp;            for (int j = 0; j &lt; n - i - 1; j++) {</b>
+<b class="fc"><i>409</i>&nbsp;                if (Integer.parseInt(arr[j][1]) &lt; Integer.parseInt(arr[j + 1][1])) {</b>
+<b class="fc"><i>410</i>&nbsp;                    String[] temp = new String[2];</b>
+<i>411</i>&nbsp;
+<i>412</i>&nbsp;                    // names and scores
+<b class="fc"><i>413</i>&nbsp;                    for (int k = 0; k &lt; temp.length; k++) {</b>
+<b class="fc"><i>414</i>&nbsp;                        temp[k] = arr[j][k];</b>
+<i>415</i>&nbsp;                    }
+<b class="fc"><i>416</i>&nbsp;                    for (int k = 0; k &lt; temp.length; k++) {</b>
+<b class="fc"><i>417</i>&nbsp;                        arr[j][k] = arr[j + 1][k];</b>
+<i>418</i>&nbsp;                    }
+<b class="fc"><i>419</i>&nbsp;                    for (int k = 0; k &lt; temp.length; k++) {</b>
+<b class="fc"><i>420</i>&nbsp;                        arr[j + 1][k] = temp[k];</b>
+<i>421</i>&nbsp;                    }
+<i>422</i>&nbsp;                }
+<i>423</i>&nbsp;            }
+<i>424</i>&nbsp;        }
+<b class="fc"><i>425</i>&nbsp;    }</b>
+<i>426</i>&nbsp;
+<i>427</i>&nbsp;
+<i>428</i>&nbsp;    /**
+<i>429</i>&nbsp;     * Getter for high scores
+<i>430</i>&nbsp;     * @return speed of timer
+<i>431</i>&nbsp;     */
+<i>432</i>&nbsp;    public String[][] getScores(){
+<b class="fc"><i>433</i>&nbsp;        return highScores;</b>
+<i>434</i>&nbsp;    }
+<i>435</i>&nbsp;
+<i>436</i>&nbsp;    /**
+<i>437</i>&nbsp;     * Checks if button is clicked
+<i>438</i>&nbsp;     * @param e action event
+<i>439</i>&nbsp;     */
+<i>440</i>&nbsp;    @Override
+<i>441</i>&nbsp;    public void actionPerformed(ActionEvent e) {
+<i>442</i>&nbsp;
+<b class="fc"><i>443</i>&nbsp;        if (e.getSource() == start) {</b>
+<b class="fc"><i>444</i>&nbsp;            startGame();</b>
+<i>445</i>&nbsp;        }
+<b class="fc"><i>446</i>&nbsp;        if (e.getSource() == help) {</b>
+<b class="fc"><i>447</i>&nbsp;            helpMenu();</b>
+<i>448</i>&nbsp;        }
+<b class="fc"><i>449</i>&nbsp;        if (e.getSource() == settings) {</b>
+<b class="fc"><i>450</i>&nbsp;            settingsMenu();</b>
+<i>451</i>&nbsp;        }
+<b class="fc"><i>452</i>&nbsp;        if (e.getSource() == highscores) {</b>
+<b class="fc"><i>453</i>&nbsp;            highScoresMenu();</b>
+<i>454</i>&nbsp;        }
+<b class="fc"><i>455</i>&nbsp;        if (e.getSource() == settingsBack) {</b>
+<b class="fc"><i>456</i>&nbsp;            settingsWindow.dispose();</b>
+<i>457</i>&nbsp;        }
+<b class="fc"><i>458</i>&nbsp;        if (e.getSource() == helpBack) {</b>
+<b class="fc"><i>459</i>&nbsp;            helpWindow.dispose();</b>
+<i>460</i>&nbsp;        }
+<b class="fc"><i>461</i>&nbsp;        if (e.getSource() == highscoresBack) {</b>
+<b class="fc"><i>462</i>&nbsp;            highScoresWindow.dispose();</b>
+<i>463</i>&nbsp;        }
+<b class="fc"><i>464</i>&nbsp;        if (e.getSource() == easyButton) {</b>
+<b class="fc"><i>465</i>&nbsp;            setSpeed(700);</b>
+<i>466</i>&nbsp;        }
+<b class="fc"><i>467</i>&nbsp;        if (e.getSource() == mediumButton) {</b>
+<b class="fc"><i>468</i>&nbsp;            setSpeed(400);</b>
+<i>469</i>&nbsp;        }
+<b class="fc"><i>470</i>&nbsp;        if (e.getSource() == hardButton) {</b>
+<b class="fc"><i>471</i>&nbsp;            setSpeed(100);</b>
+<i>472</i>&nbsp;        }
+<b class="fc"><i>473</i>&nbsp;        if (e.getSource() == defaultColors) {</b>
+<b class="nc"><i>474</i>&nbsp;            setColorNum(0);</b>
+<i>475</i>&nbsp;        }
+<b class="fc"><i>476</i>&nbsp;        if (e.getSource() == dullColors) {</b>
+<b class="fc"><i>477</i>&nbsp;            setColorNum(1);</b>
+<i>478</i>&nbsp;        }
+<b class="fc"><i>479</i>&nbsp;        if (e.getSource() == blackAndWhiteColors) {</b>
+<b class="fc"><i>480</i>&nbsp;            setColorNum(2);</b>
+<i>481</i>&nbsp;        }
+<b class="fc"><i>482</i>&nbsp;        if (e.getSource() == fallColors) {</b>
+<b class="fc"><i>483</i>&nbsp;            setColorNum(3);</b>
+<i>484</i>&nbsp;        }
+<b class="fc"><i>485</i>&nbsp;        if (e.getSource() == springColors) {</b>
+<b class="fc"><i>486</i>&nbsp;            setColorNum(4);</b>
+<i>487</i>&nbsp;        }
+<b class="fc"><i>488</i>&nbsp;        if (e.getSource() == blackColors) {</b>
+<b class="fc"><i>489</i>&nbsp;            setColorNum(5);</b>
+<i>490</i>&nbsp;        }
+<b class="fc"><i>491</i>&nbsp;    }</b>
+<i>492</i>&nbsp;
+<i>493</i>&nbsp;    /**
+<i>494</i>&nbsp;     * Main method to run game
+<i>495</i>&nbsp;     * @param args args
+<i>496</i>&nbsp;     */
+<i>497</i>&nbsp;    public static void main(String[] args) {
+<b class="fc"><i>498</i>&nbsp;        new Game();</b>
+<b class="fc"><i>499</i>&nbsp;    }</b>
+<i>500</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2018-10-26 10:08</div>
+    <div style="float:right;">generated on 2018-12-07 08:44</div>
 </div>
 </body>
 </html>
