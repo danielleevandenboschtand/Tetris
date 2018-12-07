@@ -141,6 +141,8 @@ class Game extends JFrame implements ActionListener {
 
         JPanel buttonPanel = new JPanel();
 
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
+
         easyButton = new JRadioButton("Easy");
         mediumButton = new JRadioButton("Normal");
         hardButton = new JRadioButton("Hard");
@@ -158,6 +160,8 @@ class Game extends JFrame implements ActionListener {
         group.add(mediumButton);
         group.add(hardButton);
 
+        buttonPanel.add(Box.createRigidArea(new Dimension(2,2)));
+
         ButtonGroup colorGroup = new ButtonGroup();
         colorGroup.add(defaultColors);
         colorGroup.add(dullColors);
@@ -166,7 +170,7 @@ class Game extends JFrame implements ActionListener {
         colorGroup.add(springColors);
         colorGroup.add(blackColors);
 
-        JTextArea difficultyLabel = new JTextArea("Difficulty");
+        JTextField difficultyLabel = new JTextField("Difficulty");
         difficultyLabel.setEditable(false);
         difficultyLabel.setFont(new Font("Arial Black", Font.PLAIN, 16));
         buttonPanel.add(difficultyLabel);
@@ -175,7 +179,7 @@ class Game extends JFrame implements ActionListener {
         buttonPanel.add(mediumButton);
         buttonPanel.add(hardButton);
 
-        JTextArea themeLabel = new JTextArea("Theme");
+        JTextField themeLabel = new JTextField("Theme");
         themeLabel.setEditable(false);
         themeLabel.setFont(new Font("Arial Black", Font.PLAIN, 16));
         buttonPanel.add(themeLabel);

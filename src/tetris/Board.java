@@ -450,7 +450,7 @@ class Board extends JPanel implements ActionListener {
             started = false;
             if ( Integer.parseInt(String.valueOf(score * 100)) > Integer.parseInt(highScores[9][1]) ) {
                 changeScoreMultiplier();
-                scorebar.setText("New High Score! Score: " + String.valueOf((int)(score * 100 * scoreMultiplier)));
+                scorebar.setText("New Top 10 High Score!: " + String.valueOf((int)(score * 100 * scoreMultiplier)));
                 highScores[9][0] = playerName;
                 highScores[9][1] = Integer.toString(score * 100);
                 saveScores();
