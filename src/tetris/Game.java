@@ -4,8 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -30,9 +29,11 @@ class Game extends JFrame implements ActionListener {
     /** speed of timer */
     private int speed = 400;
 
-    /** top ten scores */
-    private int[] scores = new int[10];
-    private int[] orderedScores = new int[10];
+    /** current player name */
+    private String playerName;
+
+    /** high scores array **/
+    private String[][] highScores = new String[10][2];
 
     /** color selector */
     private int color;
@@ -249,12 +250,19 @@ class Game extends JFrame implements ActionListener {
         JTextArea scoreTextArea = new JTextArea();
         scoreTextArea.setEditable(false);
 
-        for (int i = 0; i < orderedScores.length; i++) {
-            scoreTextArea.append((i + 1) + ".  ");
-            scoreTextArea.append(Integer.toString(orderedScores[i]) + "\n");
-        }
-
         scoreTextArea.setFont(new Font("Arial Black", Font.PLAIN, 16));
+
+        for (int j = 0; j < highScores.length; j++) {
+            for (int k = 0; k < 2; k++) {
+                scoreTextArea.append(highScores[j][k]);
+                if ( k==0 ) {
+                    scoreTextArea.append(": ");
+                } else {
+                    scoreTextArea.append("\n");
+                }
+            }
+
+        }
 
         scoresPanel.add(scoreTextArea);
         highScoresWindow.add(scoresPanel);
@@ -269,12 +277,16 @@ class Game extends JFrame implements ActionListener {
         highscoresBack.addActionListener(this);
     }
 
+
+
     /**
      * Frame for menu screen
      */
     private void frame() {
 
         JFrame f = new JFrame();
+
+        playerName = JOptionPane.showInputDialog("Please Enter First Name");
 
         // create game window
         f.setVisible(true);
@@ -317,10 +329,18 @@ class Game extends JFrame implements ActionListener {
 
     /**
      * Getter for game speed
-     * @return speed of timer
+     * @return int speed of timer
      */
     public int getSpeed() {
         return speed;
+    }
+
+    /**
+     * Getter for current player name
+     * @return String playerName
+     */
+    public String getPlayerName() {
+        return playerName;
     }
 
     /**
@@ -348,44 +368,65 @@ class Game extends JFrame implements ActionListener {
     }
 
     /**
-     * Loads scores from text file to keep track of high scores
+     * Loads scores from file to keep track of high scores
      */
     private void loadScores() {
 
-        try {
+        String csvFile = "highscores.dat";
+        String line = "";
+        String csvSplitBy = ",";
+        int rowCounter = 0;
 
-            // open the text file
-            File file = new File("scores.txt");
-            int currentLine;
-            int i = 0;
-            Scanner sc = new Scanner(file);
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
 
-            while (sc.hasNextLine()) {
-                currentLine = Integer.parseInt(sc.nextLine());
-                scores[i] = currentLine;
-                i++;
+            while ((line = br.readLine()) != null) {
+
+                // use comma as separator
+                String[] tempScores = line.split(csvSplitBy);
+                for (int colCounter = 0; colCounter < tempScores.length; colCounter++) {
+                    highScores[rowCounter][colCounter] = tempScores[colCounter];
+                }
+                rowCounter++;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        sortScores(highScores);
+    }
+
+    private static void sortScores(String[][] arr) {
+        int n = arr.length;
+
+        // run bubble sort on this 2d array based on the values in the 2nd column!
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (Integer.parseInt(arr[j][1]) < Integer.parseInt(arr[j + 1][1])) {
+                    String[] temp = new String[2];
+
+                    // names and scores
+                    for (int k = 0; k < temp.length; k++) {
+                        temp[k] = arr[j][k];
+                    }
+                    for (int k = 0; k < temp.length; k++) {
+                        arr[j][k] = arr[j + 1][k];
+                    }
+                    for (int k = 0; k < temp.length; k++) {
+                        arr[j + 1][k] = temp[k];
+                    }
+                }
             }
         }
-        catch (FileNotFoundException error) {
-            System.out.println("File not found");
-        }
-
-        Arrays.sort(scores);
-
-        int j = 9;
-
-        for (int score : scores) {
-            orderedScores[j] = score;
-            j--;
-        }
     }
+
 
     /**
      * Getter for high scores
      * @return speed of timer
      */
-    public int[] getScores() {
-        return orderedScores;
+    public String[][] getScores(){
+        return highScores;
     }
 
     /**

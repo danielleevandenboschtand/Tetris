@@ -48,8 +48,11 @@ class Board extends JPanel implements ActionListener {
     /** game board */
     private final Tetris[] board;
 
-    /** array for high scores */
-    private int[] scores = new int[10];
+    /** high scores array **/
+    private String[][] highScores = new String[10][2];
+
+    /** current player name */
+    private String playerName;
 
     /** color selector */
     private int color;
@@ -66,7 +69,8 @@ class Board extends JPanel implements ActionListener {
         curPiece = new Piece();
         timer = new Timer(parent.getSpeed(), this);
         color = parent.getColorNum();
-        scores = parent.getScores();
+        highScores = parent.getScores();
+        playerName = parent.getPlayerName();
         timer.start();
         scorebar = parent.getStatusBar();
         board = new Tetris[bWidth * bHeight];
@@ -444,10 +448,11 @@ class Board extends JPanel implements ActionListener {
             curPiece.setPiece(Tetris.emptyPiece);
             timer.stop();
             started = false;
-            if ( Integer.parseInt(String.valueOf(score * 100)) > scores[9] ) {
+            if ( Integer.parseInt(String.valueOf(score * 100)) > Integer.parseInt(highScores[9][1]) ) {
                 changeScoreMultiplier();
                 scorebar.setText("New High Score! Score: " + String.valueOf((int)(score * 100 * scoreMultiplier)));
-                scores[9] = Integer.parseInt(String.valueOf(score * 100));
+                highScores[9][0] = playerName;
+                highScores[9][1] = Integer.toString(score * 100);
                 saveScores();
             }
             else {
@@ -456,8 +461,8 @@ class Board extends JPanel implements ActionListener {
             }
 
             String[] options = {"Yes", "No"};
-            int x = JOptionPane.showOptionDialog(null, "Start a New Game?",
-                    "Click a button",
+            int x = JOptionPane.showOptionDialog(null, "Would you like to start a New Game?",
+                    "Game Over!",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
             // check popup options
@@ -475,19 +480,21 @@ class Board extends JPanel implements ActionListener {
      */
     private void saveScores() {
 
-        PrintWriter out;
-        String filename = "scores.txt";
 
         try {
-            out = new PrintWriter(new BufferedWriter(new FileWriter(filename, false)));
-
-            // reset file
-//            out.write(" ");
-            for (int i = 0; i < 10; i++) {
-                out.append(Integer.toString(scores[i])).append("\n");
+            FileWriter writer = new FileWriter("highscores.dat");
+            BufferedWriter buffer = new BufferedWriter(writer);
+            for (int j = 0; j < highScores.length; j++) {
+                for (int k = 0; k < 2; k++) {
+                    buffer.write(highScores[j][k]);
+                    if ( k==0 ) {
+                        buffer.write(",");
+                    } else {
+                        buffer.write("\n");
+                    }
+                }
             }
-
-            out.close();
+            buffer.close();
         }
         catch (IOException e) {
             e.printStackTrace();
