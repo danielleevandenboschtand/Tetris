@@ -341,7 +341,6 @@ class Board extends JPanel implements ActionListener {
         catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("saved scores");
     }
 
     /**
