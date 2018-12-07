@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
-class Game extends JFrame implements ActionListener {
+public class Game extends JFrame implements ActionListener {
     private JFrame helpWindow, settingsWindow, highScoresWindow;
 
     /** bar to show score/game message */

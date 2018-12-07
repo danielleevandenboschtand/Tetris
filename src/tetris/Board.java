@@ -12,7 +12,7 @@ import javax.swing.*;
 
 import tetris.Piece.Tetris;
 
-class Board extends JPanel implements ActionListener {
+public class Board extends JPanel implements ActionListener {
 
     /** width of game board */
     private static final int bWidth = 10;
