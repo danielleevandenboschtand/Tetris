@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Scanner;
 
 class Game extends JFrame implements ActionListener {
@@ -25,6 +24,9 @@ class Game extends JFrame implements ActionListener {
     /** settings radio buttons **/
     private JRadioButton easyButton, mediumButton, hardButton;
 
+    /** color radio buttons */
+    private JRadioButton defaultColors, dullColors, blackAndWhiteColors, fallColors, springColors, blackColors;
+
     /** speed of timer */
     private int speed = 400;
 
@@ -32,10 +34,13 @@ class Game extends JFrame implements ActionListener {
     private int[] scores = new int[10];
     private int[] orderedScores = new int[10];
 
+    /** color selector */
+    private int color;
+
     /**
      * Default constructor to create game
      */
-    private Game() {
+    public Game() {
         frame();
     }
 
@@ -88,7 +93,7 @@ class Game extends JFrame implements ActionListener {
         helpText.setHorizontalAlignment(JLabel.CENTER);
         helpText.setFont(new Font("Arial Black", Font.PLAIN, 20));
 
-        /* text for controls */
+        // text for controls
         JTextArea helpTextArea = new JTextArea(
                 "                            Right:              Up Arrow\n" +
                         "                            Rotate Left:    Down Arrow\n" +
@@ -96,7 +101,11 @@ class Game extends JFrame implements ActionListener {
                         "                            Move Left:      Left Arrow\n" +
                         "                            Fast Drop:      Shift\n" +
                         "                            Instant Drop:  Space\n" +
-                        "                            Pause:            p"
+                        "                            Pause:            p" +
+                        "\n\n\n" +
+                        "                    Easy Difficulty: 50 points per line cleared" +
+                        "                         Normal Difficulty: 100 points per line cleared" +
+                        "                          Hard Difficulty: 200 points per line cleared"
         );
         Insets i = new Insets(50,50,50,50);
         helpTextArea.setMargin(i);
@@ -135,19 +144,58 @@ class Game extends JFrame implements ActionListener {
         mediumButton = new JRadioButton("Normal");
         hardButton = new JRadioButton("Hard");
 
+        defaultColors = new JRadioButton("Default");
+        dullColors = new JRadioButton("Dull");
+        blackAndWhiteColors = new JRadioButton("Black and White");
+        fallColors = new JRadioButton("Fall");
+        springColors = new JRadioButton("Spring");
+        blackColors = new JRadioButton("Black");
+
         //Group the radio buttons
         ButtonGroup group = new ButtonGroup();
         group.add(easyButton);
         group.add(mediumButton);
         group.add(hardButton);
 
+        ButtonGroup colorGroup = new ButtonGroup();
+        colorGroup.add(defaultColors);
+        colorGroup.add(dullColors);
+        colorGroup.add(blackAndWhiteColors);
+        colorGroup.add(fallColors);
+        colorGroup.add(springColors);
+        colorGroup.add(blackColors);
+
+        JTextArea difficultyLabel = new JTextArea("Difficulty");
+        difficultyLabel.setEditable(false);
+        difficultyLabel.setFont(new Font("Arial Black", Font.PLAIN, 16));
+        buttonPanel.add(difficultyLabel);
+
         buttonPanel.add(easyButton);
         buttonPanel.add(mediumButton);
         buttonPanel.add(hardButton);
 
+        JTextArea themeLabel = new JTextArea("Theme");
+        themeLabel.setEditable(false);
+        themeLabel.setFont(new Font("Arial Black", Font.PLAIN, 16));
+        buttonPanel.add(themeLabel);
+
+        buttonPanel.add(defaultColors);
+        buttonPanel.add(dullColors);
+        buttonPanel.add(blackAndWhiteColors);
+        buttonPanel.add(fallColors);
+        buttonPanel.add(springColors);
+        buttonPanel.add(blackColors);
+
         easyButton.addActionListener(this);
         mediumButton.addActionListener(this);
         hardButton.addActionListener(this);
+
+        defaultColors.addActionListener(this);
+        dullColors.addActionListener(this);
+        blackAndWhiteColors.addActionListener(this);
+        fallColors.addActionListener(this);
+        springColors.addActionListener(this);
+        blackColors.addActionListener(this);
 
         if (speed == 100) {
             hardButton.setSelected(true);
@@ -157,6 +205,25 @@ class Game extends JFrame implements ActionListener {
         }
         else {
             mediumButton.setSelected(true);
+        }
+
+        if (color == 1) {
+            dullColors.setSelected(true);
+        }
+        else if (color == 2) {
+            blackAndWhiteColors.setSelected(true);
+        }
+        else if (color == 3) {
+            fallColors.setSelected(true);
+        }
+        else if (color == 4) {
+            springColors.setSelected(true);
+        }
+        else if (color == 5) {
+            blackColors.setSelected(true);
+        }
+        else {
+            defaultColors.setSelected(true);
         }
 
         settingsWindow.add(buttonPanel);
@@ -217,7 +284,7 @@ class Game extends JFrame implements ActionListener {
 
         JPanel p = new JPanel();
 
-        /* game title */
+        // game title
         JLabel title = new JLabel(logo);
         start = new JButton("Start");
         start.setPreferredSize(new Dimension(100, 40));
@@ -265,6 +332,22 @@ class Game extends JFrame implements ActionListener {
     }
 
     /**
+     * Sets num to select color
+     * @param c int for color
+     */
+    private void setColorNum(int c) {
+        color = c;
+    }
+
+    /**
+     * Returns num to select color
+     * @return int for color
+     */
+    public int getColorNum() {
+        return color;
+    }
+
+    /**
      * Loads scores from text file to keep track of high scores
      */
     private void loadScores() {
@@ -291,8 +374,8 @@ class Game extends JFrame implements ActionListener {
 
         int j = 9;
 
-        for (int i = 0; i < scores.length; i++) {
-            orderedScores[j] = scores[i];
+        for (int score : scores) {
+            orderedScores[j] = score;
             j--;
         }
     }
@@ -341,6 +424,24 @@ class Game extends JFrame implements ActionListener {
         }
         if (e.getSource() == hardButton) {
             setSpeed(100);
+        }
+        if (e.getSource() == defaultColors) {
+            setColorNum(0);
+        }
+        if (e.getSource() == dullColors) {
+            setColorNum(1);
+        }
+        if (e.getSource() == blackAndWhiteColors) {
+            setColorNum(2);
+        }
+        if (e.getSource() == fallColors) {
+            setColorNum(3);
+        }
+        if (e.getSource() == springColors) {
+            setColorNum(4);
+        }
+        if (e.getSource() == blackColors) {
+            setColorNum(5);
         }
     }
 
